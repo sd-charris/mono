@@ -25,6 +25,7 @@ namespace System.Web {
     using System.Web.Hosting;
     using System.Web.Management;
     using System.Web.Util;
+    
 
 
     /// <devdoc>
@@ -431,7 +432,7 @@ namespace System.Web {
 
                     // If we found an error that's not in the generated code, use it
                     if (HttpRuntime.CodegenDirInternal != null && error.FileName != null &&
-                        !StringUtil.StringStartsWith(error.FileName, HttpRuntime.CodegenDirInternal)) {
+                        !System.Web.Util.StringUtil.StringStartsWith(error.FileName, HttpRuntime.CodegenDirInternal)) {
                         e = error;
                         break;
                     }
@@ -582,7 +583,7 @@ namespace System.Web {
         public HttpRequestValidationException(string message) : base(message) {
 
             SetFormatter(new UnhandledErrorFormatter(
-                this, SR.GetString(SR.Dangerous_input_detected_descr), null));
+                this, System.Web.SR.GetString(System.Web.SR.Dangerous_input_detected_descr), null));
         }
 
 

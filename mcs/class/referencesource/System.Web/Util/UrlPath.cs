@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// <copyright file="UrlPath.cs" company="Microsoft">
+// <copyright file="System.Web.Util.UrlPath.cs" company="Microsoft">
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -95,10 +95,10 @@ internal static class UrlPath {
 
     internal static String GetDirectory(String path) {
         if (String.IsNullOrEmpty(path))
-            throw new ArgumentException(SR.GetString(SR.Empty_path_has_no_directory));
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Empty_path_has_no_directory));
 
         if (path[0] != '/' && path[0] != appRelativeCharacter)
-            throw new ArgumentException(SR.GetString(SR.Path_must_be_rooted, path));
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Path_must_be_rooted, path));
 
         // If it's just "~" or "/", return it unchanged
         if (path.Length == 1)
@@ -108,7 +108,7 @@ internal static class UrlPath {
 
         // This could happen if the input looks like "~abc"
         if (slashIndex < 0)
-            throw new ArgumentException(SR.GetString(SR.Path_must_be_rooted, path));
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Path_must_be_rooted, path));
 
         return path.Substring(0, slashIndex + 1);
     }
@@ -118,6 +118,19 @@ internal static class UrlPath {
     }
 
     internal static bool IsAbsolutePhysicalPath(string path) {
+        /* 
+        if (path == null || path.Length < 3)
+            return false;
+        
+        if ((path.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+            && (Path.IsPathRooted(path))
+            && (Path.GetPathRoot(path).Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))) {
+            return true;
+        }
+
+        // e.g \\server\share\foo or //server/share/foo
+        return IsUncSharePath(path);
+        */
         if (path == null || path.Length < 3)
             return false;
 
@@ -141,7 +154,7 @@ internal static class UrlPath {
 
         // Check if it looks like a physical path (UNC shares and C:)
         if (IsAbsolutePhysicalPath(path)) {
-            throw new HttpException(SR.GetString(SR.Physical_path_not_allowed, path));
+            throw new HttpException(System.Web.SR.GetString(System.Web.SR.Physical_path_not_allowed, path));
         }
 
         // Virtual path can't have colons.
@@ -150,7 +163,7 @@ internal static class UrlPath {
             path = path.Substring(0, iqs);
         }
         if (HasScheme(path)) {
-            throw new HttpException(SR.GetString(SR.Invalid_vpath, path));
+            throw new HttpException(System.Web.SR.GetString(System.Web.SR.Invalid_vpath, path));
         }
     }
 
@@ -169,7 +182,7 @@ internal static class UrlPath {
         else {
             // If the base path includes a file name, get rid of it before combining
             int lastSlashIndex = basepath.LastIndexOf('/');
-            Debug.Assert(lastSlashIndex >= 0);
+            System.Web.Util.Debug.Assert(lastSlashIndex >= 0);
             if (lastSlashIndex < basepath.Length - 1) {
                 basepath = basepath.Substring(0, lastSlashIndex + 1);
             }
@@ -210,9 +223,9 @@ internal static class UrlPath {
     // path is known to be relative.  It's more efficient, but doesn't do any
     // sanity checks.
     internal static String SimpleCombine(String basepath, String relative) {
-        Debug.Assert(!String.IsNullOrEmpty(basepath));
-        Debug.Assert(!String.IsNullOrEmpty(relative));
-        Debug.Assert(relative[0] != '/');
+        System.Web.Util.Debug.Assert(!String.IsNullOrEmpty(basepath));
+        System.Web.Util.Debug.Assert(!String.IsNullOrEmpty(relative));
+        System.Web.Util.Debug.Assert(relative[0] != '/');
 
         if (HasTrailingSlash(basepath))
             return basepath + relative;
@@ -278,13 +291,13 @@ internal static class UrlPath {
                 (start + 1 >= length || path[start + 1] == '.')) {
                 if (examine - start == 3) {
                     if (list.Count == 0)
-                        throw new HttpException(SR.GetString(SR.Cannot_exit_up_top_directory));
+                        throw new HttpException(System.Web.SR.GetString(System.Web.SR.Cannot_exit_up_top_directory));
 
                     // We're about to backtrack onto a starting '~', which would yield
                     // incorrect results.  Instead, make the path App Absolute, and call
                     // Reduce on that.
                     if (list.Count == 1 && IsAppRelativePath(path)) {
-                        Debug.Assert(sb.Length == 1);
+                        System.Web.Util.Debug.Assert(sb.Length == 1);
                         return ReduceVirtualPath(MakeVirtualPathAppAbsolute(path));
                     }
 
@@ -350,9 +363,9 @@ internal static class UrlPath {
 
         // Make sure both virtual paths are rooted
         if (!IsRooted(from))
-            throw new ArgumentException(SR.GetString(SR.Path_must_be_rooted, from));
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Path_must_be_rooted, from));
         if (!IsRooted(to))
-            throw new ArgumentException(SR.GetString(SR.Path_must_be_rooted, to));
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Path_must_be_rooted, to));
 
         // Remove the query string, so that System.Uri doesn't corrupt it
         string queryString = null;
@@ -507,7 +520,7 @@ internal static class UrlPath {
         }
 
         // if virtualPath1 as a string doesn't start with virtualPath2 as s string, then no for sure
-        if (!StringUtil.StringStartsWithIgnoreCase(virtualPath1, virtualPath2)) {
+        if (!System.Web.Util.StringUtil.StringStartsWithIgnoreCase(virtualPath1, virtualPath2)) {
             return false;
         }
 
@@ -520,7 +533,7 @@ internal static class UrlPath {
 
         // Special case for apps rooted at the root. VSWhidbey 286145
         if (virtualPath2Length == 1) {
-            Debug.Assert(virtualPath2[0] == '/');
+            System.Web.Util.Debug.Assert(virtualPath2[0] == '/');
             return true;
         }
 
@@ -539,20 +552,20 @@ internal static class UrlPath {
     }
 
     internal static bool VirtualPathStartsWithAppPath(string virtualPath) {
-        Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
+        System.Web.Util.Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
         return VirtualPathStartsWithVirtualPath(virtualPath,
             HttpRuntime.AppDomainAppVirtualPathString);
     }
 
     internal static string MakeVirtualPathAppRelative(string virtualPath) {
-        Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
+        System.Web.Util.Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
         return MakeVirtualPathAppRelative(virtualPath,
             HttpRuntime.AppDomainAppVirtualPathString, false /*nullIfNotInApp*/);
     }
 
     // Same as MakeVirtualPathAppRelative, but return null if app relative can't be obtained
     internal static string MakeVirtualPathAppRelativeOrNull(string virtualPath) {
-        Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
+        System.Web.Util.Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
         return MakeVirtualPathAppRelative(virtualPath,
             HttpRuntime.AppDomainAppVirtualPathString, true /*nullIfNotInApp*/);
     }
@@ -566,8 +579,8 @@ internal static class UrlPath {
         if (virtualPath == null)
             throw new ArgumentNullException("virtualPath");
 
-        Debug.Assert(applicationPath[0] == '/');
-        Debug.Assert(HasTrailingSlash(applicationPath));
+        System.Web.Util.Debug.Assert(applicationPath[0] == '/');
+        System.Web.Util.Debug.Assert(HasTrailingSlash(applicationPath));
 
         int appPathLength = applicationPath.Length;
         int virtualPathLength = virtualPath.Length;
@@ -575,7 +588,7 @@ internal static class UrlPath {
         // If virtualPath is the same as the app path, but without the ending slash,
         // treat it as if it were truly the app path (VSWhidbey 495949)
         if (virtualPathLength == appPathLength - 1) {
-            if (StringUtil.StringStartsWithIgnoreCase(applicationPath, virtualPath))
+            if (System.Web.Util.StringUtil.StringStartsWithIgnoreCase(applicationPath, virtualPath))
                 return appRelativeCharacterString;
         }
 
@@ -600,7 +613,7 @@ internal static class UrlPath {
     }
 
     internal static string MakeVirtualPathAppAbsolute(string virtualPath) {
-        Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
+        System.Web.Util.Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
         return MakeVirtualPathAppAbsolute(virtualPath, HttpRuntime.AppDomainAppVirtualPathString);
     }
 
@@ -619,7 +632,7 @@ internal static class UrlPath {
             (virtualPath[1] == '/' || virtualPath[1] == '\\')) {
 
             if (applicationPath.Length > 1) {
-                Debug.Assert(HasTrailingSlash(applicationPath));
+                System.Web.Util.Debug.Assert(HasTrailingSlash(applicationPath));
                 return applicationPath + virtualPath.Substring(2);
             }
             else
@@ -643,8 +656,8 @@ internal static class UrlPath {
 
         string path = Reduce(MakeVirtualPathAppAbsolute(virtualPath));
 
-        if (!UrlPath.VirtualPathStartsWithAppPath(path)) {
-            throw new ArgumentException(SR.GetString(SR.Invalid_app_VirtualPath, virtualPath));
+        if (!System.Web.Util.UrlPath.VirtualPathStartsWithAppPath(path)) {
+            throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Invalid_app_VirtualPath, virtualPath));
         }
 
         return path;
@@ -654,7 +667,7 @@ internal static class UrlPath {
         if (path == null)
             return false;
         int l = path.Length;
-        if (l == 0 || path[l-1] != '\\')
+        if (l == 0 || path[l-1] != Path.DirectorySeparatorChar)
             return false;
         if (l == 3 && path[1] == ':')   // c:\ case
             return false;
@@ -664,7 +677,12 @@ internal static class UrlPath {
     internal static bool PathIsDriveRoot(string path) {
         if (path != null) {
             int l = path.Length;
-            if (l == 3 && path[1] == ':' && path[2] == '\\') {
+#if MONO
+            if (l == 1 && path[1] == '/') {
+                return true;
+            }
+#endif
+            if (l == 3 && path[1] == ':' && path[2] == Path.DirectorySeparatorChar) {
                 return true;
             }
         }
@@ -703,7 +721,7 @@ internal static class UrlPath {
         if (lSubpath < lPath)
             return false;
 
-        if (!StringUtil.EqualsIgnoreCase(path, 0, subpath, 0, lPath))
+        if (!System.Web.Util.StringUtil.EqualsIgnoreCase(path, 0, subpath, 0, lPath))
             return false;
 
         // Check subpath that character following length of path is a slash

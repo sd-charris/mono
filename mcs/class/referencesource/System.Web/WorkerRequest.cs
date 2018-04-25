@@ -499,7 +499,7 @@ namespace System.Web {
             }
             
             // someone must have modified CACHE_URL, it is not valid
-            throw new HttpException(SR.GetString(SR.Cache_url_invalid));
+            throw new HttpException(System.Web.SR.GetString(System.Web.SR.Cache_url_invalid));
         } 
 
         // Mark a blocking call
@@ -599,7 +599,7 @@ namespace System.Web {
             if (token != IntPtr.Zero) {
                 String logonUser = GetServerVariable("LOGON_USER");
                 String authType = GetServerVariable("AUTH_TYPE");
-                bool isAuthenticated = (!string.IsNullOrEmpty(logonUser) || (!string.IsNullOrEmpty(authType) && !StringUtil.EqualsIgnoreCase(authType, "basic")));
+                bool isAuthenticated = (!string.IsNullOrEmpty(logonUser) || (!string.IsNullOrEmpty(authType) && !System.Web.Util.StringUtil.EqualsIgnoreCase(authType, "basic")));
                 return CreateWindowsIdentityWithAssert(token, ((authType == null) ? "" : authType), WindowsAccountType.Normal, isAuthenticated);
             }
 
@@ -1023,7 +1023,7 @@ namespace System.Web {
                                             bool addUserIndo, IntPtr token, String name, String authType,
                                             byte[] entity,
                                             AsyncCallback cb, Object state) {
-            throw new NotSupportedException(SR.GetString(SR.ExecuteUrl_not_supported));
+            throw new NotSupportedException(System.Web.SR.GetString(System.Web.SR.ExecuteUrl_not_supported));
         }
 
         internal virtual void EndExecuteUrl(IAsyncResult result) {
@@ -1384,7 +1384,7 @@ namespace System.Web {
                                          String headerName,
                                          String serverVarName) {
 
-            Debug.Assert(serverVarName == null || serverVarName == "HTTP_" + headerName.ToUpper(CultureInfo.InvariantCulture).Replace('-', '_'));
+            System.Web.Util.Debug.Assert(serverVarName == null || serverVarName == "HTTP_" + headerName.ToUpper(CultureInfo.InvariantCulture).Replace('-', '_'));
 
             Int32  i32 = new Int32();
             if (isRequest) {

@@ -25,7 +25,7 @@ namespace System.Web {
                 if (_unrestricted == null)
                     _unrestricted = new PermissionSet(PermissionState.Unrestricted);
 
-                Debug.Trace("Permissions", "Unrestricted Set");
+                System.Web.Util.Debug.Trace("Permissions", "Unrestricted Set");
                 return _unrestricted;
             }
         }
@@ -35,7 +35,7 @@ namespace System.Web {
                 if (_unmanagedCode == null)
                     _unmanagedCode = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
 
-                Debug.Trace("Permissions", "UnmanagedCode");
+                System.Web.Util.Debug.Trace("Permissions", "UnmanagedCode");
                 return _unmanagedCode;
             }
         }
@@ -45,7 +45,7 @@ namespace System.Web {
                 if (_controlPrincipal == null)
                     _controlPrincipal = new SecurityPermission(SecurityPermissionFlag.ControlPrincipal);
 
-                Debug.Trace("Permissions", "ControlPrincipal");
+                System.Web.Util.Debug.Trace("Permissions", "ControlPrincipal");
                 return _controlPrincipal;
             }
         }
@@ -55,7 +55,7 @@ namespace System.Web {
                 if (_reflection == null)
                     _reflection = new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
 
-                Debug.Trace("Permissions", "Reflection");
+                System.Web.Util.Debug.Trace("Permissions", "Reflection");
                 return _reflection;
             }
         }
@@ -65,7 +65,7 @@ namespace System.Web {
                 if (_appPathDiscovery == null)
                     _appPathDiscovery = new FileIOPermission(FileIOPermissionAccess.PathDiscovery, HttpRuntime.AppDomainAppPathInternal);
 
-                Debug.Trace("Permissions", "AppPathDiscovery");
+                System.Web.Util.Debug.Trace("Permissions", "AppPathDiscovery");
                 return _appPathDiscovery;
             }
         }
@@ -75,7 +75,7 @@ namespace System.Web {
                 if (_controlThread == null)
                     _controlThread = new SecurityPermission(SecurityPermissionFlag.ControlThread);
 
-                Debug.Trace("Permissions", "ControlThread");
+                System.Web.Util.Debug.Trace("Permissions", "ControlThread");
                 return _controlThread;
             }
         }
@@ -85,7 +85,7 @@ namespace System.Web {
                 if (_levelLow == null)
                     _levelLow = new AspNetHostingPermission(AspNetHostingPermissionLevel.Low);
 
-                Debug.Trace("Permissions", "AspNetHostingPermissionLevelLow");
+                System.Web.Util.Debug.Trace("Permissions", "AspNetHostingPermissionLevelLow");
                 return _levelLow;
             }
         }
@@ -95,7 +95,7 @@ namespace System.Web {
                 if (_levelMedium == null)
                     _levelMedium = new AspNetHostingPermission(AspNetHostingPermissionLevel.Medium);
 
-                Debug.Trace("Permissions", "AspNetHostingPermissionLevelMedium");
+                System.Web.Util.Debug.Trace("Permissions", "AspNetHostingPermissionLevelMedium");
                 return _levelMedium;
             }
         }
@@ -105,7 +105,7 @@ namespace System.Web {
                 if (_levelHigh == null)
                     _levelHigh = new AspNetHostingPermission(AspNetHostingPermissionLevel.High);
 
-                Debug.Trace("Permissions", "AspNetHostingPermissionLevelHigh");
+                System.Web.Util.Debug.Trace("Permissions", "AspNetHostingPermissionLevelHigh");
                 return _levelHigh;
             }
         }
@@ -114,17 +114,17 @@ namespace System.Web {
         // Parameterized permissions
 
         internal static IStackWalk FileReadAccess(String filename) {
-            Debug.Trace("Permissions", "FileReadAccess(" + filename + ")");
+            System.Web.Util.Debug.Trace("Permissions", "FileReadAccess(" + filename + ")");
             return new FileIOPermission(FileIOPermissionAccess.Read, filename);
         }
 
         internal static IStackWalk FileWriteAccess(String filename) {
-            Debug.Trace("Permissions", "FileWriteAccess(" + filename + ")");
+            System.Web.Util.Debug.Trace("Permissions", "FileWriteAccess(" + filename + ")");
             return new FileIOPermission(FileIOPermissionAccess.Write | FileIOPermissionAccess.Append, filename);
         }
 
         internal static IStackWalk PathDiscovery(String path) {
-            Debug.Trace("Permissions", "PathDiscovery(" + path + ")");
+            System.Web.Util.Debug.Trace("Permissions", "PathDiscovery(" + path + ")");
             return new FileIOPermission(FileIOPermissionAccess.PathDiscovery, path);
         }
 

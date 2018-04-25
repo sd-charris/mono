@@ -31,6 +31,7 @@ namespace System.Web {
     using System.Web.Security;
     using System.Web.SessionState;
     using System.Web.Util;
+    
 
     // enumeration of dynamic server variables
     internal enum DynamicServerVariable {
@@ -210,7 +211,7 @@ namespace System.Web {
         }
 
         internal void SetRawContent(HttpRawUploadedContent rawContent) {
-            Debug.Assert(rawContent != null);
+            System.Web.Util.Debug.Assert(rawContent != null);
             if (rawContent.Length > 0) {
                 NeedToInsertEntityBody = true;
             }
@@ -380,7 +381,7 @@ namespace System.Web {
                 return;
             }
 
-            if (StringUtil.StringStartsWithIgnoreCase(contentType, "application/x-www-form-urlencoded")) {
+            if (System.Web.Util.StringUtil.StringStartsWithIgnoreCase(contentType, "application/x-www-form-urlencoded")) {
                 // regular urlencoded form
 
                 byte[] formBytes = null;
@@ -395,11 +396,11 @@ namespace System.Web {
                     }
                     catch (Exception e) {
                         // could be thrown because of malformed data
-                        throw new HttpException(SR.GetString(SR.Invalid_urlencoded_form_data), e);
+                        throw new HttpException(System.Web.SR.GetString(System.Web.SR.Invalid_urlencoded_form_data), e);
                     }
                 }
             }
-            else if (StringUtil.StringStartsWithIgnoreCase(contentType, "multipart/form-data")) {
+            else if (System.Web.Util.StringUtil.StringStartsWithIgnoreCase(contentType, "multipart/form-data")) {
                 // multipart form
 
                 MultipartContentElement[] elements = GetMultipartContent();
@@ -743,9 +744,9 @@ namespace System.Web {
 
                     // add known attribute to the last cookie (if any)
                     if (name != null && name.Length > 0 && name[0] == '$') {
-                        if (StringUtil.EqualsIgnoreCase(name, "$Path"))
+                        if (System.Web.Util.StringUtil.EqualsIgnoreCase(name, "$Path"))
                             lastCookie.Path = cookie.Value;
-                        else if (StringUtil.EqualsIgnoreCase(name, "$Domain"))
+                        else if (System.Web.Util.StringUtil.EqualsIgnoreCase(name, "$Domain"))
                             lastCookie.Domain = cookie.Value;
 
                         continue;
@@ -798,7 +799,7 @@ namespace System.Web {
             if (_wr == null)
                 return;
 
-            if (!StringUtil.StringStartsWithIgnoreCase(ContentType, "multipart/form-data"))
+            if (!System.Web.Util.StringUtil.StringStartsWithIgnoreCase(ContentType, "multipart/form-data"))
                 return;
 
             MultipartContentElement[] elements = GetMultipartContent();
@@ -952,10 +953,10 @@ namespace System.Web {
             }
             else if (_readEntityBodyMode == ReadEntityBodyMode.Buffered) {
                 // _rawContent should have been set already
-                throw new InvalidOperationException(SR.GetString(SR.Invalid_operation_with_get_buffered_input_stream));
+                throw new InvalidOperationException(System.Web.SR.GetString(System.Web.SR.Invalid_operation_with_get_buffered_input_stream));
             }
             else if (_readEntityBodyMode == ReadEntityBodyMode.Bufferless) {
-                throw new HttpException(SR.GetString(SR.Incompatible_with_get_bufferless_input_stream));
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_bufferless_input_stream));
             }
 
             // enforce the limit
@@ -965,7 +966,7 @@ namespace System.Web {
                 if ( !(_wr is IIS7WorkerRequest) ) {
                     Response.CloseConnectionAfterError();
                 }
-                throw new HttpException(SR.GetString(SR.Max_request_length_exceeded),
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Max_request_length_exceeded),
                                         null, WebEventCodes.RuntimeErrorPostTooLarge);
             }
 
@@ -1010,7 +1011,7 @@ namespace System.Web {
                     numBytesRead += bytesRead;
 
                     if (numBytesRead > limit) {
-                        throw new HttpException(SR.GetString(SR.Max_request_length_exceeded),
+                        throw new HttpException(System.Web.SR.GetString(System.Web.SR.Max_request_length_exceeded),
                                     null, WebEventCodes.RuntimeErrorPostTooLarge);
                     }
 
@@ -1018,7 +1019,7 @@ namespace System.Web {
                     // RequestTimeoutManager is not efficient in case of ThreadPool starvation
                     // as the timer callback doing Thread.Abort may not trigger for a long time
                     if (remainingBytes > 0 && _context.HasTimeoutExpired) {
-                        throw new HttpException(SR.GetString(SR.Request_timed_out));
+                        throw new HttpException(System.Web.SR.GetString(System.Web.SR.Request_timed_out));
                     }
                 }
             }
@@ -1160,7 +1161,7 @@ namespace System.Web {
             get {
                 // Directly from worker request
                 if (_httpMethod == null) {
-                    Debug.Assert(_wr != null);
+                    System.Web.Util.Debug.Assert(_wr != null);
                     _httpMethod = _wr.GetHttpVerbName();
                 }
 
@@ -1402,7 +1403,7 @@ namespace System.Web {
                 if (_path == null) {
                     // Directly from worker request
 
-                    Debug.Assert(_wr != null);
+                    System.Web.Util.Debug.Assert(_wr != null);
 
                     // Don't allow malformed paths for security reasons
                     _path = VirtualPath.Create(_wr.GetUriPath(),
@@ -1449,7 +1450,7 @@ namespace System.Web {
                     _clientFilePath = VirtualPath.Create(uri, VirtualPathOptions.AllowAbsolutePath);
                 }
 
-                Debug.Trace("ClientUrl", "*** ClientFilePath --> " + _clientFilePath + " ***");
+                System.Web.Util.Debug.Trace("ClientUrl", "*** ClientFilePath --> " + _clientFilePath + " ***");
                 return _clientFilePath;
             }
             set {
@@ -1558,7 +1559,7 @@ namespace System.Web {
 
         public string CurrentExecutionFilePathExtension {
             get {
-                return UrlPath.GetExtension(CurrentExecutionFilePathObject.VirtualPathString);
+                return System.Web.Util.UrlPath.GetExtension(CurrentExecutionFilePathObject.VirtualPathString);
             }
         }
 
@@ -1582,7 +1583,7 @@ namespace System.Web {
         // so it is application-agnostic.
         public string AppRelativeCurrentExecutionFilePath {
             get {
-                return UrlPath.MakeVirtualPathAppRelative(CurrentExecutionFilePath);
+                return System.Web.Util.UrlPath.MakeVirtualPathAppRelative(CurrentExecutionFilePath);
             }
         }
 
@@ -1662,7 +1663,7 @@ namespace System.Web {
                 if (_pathTranslated == null) {
                     if (!_computePathInfo) {
                         // Directly from worker request
-                        Debug.Assert(_wr != null);
+                        System.Web.Util.Debug.Assert(_wr != null);
                         _pathTranslated = _wr.GetFilePathTranslated();
                         if (HttpRuntime.IsMapPathRelaxed)
                             _pathTranslated = HttpRuntime.GetRelaxedMapPathResult(_pathTranslated);
@@ -2402,7 +2403,7 @@ namespace System.Web {
         internal HttpFileCollection EnsureFiles() {
             if (_files == null) {
                 if (_readEntityBodyMode == ReadEntityBodyMode.Bufferless)
-                    throw new HttpException(SR.GetString(SR.Incompatible_with_get_bufferless_input_stream));
+                    throw new HttpException(System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_bufferless_input_stream));
 
                 _files = new HttpFileCollection();
 
@@ -2419,7 +2420,7 @@ namespace System.Web {
             get {
                 if (_inputStream == null) {
                     if (_readEntityBodyMode == ReadEntityBodyMode.Bufferless)
-                        throw new HttpException(SR.GetString(SR.Incompatible_with_get_bufferless_input_stream));
+                        throw new HttpException(System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_bufferless_input_stream));
 
                     HttpRawUploadedContent rawContent = null;
 
@@ -2455,7 +2456,7 @@ namespace System.Web {
         //  Performs a binary read of a specified number of bytes from the current input stream.
         public byte[] BinaryRead(int count) {
             if (_readEntityBodyMode == ReadEntityBodyMode.Bufferless)
-                throw new HttpException(SR.GetString(SR.Incompatible_with_get_bufferless_input_stream));
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_bufferless_input_stream));
 
             if (count < 0 || count > TotalBytes)
                 throw new ArgumentOutOfRangeException("count");
@@ -2491,7 +2492,7 @@ namespace System.Web {
 
             set {
                 if (_filterSource == null)  // have to use the source -- null means source wasn't ever asked for
-                    throw new HttpException(SR.GetString(SR.Invalid_request_filter));
+                    throw new HttpException(System.Web.SR.GetString(System.Web.SR.Invalid_request_filter));
 
                 _installedFilter = value;
             }
@@ -2526,7 +2527,7 @@ namespace System.Web {
                         if (_wr is IIS7WorkerRequest && _context.NotificationContext != null &&
                             ((_context.NotificationContext.CurrentNotification == RequestNotification.AuthenticateRequest && !_context.NotificationContext.IsPostNotification)
                              || (_context.NotificationContext.CurrentNotification < RequestNotification.AuthenticateRequest))) {
-                            throw new InvalidOperationException(SR.GetString(SR.Invalid_before_authentication));
+                            throw new InvalidOperationException(System.Web.SR.GetString(System.Web.SR.Invalid_before_authentication));
                         }
 
                         _logonUserIdentity = _wr.GetLogonUserIdentity();
@@ -2608,10 +2609,10 @@ namespace System.Web {
                 //////////////////////////////////////////////////////////////////
                 // Verify the URL & QS lengths
                 if (requestUrl.Length > runtimeSection.MaxUrlLength) {
-                    throw new HttpException(400, SR.GetString(SR.Url_too_long));
+                    throw new HttpException(400, System.Web.SR.GetString(System.Web.SR.Url_too_long));
                 }
                 if (QueryStringText.Length > runtimeSection.MaxQueryStringLength) {
-                    throw new HttpException(400, SR.GetString(SR.QueryString_too_long));
+                    throw new HttpException(400, System.Web.SR.GetString(System.Web.SR.QueryString_too_long));
                 }
 
                 //////////////////////////////////////////////////////////////////
@@ -2621,7 +2622,7 @@ namespace System.Web {
                     int index = requestUrl.IndexOfAny(invalidChars);
                     if (index >= 0) {
                         string invalidString = new string(requestUrl[index], 1);
-                        throw new HttpException(400, SR.GetString(SR.Dangerous_input_detected,
+                        throw new HttpException(400, System.Web.SR.GetString(System.Web.SR.Dangerous_input_detected,
                                                                   "Request.Path", invalidString));
                     }
                     _flags.Set(needToValidateCookielessHeader);
@@ -2658,7 +2659,7 @@ namespace System.Web {
                 int index = header.IndexOfAny(invalidChars);
                 if (index >= 0) {
                     string invalidString = new string(header[index], 1);
-                    throw new HttpException(400, SR.GetString(SR.Dangerous_input_detected, "Request.Path", invalidString));
+                    throw new HttpException(400, System.Web.SR.GetString(System.Web.SR.Dangerous_input_detected, "Request.Path", invalidString));
                 }
             }
         }
@@ -2704,7 +2705,7 @@ namespace System.Web {
                 }
 
                 string collectionName = GetRequestValidationSourceName(requestCollection);
-                throw new HttpRequestValidationException(SR.GetString(SR.Dangerous_input_detected,
+                throw new HttpRequestValidationException(System.Web.SR.GetString(System.Web.SR.Dangerous_input_detected,
                     collectionName, detectedString));
             }
         }
@@ -2891,7 +2892,7 @@ namespace System.Web {
             if (!System.IO.Path.IsPathRooted(filename)) {
                 HttpRuntimeSection config = RuntimeConfig.GetConfig(_context).HttpRuntime;
                 if (config.RequireRootedSaveAsPath) {
-                    throw new HttpException(SR.GetString(SR.SaveAs_requires_rooted_path, filename));
+                    throw new HttpException(System.Web.SR.GetString(System.Web.SR.SaveAs_requires_rooted_path, filename));
                 }
             }
 
@@ -2983,7 +2984,7 @@ namespace System.Web {
 
         internal String MapPath(VirtualPath virtualPath, VirtualPath baseVirtualDir, bool allowCrossAppMapping) {
             if (_wr == null)
-                throw new HttpException(SR.GetString(SR.Cannot_map_path_without_context));
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Cannot_map_path_without_context));
 
             // treat null as "."
 
@@ -3007,7 +3008,7 @@ namespace System.Web {
             if (virtualPath.VirtualPathString == "/" &&
                 originalVirtualPath.VirtualPathString != "/" &&
                 !originalVirtualPath.HasTrailingSlash &&
-                UrlPath.PathEndsWithExtraSlash(realPath)) {
+                System.Web.Util.UrlPath.PathEndsWithExtraSlash(realPath)) {
                 realPath = realPath.Substring(0, realPath.Length - 1);
             }
 
@@ -3185,7 +3186,7 @@ namespace System.Web {
 
             IIS7WorkerRequest wr = _wr as IIS7WorkerRequest;
             if (wr == null)
-                throw new PlatformNotSupportedException(SR.GetString(SR.Requires_Iis_Integrated_Mode));
+                throw new PlatformNotSupportedException(System.Web.SR.GetString(System.Web.SR.Requires_Iis_Integrated_Mode));
             if (buffer == null)
                 throw new ArgumentNullException("buffer");
             if (offset < 0)
@@ -3193,7 +3194,7 @@ namespace System.Web {
             if (count < 0)
                 throw new ArgumentOutOfRangeException("count");
             if (buffer.Length - offset < count)
-                throw new ArgumentException(SR.GetString(SR.InvalidOffsetOrCount, "offset", "count"));
+                throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.InvalidOffsetOrCount, "offset", "count"));
 
             wr.InsertEntityBody(buffer, offset, count);
             NeedToInsertEntityBody = false;
@@ -3207,7 +3208,7 @@ namespace System.Web {
         public void InsertEntityBody() {
             IIS7WorkerRequest wr = _wr as IIS7WorkerRequest;
             if (wr == null)
-                throw new PlatformNotSupportedException(SR.GetString(SR.Requires_Iis_Integrated_Mode));
+                throw new PlatformNotSupportedException(System.Web.SR.GetString(System.Web.SR.Requires_Iis_Integrated_Mode));
             byte[] buffer = EntityBody;
             if (buffer == null)
                 return;
@@ -3269,10 +3270,10 @@ namespace System.Web {
                 _readEntityBodyStream = new HttpBufferlessInputStream(_context, persistEntityBody, disableMaxRequestLength);                
             }
             else if (currentMode == ReadEntityBodyMode.Classic) {
-                throw new HttpException(SR.GetString(SR.Incompatible_with_input_stream));
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Incompatible_with_input_stream));
             }
             else if (currentMode != requestedMode) {
-                throw new HttpException((persistEntityBody) ? SR.GetString(SR.Incompatible_with_get_bufferless_input_stream) : SR.GetString(SR.Incompatible_with_get_buffered_input_stream));
+                throw new HttpException((persistEntityBody) ? System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_bufferless_input_stream) : System.Web.SR.GetString(System.Web.SR.Incompatible_with_get_buffered_input_stream));
             }
             return _readEntityBodyStream;
         }
@@ -3291,7 +3292,7 @@ namespace System.Web {
                 wr.AbortConnection();
             }
             else {
-                throw new PlatformNotSupportedException(SR.GetString(SR.Requires_Iis_Integrated_Mode));
+                throw new PlatformNotSupportedException(System.Web.SR.GetString(System.Web.SR.Requires_Iis_Integrated_Mode));
             }
         }
 

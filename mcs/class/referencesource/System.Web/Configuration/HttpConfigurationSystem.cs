@@ -29,7 +29,7 @@ namespace System.Web.Configuration {
 
     internal class HttpConfigurationSystem : IInternalConfigSystem {
         private const string InternalConfigSettingsFactoryTypeString = "System.Configuration.Internal.InternalConfigSettingsFactory, " + AssemblyRef.SystemConfiguration;
-        internal const string ConfigSystemTypeString = "System.Configuration.Internal.ConfigSystem, " + AssemblyRef.SystemConfiguration;
+        internal const string ConfigSystemTypeString = "System.Configuration.Internal.ClassicConfigSystem, " + AssemblyRef.SystemConfiguration;
 
 #if !PLATFORM_UNIX // File system paths must be lowercased in UNIX
         internal const string MachineConfigSubdirectory = "Config";
@@ -124,11 +124,11 @@ namespace System.Web.Configuration {
                 }
             }
 
-            Debug.Assert(s_httpConfigSystem != null, "s_httpConfigSystem != null - The appdomain is using the client configuration system.");
+            System.Web.Util.Debug.Assert(s_httpConfigSystem != null, "s_httpConfigSystem != null - The appdomain is using the client configuration system.");
         }
 
         static internal void CompleteInit() {
-            Debug.Assert(!s_initComplete, "!s_initComplete");
+            System.Web.Util.Debug.Assert(!s_initComplete, "!s_initComplete");
             s_configSettingsFactory.CompleteInit();
             s_configSettingsFactory = null;
         }
@@ -147,7 +147,7 @@ namespace System.Web.Configuration {
                             // by setting s_inited = true.
                             //
                             s_inited = true;
-                            Debug.Assert(s_httpConfigSystem == null, "s_httpConfigSystem == null");
+                            System.Web.Util.Debug.Assert(s_httpConfigSystem == null, "s_httpConfigSystem == null");
                         }
                     }
                 }
@@ -206,7 +206,7 @@ namespace System.Web.Configuration {
         // Get the Config for a specific path
         //
         static internal object GetSection(string sectionName, VirtualPath path) {
-            Debug.Assert(UseHttpConfigurationSystem, "UseHttpConfigurationSystem");
+            System.Web.Util.Debug.Assert(UseHttpConfigurationSystem, "UseHttpConfigurationSystem");
 
             CachedPathData pathData;
 
@@ -224,7 +224,7 @@ namespace System.Web.Configuration {
         // Get the Config for a specific path
         //
         static internal object GetApplicationSection(string sectionName) {
-            Debug.Assert(UseHttpConfigurationSystem, "UseHttpConfigurationSystem");
+            System.Web.Util.Debug.Assert(UseHttpConfigurationSystem, "UseHttpConfigurationSystem");
 
             CachedPathData pathData;
 
@@ -283,7 +283,9 @@ namespace System.Web.Configuration {
         static internal string MachineConfigurationDirectory {
             get {
                 if (s_MachineConfigurationDirectory == null) {
-#if !FEATURE_PAL
+#if MONO
+                    s_MachineConfigurationDirectory = Path.GetDirectoryName(System.Configuration.DefaultConfig.MachineConfigPath);
+#elif FEATURE_PAL
                     s_MachineConfigurationDirectory = Path.Combine(MsCorLibDirectory, MachineConfigSubdirectory);
 #else // !FEATURE_PAL
                     System.UInt32 length = 0;

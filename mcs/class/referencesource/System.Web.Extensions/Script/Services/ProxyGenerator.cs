@@ -40,7 +40,7 @@ namespace System.Web.Script.Services {
             }
             else if(IsWCFServiceType(type)) {
                 // invoke the WCFServiceClientProxyGenerator.GetClientProxyScript method using reflection
-                Assembly wcfWebAssembly = Assembly.Load(AssemblyRef.SystemServiceModelWeb);
+                Assembly wcfWebAssembly = Assembly.Load("System.ServiceModel.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
                 if (wcfWebAssembly != null) {
                     Type wcfProxyType = wcfWebAssembly.GetType(WCFProxyTypeName);
                     if (wcfProxyType != null) {

@@ -52,7 +52,7 @@ namespace System.Web.UI.WebControls.WebParts {
             }
             set {
                 if (value != null && value.Length > maxStringLength) {
-                    throw new ProviderException(SR.GetString(SR.PersonalizationProvider_ApplicationNameExceedMaxLength, maxStringLength.ToString(CultureInfo.CurrentCulture)));
+                    throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_ApplicationNameExceedMaxLength, maxStringLength.ToString(CultureInfo.CurrentCulture)));
                 }
                 _applicationName = value;
             }
@@ -81,7 +81,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -166,7 +166,7 @@ namespace System.Web.UI.WebControls.WebParts {
             if (scope == PersonalizationScope.Shared) {
                 string pathToMatch = null;
                 if (query != null) {
-                    pathToMatch = StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
+                    pathToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
                 }
                 return FindSharedState(pathToMatch, pageIndex, pageSize, out totalRecords);
             }
@@ -175,9 +175,9 @@ namespace System.Web.UI.WebControls.WebParts {
                 DateTime inactiveSinceDate = PersonalizationAdministration.DefaultInactiveSinceDate;
                 string usernameToMatch = null;
                 if (query != null) {
-                    pathToMatch = StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
+                    pathToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
                     inactiveSinceDate = query.UserInactiveSinceDate;
-                    usernameToMatch = StringUtil.CheckAndTrimString(query.UsernameToMatch, "query.UsernameToMatch", false, maxStringLength);
+                    usernameToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.UsernameToMatch, "query.UsernameToMatch", false, maxStringLength);
                 }
 
                 return FindUserState(pathToMatch, inactiveSinceDate, usernameToMatch,
@@ -201,7 +201,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -291,7 +291,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 connection = connectionHolder.Connection;
             }
             if (connection == null) {
-                throw new ProviderException(SR.GetString(SR.PersonalizationProvider_CantAccess, Name));
+                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_CantAccess, Name));
             }
 
             return connectionHolder;
@@ -307,7 +307,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -356,7 +356,7 @@ namespace System.Web.UI.WebControls.WebParts {
             if (scope == PersonalizationScope.Shared) {
                 string pathToMatch = null;
                 if (query != null) {
-                    pathToMatch = StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
+                    pathToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
                 }
                 return GetCountOfSharedState(pathToMatch);
             }
@@ -365,9 +365,9 @@ namespace System.Web.UI.WebControls.WebParts {
                 DateTime userInactiveSinceDate = PersonalizationAdministration.DefaultInactiveSinceDate;
                 string usernameToMatch = null;
                 if (query != null) {
-                    pathToMatch = StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
+                    pathToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.PathToMatch, "query.PathToMatch", false, maxStringLength);
                     userInactiveSinceDate = query.UserInactiveSinceDate;
-                    usernameToMatch = StringUtil.CheckAndTrimString(query.UsernameToMatch, "query.UsernameToMatch", false, maxStringLength);
+                    usernameToMatch = System.Web.Util.StringUtil.CheckAndTrimString(query.UsernameToMatch, "query.UsernameToMatch", false, maxStringLength);
                 }
                 return GetCountOfUserState(pathToMatch, userInactiveSinceDate, usernameToMatch);
             }
@@ -383,7 +383,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -435,7 +435,7 @@ namespace System.Web.UI.WebControls.WebParts {
         }
 
         public override void Initialize(string name, NameValueCollection configSettings) {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, SR.Feature_not_supported_at_this_level);
+            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
 
             // configSettings cannot be null because there are required settings needed below
             if (configSettings == null) {
@@ -449,7 +449,7 @@ namespace System.Web.UI.WebControls.WebParts {
             // description will be set from the base class' Initialize method
             if (string.IsNullOrEmpty(configSettings["description"])) {
                 configSettings.Remove("description");
-                configSettings.Add("description", SR.GetString(SR.SqlPersonalizationProvider_Description));
+                configSettings.Add("description", System.Web.SR.GetString(System.Web.SR.SqlPersonalizationProvider_Description));
             }
             base.Initialize(name, configSettings);
 
@@ -461,19 +461,19 @@ namespace System.Web.UI.WebControls.WebParts {
                 configSettings.Remove("applicationName");
 
                 if (_applicationName.Length > maxStringLength) {
-                    throw new ProviderException(SR.GetString(SR.PersonalizationProvider_ApplicationNameExceedMaxLength, maxStringLength.ToString(CultureInfo.CurrentCulture)));
+                    throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_ApplicationNameExceedMaxLength, maxStringLength.ToString(CultureInfo.CurrentCulture)));
                 }
             }
 
             string connectionStringName = configSettings["connectionStringName"];
             if (String.IsNullOrEmpty(connectionStringName)) {
-                throw new ProviderException(SR.GetString(SR.PersonalizationProvider_NoConnection));
+                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_NoConnection));
             }
             configSettings.Remove("connectionStringName");
 
             string connectionString = SqlConnectionHelper.GetConnectionString(connectionStringName, true, true);
             if (String.IsNullOrEmpty(connectionString)) {
-                throw new ProviderException(SR.GetString(SR.PersonalizationProvider_BadConnection, connectionStringName));
+                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_BadConnection, connectionStringName));
             }
             _connectionString = connectionString;
 
@@ -482,7 +482,7 @@ namespace System.Web.UI.WebControls.WebParts {
 
             if (configSettings.Count > 0) {
                 string invalidAttributeName = configSettings.GetKey(0);
-                throw new ProviderException(SR.GetString(SR.PersonalizationProvider_UnknownProp, invalidAttributeName, name));
+                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.PersonalizationProvider_UnknownProp, invalidAttributeName, name));
             }
         }
 
@@ -501,8 +501,8 @@ namespace System.Web.UI.WebControls.WebParts {
         /// <devdoc>
         /// </devdoc>
         private byte[] LoadPersonalizationBlob(SqlConnection connection, string path, string userName) {
-            Debug.Assert(connection != null);
-            Debug.Assert(!String.IsNullOrEmpty(path));
+            System.Web.Util.Debug.Assert(connection != null);
+            System.Web.Util.Debug.Assert(!String.IsNullOrEmpty(path));
 
             SqlCommand command;
 
@@ -577,8 +577,8 @@ namespace System.Web.UI.WebControls.WebParts {
         /// <devdoc>
         /// </devdoc>
         private void ResetPersonalizationState(SqlConnection connection, string path, string userName) {
-            Debug.Assert(connection != null);
-            Debug.Assert(!String.IsNullOrEmpty(path));
+            System.Web.Util.Debug.Assert(connection != null);
+            System.Web.Util.Debug.Assert(!String.IsNullOrEmpty(path));
 
             SqlCommand command;
 
@@ -637,7 +637,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -689,7 +689,7 @@ namespace System.Web.UI.WebControls.WebParts {
                     try {
                         connectionHolder = GetConnectionHolder();
                         connection = connectionHolder.Connection;
-                        Debug.Assert(connection != null);
+                        System.Web.Util.Debug.Assert(connection != null);
 
                         CheckSchemaVersion( connection );
 
@@ -745,7 +745,7 @@ namespace System.Web.UI.WebControls.WebParts {
         }
 
         public override int ResetUserState(string path, DateTime userInactiveSinceDate) {
-            path = StringUtil.CheckAndTrimString(path, "path", false, maxStringLength);
+            path = System.Web.Util.StringUtil.CheckAndTrimString(path, "path", false, maxStringLength);
             string [] paths = (path == null) ? null : new string [] {path};
             return ResetUserState(ResetUserStateMode.PerInactiveDate,
                                   userInactiveSinceDate, paths, null);
@@ -802,7 +802,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 try {
                     connectionHolder = GetConnectionHolder();
                     connection = connectionHolder.Connection;
-                    Debug.Assert(connection != null);
+                    System.Web.Util.Debug.Assert(connection != null);
 
                     CheckSchemaVersion( connection );
 
@@ -836,7 +836,7 @@ namespace System.Web.UI.WebControls.WebParts {
                         }
                     }
                     else if (mode == ResetUserStateMode.PerPaths) {
-                        Debug.Assert(paths != null);
+                        System.Web.Util.Debug.Assert(paths != null);
                         parameter = parameters.Add("Path", SqlDbType.NVarChar);
                         foreach (string path in paths) {
                             if (!beginTranCalled && paths.Length > 1) {
@@ -853,7 +853,7 @@ namespace System.Web.UI.WebControls.WebParts {
                         }
                     }
                     else {
-                        Debug.Assert(mode == ResetUserStateMode.PerUsers);
+                        System.Web.Util.Debug.Assert(mode == ResetUserStateMode.PerUsers);
                         if (firstPath != null) {
                             parameters.AddWithValue("Path", firstPath);
                         }
@@ -903,9 +903,9 @@ namespace System.Web.UI.WebControls.WebParts {
         /// <devdoc>
         /// </devdoc>
         private void SavePersonalizationState(SqlConnection connection, string path, string userName, byte[] state) {
-            Debug.Assert(connection != null);
-            Debug.Assert(!String.IsNullOrEmpty(path));
-            Debug.Assert((state != null) && (state.Length != 0));
+            System.Web.Util.Debug.Assert(connection != null);
+            System.Web.Util.Debug.Assert(!String.IsNullOrEmpty(path));
+            System.Web.Util.Debug.Assert((state != null) && (state.Length != 0));
             SqlCommand command;
 
             if (userName != null) {

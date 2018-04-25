@@ -13,6 +13,7 @@ namespace System.Web.Configuration
     using System;
     using System.Security;
     using System.Security.Permissions;
+    
 
     public static class ProvidersHelper {
         ///////////////////////////////////////////////////////////////////////////////
@@ -24,11 +25,11 @@ namespace System.Web.Configuration
             try {
                 string pnType = (providerSettings.Type == null) ? null : providerSettings.Type.Trim();
                 if (string.IsNullOrEmpty(pnType))
-                    throw new ArgumentException(SR.GetString(SR.Provider_no_type_name));
+                    throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Provider_no_type_name));
                 Type t = ConfigUtil.GetType(pnType, "type", providerSettings, true, true);
 
                 if (!providerType.IsAssignableFrom(t))
-                    throw new ArgumentException(SR.GetString(SR.Provider_must_implement_type, providerType.ToString()));
+                    throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Provider_must_implement_type, providerType.ToString()));
                 provider = (ProviderBase)HttpRuntime.CreatePublicInstance(t);
 
                 // Because providers modify the parameters collection (i.e. delete stuff), pass in a clone of the collection
@@ -53,11 +54,11 @@ namespace System.Web.Configuration
                 string pnName = GetAndRemoveStringValue(providerSettings, "name");
                 string pnType = GetAndRemoveStringValue(providerSettings, "type");
                 if (string.IsNullOrEmpty(pnType))
-                    throw new ArgumentException(SR.GetString(SR.Provider_no_type_name));
+                    throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Provider_no_type_name));
                 Type t = ConfigUtil.GetType(pnType, "type", null, null, true, true);
 
                 if (!providerType.IsAssignableFrom(t))
-                    throw new ArgumentException(SR.GetString(SR.Provider_must_implement_type, providerType.ToString()));
+                    throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.Provider_must_implement_type, providerType.ToString()));
                 provider = (ProviderBase)HttpRuntime.CreatePublicInstance(t);
 
                 // Because providers modify the parameters collection (i.e. delete stuff), pass in a clone of the collection

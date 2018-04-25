@@ -61,13 +61,13 @@ public class Transactions {
     /// </devdoc>
     public static void InvokeTransacted(TransactedCallback callback, TransactionOption mode, ref bool transactionAborted) {
         // check for hosting permission even if no user code on the stack
-        HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, SR.Transaction_not_supported_in_low_trust);
+        HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.Transaction_not_supported_in_low_trust);
 
         bool executeWithoutTransaction = false;
 
 #if !FEATURE_PAL // FEATURE_PAL does not enable Transactions
         if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version.Major <= 4)
-            throw new PlatformNotSupportedException(SR.GetString(SR.RequiresNT));
+            throw new PlatformNotSupportedException(System.Web.SR.GetString(System.Web.SR.RequiresNT));
 #else // !FEATURE_PAL
         throw new NotImplementedException("ROTORTODO");
 #endif // !FEATURE_PAL
@@ -111,7 +111,7 @@ public class Transactions {
             transactionAborted = true;
         }
         else {
-            throw new HttpException(SR.GetString(SR.Cannot_execute_transacted_code));
+            throw new HttpException(System.Web.SR.GetString(System.Web.SR.Cannot_execute_transacted_code));
         }
     }
 

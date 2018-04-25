@@ -91,6 +91,9 @@ namespace System
 
 		byte [] serialized_non_primitives;
 
+		private string _AppDomainManagerAssembly;
+		private string _AppDomainManagerType;
+		private string[] _AptcaVisibleAssemblies;
 		public AppDomainSetup ()
 		{
 		}
@@ -256,6 +259,32 @@ namespace System
 #endif
 			}
 		}
+
+		public string AppDomainManagerAssembly
+        {
+            get { return _AppDomainManagerAssembly; }
+            set { _AppDomainManagerAssembly = value; }
+        }
+
+		public string AppDomainManagerType
+        {
+            get { return _AppDomainManagerType; }
+            set { _AppDomainManagerType = value; }
+        }
+
+		public string[] PartialTrustVisibleAssemblies
+        {
+            get { return _AptcaVisibleAssemblies; }
+            set { 
+                if (value != null) {
+                    _AptcaVisibleAssemblies = (string[])value.Clone(); 
+                    Array.Sort<string>(_AptcaVisibleAssemblies, StringComparer.OrdinalIgnoreCase);
+                }
+                else {
+                    _AptcaVisibleAssemblies = null;
+                }
+            }
+        }
 
 		public string PrivateBinPath {
 			get {

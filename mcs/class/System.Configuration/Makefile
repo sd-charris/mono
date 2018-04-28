@@ -18,6 +18,8 @@ TEST_LIB_REFS = System.Xml System
 TEST_NUNITLITE_APP_CONFIG_GLOBAL=Test/test-config-file
 LIBRARY_WARN_AS_ERROR = yes
 
+RESX_RESOURCE_STRING=../../../external/corefx/src/System.Configuration.ConfigurationManager/src/Resources/Strings.resx
+
 include ../../build/library.make
 
 $(build_lib): $(OTHER_RES)

@@ -109,7 +109,7 @@ corefx/SR.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigurationManager.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/InvalidPropValue.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsDescriptionAttribute.cs
-../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsSerializeAsAttribute.cs
+#../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsSerializeAsAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SubclassTypeValidatorAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/XmlUtilWriter.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/TimeSpanSecondsOrInfiniteConverter.cs
@@ -185,7 +185,7 @@ corefx/SR.cs
 #../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ClientSettingsStore.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsSavingEventHandler.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigXmlReader.cs
-../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/DefaultSettingValueAttribute.cs
+#../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/DefaultSettingValueAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SchemeSettingElementCollection.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingChangingEventHandler.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/MgmtConfigurationRecord.cs

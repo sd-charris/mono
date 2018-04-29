@@ -4,6 +4,8 @@
 
 partial class SR
 {
+	public const string Cryptography_DataProtector_InvalidAppNameOrPurpose = "Invalid application name and/or purpose";
+	public const string Cryptography_DataProtector_InvalidPurpose = "Invalid data protection purpose";
 	public const string ArgumentOutOfRange_Index = "Index was out of range.  Must be non-negative and less than the size of the collection.";
 	public const string Arg_EmptyOrNullString = "String cannot be empty or null.";
 	public const string Cryptography_Partial_Chain = "A certificate chain could not be built to a trusted root authority.";

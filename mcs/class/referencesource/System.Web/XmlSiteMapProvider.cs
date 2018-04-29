@@ -291,7 +291,7 @@ namespace System.Web {
                         document);
 
                 bool enableLocalization = false;
-                HandlerBase.GetAndRemoveBooleanAttribute(node, "enableLocalization", ref enableLocalization);
+                System.Web.Configuration.HandlerBase.GetAndRemoveBooleanAttribute(node, "enableLocalization", ref enableLocalization);
                 EnableLocalization = enableLocalization;
 
                 XmlNode topElement = null;
@@ -370,19 +370,19 @@ namespace System.Web {
                 }
 
                 string providerName = null;
-                HandlerBase.GetAndRemoveNonEmptyStringAttribute(xmlNode, _providerAttribute, ref providerName);
+                System.Web.Configuration.HandlerBase.GetAndRemoveNonEmptyStringAttribute(xmlNode, _providerAttribute, ref providerName);
 
                 // If the siteMapNode references another provider
                 if (providerName != null) {
                     node = GetNodeFromProvider(providerName);
 
                     // No other attributes or child nodes are allowed on a provider node.
-                    HandlerBase.CheckForUnrecognizedAttributes(xmlNode);
-                    HandlerBase.CheckForNonCommentChildNodes(xmlNode);
+                    System.Web.Configuration.HandlerBase.CheckForUnrecognizedAttributes(xmlNode);
+                    System.Web.Configuration.HandlerBase.CheckForNonCommentChildNodes(xmlNode);
                 }
                 else {
                     string siteMapFile = null;
-                    HandlerBase.GetAndRemoveNonEmptyStringAttribute(xmlNode, _siteMapFileAttribute, ref siteMapFile);
+                    System.Web.Configuration.HandlerBase.GetAndRemoveNonEmptyStringAttribute(xmlNode, _siteMapFileAttribute, ref siteMapFile);
 
                     if (siteMapFile != null) {
                         node = GetNodeFromSiteMapFile(xmlNode, VirtualPath.Create(siteMapFile));
@@ -643,11 +643,11 @@ namespace System.Web {
 
             // For external sitemap files, its secuity setting is inherited from parent provider
             bool secuityTrimmingEnabled = SecurityTrimmingEnabled;
-            HandlerBase.GetAndRemoveBooleanAttribute(xmlNode, _securityTrimmingEnabledAttrName, ref secuityTrimmingEnabled);
+            System.Web.Configuration.HandlerBase.GetAndRemoveBooleanAttribute(xmlNode, _securityTrimmingEnabledAttrName, ref secuityTrimmingEnabled);
 
             // No other attributes or non-comment nodes are allowed on a siteMapFile node
-            HandlerBase.CheckForUnrecognizedAttributes(xmlNode);
-            HandlerBase.CheckForNonCommentChildNodes(xmlNode);
+            System.Web.Configuration.HandlerBase.CheckForUnrecognizedAttributes(xmlNode);
+            System.Web.Configuration.HandlerBase.CheckForNonCommentChildNodes(xmlNode);
 
             XmlSiteMapProvider childProvider = new XmlSiteMapProvider();
 
@@ -727,11 +727,11 @@ namespace System.Web {
             string title = null, url = null, description = null, roles = null, resourceKey = null;
 
             // Url attribute is NOT required for a xml node.
-            HandlerBase.GetAndRemoveStringAttribute(xmlNode, "url", ref url);
-            HandlerBase.GetAndRemoveStringAttribute(xmlNode, "title", ref title);
-            HandlerBase.GetAndRemoveStringAttribute(xmlNode, "description", ref description);
-            HandlerBase.GetAndRemoveStringAttribute(xmlNode, "roles", ref roles);
-            HandlerBase.GetAndRemoveStringAttribute(xmlNode, "resourceKey", ref resourceKey);
+            System.Web.Configuration.HandlerBase.GetAndRemoveStringAttribute(xmlNode, "url", ref url);
+            System.Web.Configuration.HandlerBase.GetAndRemoveStringAttribute(xmlNode, "title", ref title);
+            System.Web.Configuration.HandlerBase.GetAndRemoveStringAttribute(xmlNode, "description", ref description);
+            System.Web.Configuration.HandlerBase.GetAndRemoveStringAttribute(xmlNode, "roles", ref roles);
+            System.Web.Configuration.HandlerBase.GetAndRemoveStringAttribute(xmlNode, "resourceKey", ref resourceKey);
 
             // Do not add the resourceKey if the resource is not valid.
             if (!String.IsNullOrEmpty(resourceKey) && 
@@ -739,7 +739,7 @@ namespace System.Web {
                 resourceKey = null;
             }
 
-            HandlerBase.CheckForbiddenAttribute(xmlNode, _securityTrimmingEnabledAttrName);
+            System.Web.Configuration.HandlerBase.CheckForbiddenAttribute(xmlNode, _securityTrimmingEnabledAttrName);
 
             NameValueCollection resourceKeyCollection = null;
             bool allowImplicitResourceAttribute = String.IsNullOrEmpty(resourceKey);

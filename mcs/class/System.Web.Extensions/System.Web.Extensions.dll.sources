@@ -1,6 +1,6 @@
 Assembly/AssemblyInfo.cs
-../../build/Consts.cs
-../../build/AssemblyRef.cs
+#../../build/Consts.cs
+#../../build/AssemblyRef.cs
 ../referencesource/System.Web.Extensions/Security/RoleService.cs
 ../referencesource/System.Web.Extensions/Security/AuthenticationService.cs
 ../referencesource/System.Web.Extensions/Management/WebServiceErrorEvent.cs

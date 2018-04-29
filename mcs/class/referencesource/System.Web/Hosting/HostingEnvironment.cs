@@ -479,7 +479,7 @@ namespace System.Web.Hosting {
             // First, see if the static API AppContext.SetSwitch even exists.
             // Type.GetType will return null if the type doesn't exist; it will throw on catastrophic failure.
 
-            Type appContextType = Type.GetType("System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+            Type appContextType = Type.GetType("System.AppContext, " + AssemblyRef.Mscorlib);
             if (appContextType == null) {
                 return; // wrong version of mscorlib - do nothing
             }

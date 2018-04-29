@@ -1491,7 +1491,7 @@ namespace System.Web.SessionState {
 
         internal static void ReadConnectionString(SessionStateSection config, ref string cntString, string propName) {
             ConfigsHelper.GetRegistryStringAttribute(ref cntString, config, propName);
-            HandlerBase.CheckAndReadConnectionString(ref cntString, true);
+            System.Web.Configuration.HandlerBase.CheckAndReadConnectionString(ref cntString, true);
         }
 
         internal bool SessionIDManagerUseCookieless {

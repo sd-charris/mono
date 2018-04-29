@@ -739,7 +739,7 @@ namespace System.Web {
             catch(Exception e) {
                 ar.SetError(e);
             }
-            ar.Complete(0, HResults.S_OK, IntPtr.Zero, synchronous: true);
+            ar.Complete(0, System.Web.Util.HResults.S_OK, IntPtr.Zero, synchronous: true);
             return ar;
         }
 

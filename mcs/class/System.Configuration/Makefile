@@ -5,9 +5,6 @@ include ../../build/rules.make
 
 LIBRARY = System.Configuration.dll
 
-OTHER_RES= \
-	System/Configuration/System.Configuration.resources
-
 LOCAL_MCS_FLAGS = -d:FEATURE_PAL \
 	$(OTHER_RES:%=/resource:%)
 LIB_REFS = System.Security System System.Xml
@@ -19,10 +16,12 @@ TEST_NUNITLITE_APP_CONFIG_GLOBAL=Test/test-config-file
 LIBRARY_WARN_AS_ERROR = yes
 
 RESX_RESOURCE_STRING=../../../external/corefx/src/System.Configuration.ConfigurationManager/src/Resources/Strings.resx
+RESOURCE_DEFS = System.Configuration,System.Configuration.resx
 
 include ../../build/library.make
 
 $(build_lib): $(OTHER_RES)
+
 
 test-local:
 	cp Test/appSettings.config $(dir $(NUNITLITE_CONFIG_FILE))/Test-appSettings.config

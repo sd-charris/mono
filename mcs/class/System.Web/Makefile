@@ -59,8 +59,7 @@ RESOURCE_FILES_2 = \
 	System.Web.UI.WebControls/GridView.js \
 	System.Web.UI.WebControls/DetailsView.js \
 	System.Web.UI.WebControls/TreeView.js \
-	System.Web.UI.WebControls/Menu.js \
-	resources/System.Web.resources
+	System.Web.UI.WebControls/Menu.js 
 
 RESOURCE_FILES_4 = \
 	System.Web.UI.WebControls/MenuModern.js
@@ -228,7 +227,7 @@ TEST_RESOURCE_FILES = \
 	Test/mainsoft/NunitWebResources/CheckBoxList_CustomValues.aspx
 
 RESOURCE_DEFS = \
-	TranslationResources,resources/TranslationResources.resx
+	TranslationResources,resources/TranslationResources.resx System.Web,resources/System.Web.resx
 
 NUNIT_RESOURCE_FILES = $(TEST_RESOURCE_FILES)
 NUNIT_APP_CODE_FILES = $(TEST_APP_CODE_FILES)

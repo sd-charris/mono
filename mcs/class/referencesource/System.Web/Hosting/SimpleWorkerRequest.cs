@@ -15,6 +15,7 @@ namespace System.Web.Hosting {
     using System.Threading;
     using System.Web.Configuration;
     using System.Web.Util;
+    
 
     //
     // Simple Worker Request provides a concrete implementation 
@@ -211,7 +212,7 @@ namespace System.Web.Hosting {
             if (String.IsNullOrEmpty(path) || path.Equals("/")) {
                 mappedPath = appPath;
             }
-            if (StringUtil.StringStartsWith(path, _appVirtPath)) {
+            if (System.Web.Util.StringUtil.StringStartsWith(path, _appVirtPath)) {
                 mappedPath = appPath + path.Substring(_appVirtPath.Length).Replace('/', '\\');
             }
 
@@ -397,7 +398,7 @@ namespace System.Web.Hosting {
         /// </devdoc>
         public SimpleWorkerRequest(String appVirtualDir, String appPhysicalDir, String page, String query, TextWriter output): this() {
             if (Thread.GetDomain().GetData(".appPath") != null) {
-                throw new HttpException(SR.GetString(SR.Wrong_SimpleWorkerRequest));
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Wrong_SimpleWorkerRequest));
             }
 
             _appVirtPath = appVirtualDir;
@@ -408,7 +409,7 @@ namespace System.Web.Hosting {
 
             ExtractPagePathInfo();
 
-            if (!StringUtil.StringEndsWith(_appPhysPath, '\\'))
+            if (!System.Web.Util.StringUtil.StringEndsWith(_appPhysPath, '\\'))
                 _appPhysPath += "\\";
                 
             _hasRuntimeInfo = false;

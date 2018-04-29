@@ -143,7 +143,7 @@ namespace System.Web {
             // set the minimum number of requests that must be executing in order to detect a deadlock
             int maxWorkerThreads, maxIoThreads;
             ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxIoThreads);
-            UnsafeNativeMethods.SetMinRequestsExecutingToDetectDeadlock(maxWorkerThreads - minExternFreeThreads);
+            //UnsafeNativeMethods.SetMinRequestsExecutingToDetectDeadlock(maxWorkerThreads - minExternFreeThreads);
         }
 
         // method called from HttpRuntime for incoming requests

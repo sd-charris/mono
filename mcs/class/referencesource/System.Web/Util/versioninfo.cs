@@ -61,7 +61,7 @@ namespace System.Web.Util {
                 return null;
 
             String fileName = buf.ToString();
-            if (StringUtil.StringStartsWith(fileName, "\\\\?\\")) // on Whistler GetModuleFileName migth return this
+            if (System.Web.Util.StringUtil.StringStartsWith(fileName, "\\\\?\\")) // on Whistler GetModuleFileName migth return this
                 fileName = fileName.Substring(4);
             return fileName;
 #else // !FEATURE_PAL
@@ -101,7 +101,8 @@ namespace System.Web.Util {
                 return _engineVersion;
 #else // !FEATURE_PAL
             // ROTORTODO
-            return "1.2.0.0";
+            get {
+                return "1.2.0.0";
 #endif // !FEATURE_PAL
             }
         }

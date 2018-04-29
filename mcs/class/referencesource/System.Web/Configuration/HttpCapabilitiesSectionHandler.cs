@@ -17,6 +17,7 @@ namespace System.Web.Configuration {
     using System.Web.Util;
     using System.Xml;
     using Pair = System.Web.UI.Pair;
+    
 
     //
     // ConfigureCapabilities is used to configure the CapabilitiesEvaluator object
@@ -131,7 +132,7 @@ namespace System.Web.Configuration {
             }
             else {
                 throw new ConfigurationErrorsException(
-                                                SR.GetString(SR.Unknown_tag_in_caps_config, element.Name), 
+                                                System.Web.SR.GetString(System.Web.SR.Unknown_tag_in_caps_config, element.Name), 
                                                 element);
             }
 
@@ -142,7 +143,7 @@ namespace System.Web.Configuration {
 
             if (matchpat == null) {
                 if (testpat != null)
-                    throw new ConfigurationErrorsException(SR.GetString(SR.Cannot_specify_test_without_match), element);
+                    throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Cannot_specify_test_without_match), element);
                 regex = null;
                 pat = null;
             }
@@ -188,7 +189,7 @@ namespace System.Web.Configuration {
                                 }
                                 else {
                                     throw new ConfigurationErrorsException(
-                                                    SR.GetString(SR.Result_must_be_at_the_top_browser_section), 
+                                                    System.Web.SR.GetString(System.Web.SR.Result_must_be_at_the_top_browser_section), 
                                                     child);
                                 }
                                 break;
@@ -196,7 +197,7 @@ namespace System.Web.Configuration {
                             case "file": 
                                 if (parseState.IsExternalFile) {
                                     throw new ConfigurationErrorsException(
-                                                    SR.GetString(SR.File_element_only_valid_in_config),
+                                                    System.Web.SR.GetString(System.Web.SR.File_element_only_valid_in_config),
                                                     child);
                                 }
                                 ProcessFile(parseState.FileList, child);
@@ -342,7 +343,7 @@ namespace System.Web.Configuration {
                         section = configDoc.DocumentElement;
                     }
                     catch (Exception e) {
-                        throw new ConfigurationErrorsException(SR.GetString(SR.Error_loading_XML_file, fullFilename, e.Message), 
+                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Error_loading_XML_file, fullFilename, e.Message), 
                                         e, (XmlNode)pair.Second);
                     }
 
@@ -360,7 +361,7 @@ namespace System.Web.Configuration {
                 }
                 
                 if (section.Name != parseState.SectionName) {
-                    throw new ConfigurationErrorsException(SR.GetString(SR.Capability_file_root_element, parseState.SectionName), 
+                    throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Capability_file_root_element, parseState.SectionName), 
                                     section);
                 }
                     
@@ -421,7 +422,7 @@ namespace System.Web.Configuration {
                     match = errRegex.Match(text, textpos);
 
                     throw new ConfigurationErrorsException(
-                                    SR.GetString(SR.Problem_reading_caps_config, match.ToString()), 
+                                    System.Web.SR.GetString(System.Web.SR.Problem_reading_caps_config, match.ToString()), 
                                     ConfigurationErrorsException.GetFilename(node),
                                     lineNumber);
                 }

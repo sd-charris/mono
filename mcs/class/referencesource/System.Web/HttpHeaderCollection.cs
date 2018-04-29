@@ -19,6 +19,7 @@ namespace System.Web {
     using System.Web.Hosting;
     using System.Web.Util;
     
+    
     [Serializable()]
     internal class HttpHeaderCollection : HttpValueCollection {
         private HttpRequest _request;
@@ -97,7 +98,7 @@ namespace System.Web {
         }
 
         internal void SetHeader(String name, String value, bool replace) {
-            Debug.Assert(_iis7WorkerRequest != null, "_iis7WorkerRequest != null");
+            System.Web.Util.Debug.Assert(_iis7WorkerRequest != null, "_iis7WorkerRequest != null");
 
             if (name == null) {
                 throw new ArgumentNullException("name"); 
@@ -112,7 +113,7 @@ namespace System.Web {
             }
             else {
                 if (_response.HeadersWritten) {
-                    throw new HttpException(SR.GetString(SR.Cannot_append_header_after_headers_sent));
+                    throw new HttpException(System.Web.SR.GetString(System.Web.SR.Cannot_append_header_after_headers_sent));
                 }
 
                 // IIS7 integrated pipeline mode needs to call the header encoding routine explicitly since it
@@ -128,7 +129,7 @@ namespace System.Web {
 
                 _iis7WorkerRequest.SetResponseHeader(encodedName, encodedValue, replace);
 
-                if (_response.HasCachePolicy && StringUtil.EqualsIgnoreCase("Set-Cookie", name)) {
+                if (_response.HasCachePolicy && System.Web.Util.StringUtil.EqualsIgnoreCase("Set-Cookie", name)) {
                     _response.Cache.SetHasSetCookieHeader();
                 }
             }

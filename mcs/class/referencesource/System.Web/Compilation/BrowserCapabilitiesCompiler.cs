@@ -23,6 +23,7 @@ namespace System.Web.Compilation {
     using System.Web.Util;
     using System.Web.UI;
     using System.Xml;
+    
 
     static class BrowserCapabilitiesCompiler {
 
@@ -180,7 +181,7 @@ namespace System.Web.Compilation {
                 }
 
                 string extension = Path.GetExtension(fileBase.Name);
-                if (StringUtil.EqualsIgnoreCase(extension, ".browser")) {
+                if (System.Web.Util.StringUtil.EqualsIgnoreCase(extension, ".browser")) {
                     list.Add(fileBase.VirtualPath);
                 }
             }
@@ -262,7 +263,7 @@ namespace System.Web.Compilation {
             
             CodeCompileUnit ccu = new CodeCompileUnit();
 
-            Debug.Assert(BrowserTree != null);
+            System.Web.Util.Debug.Assert(BrowserTree != null);
             ArrayList customTreeRoots = new ArrayList();
             for (int i = 0; i < CustomTreeNames.Count; i++) {
                 customTreeRoots.Add((BrowserDefinition)(((BrowserTree)CustomTreeList[i])[CustomTreeNames[i]]));
@@ -323,9 +324,9 @@ namespace System.Web.Compilation {
                     String parentID = firstBrowserDefinition.ParentID;
 
                     if (firstBrowserDefinition != null) {
-                        throw new ConfigurationErrorsException(SR.GetString(SR.Browser_parentID_Not_Found, parentID), firstBrowserDefinition.XmlNode);
+                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Browser_parentID_Not_Found, parentID), firstBrowserDefinition.XmlNode);
                     } else {
-                        throw new ConfigurationErrorsException(SR.GetString(SR.Browser_parentID_Not_Found, parentID));
+                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Browser_parentID_Not_Found, parentID));
                     }
                 }
                
@@ -366,7 +367,7 @@ namespace System.Web.Compilation {
                     }
                     else {
                         if (!ignoreApplicationBrowsersVarRefGenerated) {
-                            Debug.Assert(isBrowserDefinition);
+                            System.Web.Util.Debug.Assert(isBrowserDefinition);
 
                             // Gen: if (ignoreApplicationBrowsers) {
                             //      }
@@ -414,7 +415,7 @@ namespace System.Web.Compilation {
                 if (baseType.GetMethod("Default" + parentName + "ProcessBrowsers", flags) == null) {
                     String parentID = firstDefaultBrowserDefinition.ParentID;
                     if (firstDefaultBrowserDefinition != null) {
-                        throw new ConfigurationErrorsException(SR.GetString(SR.DefaultBrowser_parentID_Not_Found, parentID), firstDefaultBrowserDefinition.XmlNode);
+                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.DefaultBrowser_parentID_Not_Found, parentID), firstDefaultBrowserDefinition.XmlNode);
                     }
                 }
 
@@ -441,7 +442,7 @@ namespace System.Web.Compilation {
 
                 foreach(string browserID in overrides) {
                     bd = (BrowserDefinition)DefaultTree[browserID];
-                    Debug.Assert(!(bd is GatewayDefinition));
+                    System.Web.Util.Debug.Assert(!(bd is GatewayDefinition));
 
                     if(bd.IsRefID) {
                         GenerateSingleProcessCall(bd, cmm, "Default");
@@ -455,14 +456,14 @@ namespace System.Web.Compilation {
             // Generate process method for the browser elements
             foreach (DictionaryEntry entry in BrowserTree) {
                 bd = entry.Value as BrowserDefinition;
-                Debug.Assert(bd != null);
+                System.Web.Util.Debug.Assert(bd != null);
                 GenerateProcessMethod(bd, factoryType);
             }
 
             for (int i = 0; i < customTreeRoots.Count; i++) {
                 foreach (DictionaryEntry entry in (BrowserTree)CustomTreeList[i]) {
                     bd = entry.Value as BrowserDefinition;
-                    Debug.Assert(bd != null);
+                    System.Web.Util.Debug.Assert(bd != null);
                     GenerateProcessMethod(bd, factoryType);
                 }
             }
@@ -470,7 +471,7 @@ namespace System.Web.Compilation {
             // Generate process method for the default browser elements
             foreach (DictionaryEntry entry in DefaultTree) {
                 bd = entry.Value as BrowserDefinition;
-                Debug.Assert(bd != null);
+                System.Web.Util.Debug.Assert(bd != null);
                 GenerateProcessMethod(bd, factoryType, "Default");
             }
             GenerateOverrideMatchedHeaders(factoryType);
@@ -483,7 +484,7 @@ namespace System.Web.Compilation {
 
         internal override void ProcessBrowserNode(XmlNode node, BrowserTree browserTree) {
             if (node.Name == "defaultBrowser") {
-                throw new ConfigurationErrorsException(SR.GetString(SR.Browser_Not_Allowed_InAppLevel, node.Name), node);
+                throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Browser_Not_Allowed_InAppLevel, node.Name), node);
             }
 
             base.ProcessBrowserNode(node, browserTree);

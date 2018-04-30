@@ -40,7 +40,7 @@ namespace MonoTests.System.Web.Security
 	public class MachineKeyTest
 	{
 		[Test]
-		[MonoTODO ("Find out why the difference in result sizes exists between .NET and Mono")]
+		// TODO: Find out why the difference in result sizes exists between .NET and Mono
 		public void Encode ()
 		{
 #if DOT_NET

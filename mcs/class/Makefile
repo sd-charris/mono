@@ -203,6 +203,18 @@ xammac_4_5_dirs := \
 	System.Runtime.CompilerServices.Unsafe \
 	$(pcl_facade_dirs)
 
+#System.Web depends on build, so it needs to be mixed in
+xbuild_2_0_dirs := \
+	Microsoft.Build.Framework	\
+	Microsoft.Build.Utilities	\
+	Microsoft.Build.Engine		\
+	Mono.XBuild.Tasks		\
+	Microsoft.Build.Tasks
+
+xbuild_4_0_dirs := \
+	$(xbuild_2_0_dirs)	\
+	Microsoft.Build
+
 net_4_x_dirs := \
 	corlib				\
 	Mono.Security \
@@ -346,17 +358,6 @@ net_4_x_parallel_dirs := \
 	System.Runtime.CompilerServices.Unsafe \
 	legacy/Mono.Cecil \
 	$(pcl_facade_dirs)
-
-xbuild_2_0_dirs := \
-	Microsoft.Build.Framework	\
-	Microsoft.Build.Utilities	\
-	Microsoft.Build.Engine		\
-	Mono.XBuild.Tasks		\
-	Microsoft.Build.Tasks
-
-xbuild_4_0_dirs := \
-	$(xbuild_2_0_dirs)	\
-	Microsoft.Build
 
 orbis_dirs := \
 	$(filter-out Microsoft.CSharp Mono.CSharp Mono.Data.Sqlite,$(mobile_common_dirs))	\

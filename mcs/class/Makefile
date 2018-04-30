@@ -227,11 +227,15 @@ net_4_x_dirs := \
 	Mono.WebBrowser			\
 	System.Runtime.Serialization.Formatters.Soap \
 	System.Windows.Forms		\
+	$(xbuild_4_0_dirs)		\
 	Mono.Data.Sqlite		\
 	System.Web.ApplicationServices	\
 	Novell.Directory.Ldap		\
 	System.DirectoryServices	\
+	System.DirectoryServices.Protocols 	\
+	System.Runtime.Caching \
 	System.Design			\
+	System.Web.RegularExpressions \
 	System.Web.Services		\
 	System.Web			\
 	System.Runtime.Remoting		\
@@ -259,9 +263,6 @@ net_4_x_dirs := \
 	System.IdentityModel		\
 	System.IdentityModel.Selectors	\
 	System.ServiceModel		\
-	System.Web.Extensions		\
-	System.Web.Extensions.Design	\
-	System.Web.DynamicData		\
 	Mono.CSharp			\
 	System.Net			\
 	System.Json		\
@@ -271,7 +272,9 @@ net_4_x_dirs := \
 	System.ServiceModel.Activation \
 	System.ServiceModel.Routing \
 	System.ServiceModel.Discovery \
-	System.Runtime.Caching \
+	System.Web.Extensions		\
+	System.Web.Extensions.Design	\
+	System.Web.DynamicData		\
 	Microsoft.Web.Infrastructure \
 	System.ServiceModel.Web \
 	System.Net.Http	\
@@ -328,14 +331,12 @@ net_4_x_parallel_dirs := \
 	System.ComponentModel.Composition.4.5 \
 	System.Windows \
 	System.Xml.Serialization \
-	System.DirectoryServices.Protocols	\
 	RabbitMQ.Client			\
 	Microsoft.VisualC		\
 	WebMatrix.Data \
 	monodoc	\
 	System.Deployment \
 	System.Web.Mobile \
-	System.Web.RegularExpressions \
 	System.Workflow.Activities \
 	System.Workflow.ComponentModel \
 	System.Workflow.Runtime \
@@ -375,7 +376,7 @@ testing_aot_hybrid_SUBDIRS := $(testing_aot_hybrid_dirs)
 xammac_SUBDIRS := $(xammac_dirs)
 xammac_net_4_5_SUBDIRS := $(xammac_4_5_dirs)
 binary_reference_assemblies_SUBDIRS := reference-assemblies
-net_4_x_SUBDIRS := $(net_4_x_dirs) $(xbuild_4_0_dirs)
+net_4_x_SUBDIRS := $(net_4_x_dirs)
 net_4_x_PARALLEL_SUBDIRS := $(net_4_x_parallel_dirs)
 xbuild_12_SUBDIRS := $(xbuild_4_0_dirs)
 xbuild_14_SUBDIRS := $(xbuild_4_0_dirs) Microsoft.NuGet.Build.Tasks

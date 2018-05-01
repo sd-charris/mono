@@ -7,6 +7,7 @@ System/Configuration/ConfigurationBuilderChain.cs
 System/Configuration/ConfigurationBuilderSettings.cs
 System/Configuration/ConfigurationBuildersSection.cs
 System/Configuration/ConfigurationStringConstants.cs
+System/Configuration/DefaultConfig.cs
 System/Configuration/Internal/ClassicConfigSystem.cs
 System/Configuration/Internal/IInternalConfigurationBuilderHost.cs
 System/Configuration/SR.cs

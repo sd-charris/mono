@@ -494,7 +494,7 @@ namespace MonoTests.SystemWeb.Framework
 		
 		static void LoadAssemblyRecursive (Assembly ass)
 		{
-			if (ass.GlobalAssemblyCache)
+			if (ass.GlobalAssemblyCache || ass.IsDynamic)
 				return;
 			foreach (AssemblyName ran in ass.GetReferencedAssemblies ()) {
 				bool found = false;
@@ -513,7 +513,7 @@ namespace MonoTests.SystemWeb.Framework
 
 		private static void CopyAssembly (Assembly ass, string dir)
 		{
-			if (ass.GlobalAssemblyCache || ass.FullName.StartsWith ("mscorlib"))
+			if (ass.GlobalAssemblyCache || ass.IsDynamic || ass.FullName.StartsWith ("mscorlib"))
 				return;
 			string oldfn = ass.Location;
 			if (oldfn.EndsWith (".exe"))

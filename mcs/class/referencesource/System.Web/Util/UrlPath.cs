@@ -666,6 +666,11 @@ internal static class UrlPath {
     internal static bool PathIsDriveRoot(string path) {
         if (path != null) {
             int l = path.Length;
+#if MONO
+            if (l == 1 && path[1] == '/') {
+                return true;
+            }
+#endif
             if (l == 3 && path[1] == ':' && path[2] == Path.DirectorySeparatorChar) {
                 return true;
             }

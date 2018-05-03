@@ -136,7 +136,10 @@ namespace System.Web.Configuration {
                     childPart = path.Substring(l);
                 }
 
-                childPart = childPart.Replace('/', '\\');
+                if (Path.DirectorySeparatorChar == '\\') {
+                    childPart = childPart.Replace('/', '\\');
+                }
+                
                 physicalPath = Path.Combine(mapping.PhysicalDirectory, childPart);
             }
 

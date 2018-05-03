@@ -286,6 +286,7 @@ net_4_x_dirs := \
 	System.ServiceModel.Discovery \
 	System.Web.Extensions		\
 	System.Web.Extensions.Design	\
+	System.Web.Entity			\
 	System.Web.DynamicData		\
 	Microsoft.Web.Infrastructure \
 	System.ServiceModel.Web \

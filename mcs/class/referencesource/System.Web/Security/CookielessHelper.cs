@@ -225,6 +225,10 @@ namespace System.Web.Security {
                     context = HttpContext.Current;
                 if (context == null)
                     return false;
+                if (context.Request == null || context.Request.Browser == null) {
+                    return false;
+                }
+                
                 bool fRet = (!context.Request.Browser.Cookies ||
                              !context.Request.Browser.SupportsRedirectWithCookie);
                 return fRet;

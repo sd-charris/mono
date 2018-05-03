@@ -595,7 +595,7 @@ sealed class FindFileData {
         }
     }
 
-    internal FindFileData(FileInfo fInfo) {
+    internal FindFileData(FileSystemInfo fInfo) {
         _fileNameLong = fInfo.Name;
         _fileAttributesData = new FileAttributesData(fInfo);
     }
@@ -664,12 +664,17 @@ sealed class FileAttributesData {
         FileSize          = (long)wfd.nFileSizeHigh << 32 | (long)wfd.nFileSizeLow;
     }
 
-    internal FileAttributesData(FileInfo fInfo) {
+    internal FileAttributesData(FileSystemInfo fInfo) {
         FileAttributes = fInfo.Attributes;
         UtcCreationTime = fInfo.CreationTimeUtc;
         UtcLastAccessTime = fInfo.LastAccessTimeUtc;
         UtcLastWriteTime = fInfo.LastWriteTimeUtc;
-        FileSize = fInfo.Length;
+
+        FileInfo f = fInfo as FileInfo;
+
+        if (f != null) {
+            FileSize = f.Length;
+        }
     }
 
 #if DBG

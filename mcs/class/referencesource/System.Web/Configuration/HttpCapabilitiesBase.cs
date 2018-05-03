@@ -126,7 +126,27 @@ namespace System.Web.Configuration {
 
             return capabilities;
         }
+#if MONO  // these were taken from Mono's original System.Web implementation
+        static string GetUserAgentForDetection(HttpRequest request)
+        {
+            string ua = null;
+            if (request.Context.CurrentHandler is System.Web.UI.Page)
+                ua = ((System.Web.UI.Page)request.Context.CurrentHandler).ClientTarget;
+            if (String.IsNullOrEmpty(ua)) {
+                ua = request.ClientTarget;
+            if (String.IsNullOrEmpty(ua))
+                ua = request.UserAgent;
+            }
+            return ua;
+        }
 
+        static HttpBrowserCapabilities GetHttpBrowserCapabilitiesFromBrowscapini(string ua)
+        {
+            HttpBrowserCapabilities bcap = new HttpBrowserCapabilities();
+            bcap._items = CapabilitiesLoader.GetCapabilities(ua);
+            return bcap;
+        }
+#endif
         //
         // Get browser capabilities from config that are stored at "system.web/browserCaps".
         //
@@ -136,6 +156,12 @@ namespace System.Web.Configuration {
         // Note: this API will return null if the section isn't found.
         //
         internal static HttpBrowserCapabilities GetBrowserCapabilities(HttpRequest request) {
+
+#if MONO
+            // TODO: do we need to cache this?
+            string ua = GetUserAgentForDetection(request);
+            return GetHttpBrowserCapabilitiesFromBrowscapini(ua);
+#endif
 
             HttpCapabilitiesBase capabilities = null;
 

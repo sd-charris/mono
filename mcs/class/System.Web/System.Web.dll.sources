@@ -62,6 +62,7 @@ State/ISessionStateModule.cs
 System.Web/ModName.cs
 System.Web/SR.cs
 System.Web/WebROCollection.cs
+System.Web/CapabilitiesLoader.cs
 Util/SecureHashCodeProvider.cs
 ../referencesource/System.Web/WorkerRequest.cs
 ../referencesource/System.Web/DataAnnotations/DataAnnotations/LocalizableString.cs

@@ -60,7 +60,7 @@ using System.Web.UI;
 #if !(TARGET_DOTNET)
 [assembly: AssemblyDelaySign(true)]
 
-[assembly: AssemblyFileVersion (Consts.FxVersion)]
+[assembly: AssemblyFileVersion (Consts.FxFileVersion)]
 [assembly: CompilationRelaxations (CompilationRelaxations.NoStringInterning)]
 [assembly: Dependency ("System", LoadHint.Always)]
 [assembly: SecurityRules (SecurityRuleSet.Level2, SkipVerificationInFullTrust=true)]

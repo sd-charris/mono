@@ -34,7 +34,7 @@ namespace System.Web.Util {
 
         [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
         internal static string GetFileVersion(String filename) {
-#if !FEATURE_PAL // FEATURE_PAL does not fully support FileVersionInfo
+#if !FEATURE_PAL || MONO // FEATURE_PAL does not fully support FileVersionInfo
             try {
                 FileVersionInfo ver = FileVersionInfo.GetVersionInfo(filename);
                 return string.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}",
@@ -89,12 +89,16 @@ namespace System.Web.Util {
         }
 
         internal static string EngineVersion {
-#if !FEATURE_PAL // FEATURE_PAL does not enable IIS-based hosting features
+#if !FEATURE_PAL || MONO // FEATURE_PAL does not enable IIS-based hosting features
             get {
                 if (_engineVersion == null) {
                     lock(_lock) {
                         if (_engineVersion == null)
+#if MONO
+                            _engineVersion = GetFileVersion(Assembly.GetExecutingAssembly().Location);
+#else
                             _engineVersion = GetLoadedModuleVersion(ModName.ENGINE_FULL_NAME);
+#endif
                     }
                 }
 

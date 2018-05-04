@@ -17,10 +17,6 @@
 ../../class/System.Windows.Forms/System.Resources/TypeConverterFromResXHandler.cs
 ../../class/System.Windows.Forms/System.Resources/NullRefHandler.cs
 ../../class/System.Windows.Forms/System.Resources/ResXResourceReader.cs
-../../class/System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap/SoapFormatter.cs
-../../class/System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap/SoapReader.cs
-../../class/System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap/SoapTypeMapper.cs
-../../class/System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap/SoapWriter.cs
 
 Assembly/AssemblyInfo.cs
 Assembly/ThisAssembly.cs

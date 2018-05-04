@@ -269,6 +269,7 @@ net_4_x_dirs := \
 	System.Runtime.Serialization	\
 	System.Xml.Linq			\
 	System.Data.Linq		\
+	System.Data.Entity		\
 	System.Web.Abstractions		\
 	System.Web.Routing		\
 	System.Runtime.DurableInstancing \
@@ -337,7 +338,6 @@ net_4_x_parallel_dirs := \
 	System.Reactive.Debugger \
 	System.Data.Services.Client	\
 	System.Data.Services \
-	System.Data.Entity \
 	System.Data.DataSetExtensions	\
 	System.Json.Microsoft \
 	System.Threading.Tasks.Dataflow \

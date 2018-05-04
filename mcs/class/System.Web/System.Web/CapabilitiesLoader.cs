@@ -580,6 +580,8 @@ namespace System.Web
 
 			defaultCaps.Add ("supportsxmlhttp", "False");
 
+			defaultCaps.Add ("tagwriter", "System.Web.UI.HtmlTextWriter");
+
 			defaultCaps.Add ("type", "Unknown");
 
 		}

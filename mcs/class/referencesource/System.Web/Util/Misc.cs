@@ -38,6 +38,7 @@ namespace System.Web.Util {
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.Int32.ToString(System.IFormatProvider)",
             Justification = "This is the proper culture for writing to the event log.")]
         internal static void WriteUnhandledExceptionToEventLog(AppDomain appDomain, Exception exception) {
+#if !MONO
             if (appDomain == null || exception == null) {
                 return;
             }
@@ -61,6 +62,7 @@ namespace System.Web.Util {
                     imperContext.Undo();
                 }
             }
+#endif
         }
 
         internal static void ReportUnhandledException(Exception e, String[] strings) {

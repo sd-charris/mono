@@ -1892,7 +1892,7 @@ namespace System.Web.Management {
             catch {
                 _appPath = null;
             }
-#if FEATURE_PAL // FEATURE_PAL does not fully implement Environment.MachineName
+#if (!MONO && FEATURE_PAL) // FEATURE_PAL does not fully implement Environment.MachineName
             _machineName = "dummymachinename";
 #else // FEATURE_PAL
             _machineName = GetMachineNameWithAssert();
@@ -2062,7 +2062,7 @@ namespace System.Web.Management {
 
         static WebProcessStatistics() {
             try {
-#if !FEATURE_PAL // FEATURE_PAL does not support this.  Make into a noop.
+#if (MONO || !FEATURE_PAL) // FEATURE_PAL does not support this.  Make into a noop.
                 s_startTime = Process.GetCurrentProcess().StartTime;
 #endif // !FEATURE_PAL
             }
@@ -2085,7 +2085,7 @@ namespace System.Web.Management {
 
                 if (!s_getCurrentProcFailed) {
                     Process process = Process.GetCurrentProcess();
-#if !FEATURE_PAL // FEATURE_PAL does not support these Process properties
+#if (MONO || !FEATURE_PAL) // FEATURE_PAL does not support these Process properties
 
                     s_threadCount = process.Threads.Count;
                     s_workingSet = (long)process.WorkingSet64;

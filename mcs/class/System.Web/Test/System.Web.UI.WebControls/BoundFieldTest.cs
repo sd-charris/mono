@@ -134,7 +134,7 @@ namespace MonoTests.System.Web.UI.WebControls
 			WebTest t = new WebTest ("BoundField_Bug646505.aspx");
 			t.Run ();
 
-			FormRequest fr = new FormRequest (t.Response, "form1");
+			FormRequest fr = new FormRequest ("BoundField_Bug646505.aspx", t.Response, "form1");
 			fr.Controls.Add ("__EVENTTARGET");
 			fr.Controls.Add ("__EVENTARGUMENT");
 			fr.Controls ["__EVENTTARGET"].Value = "gridView";

@@ -106,7 +106,8 @@ namespace MonoTests.SystemWeb.Framework
 			string reqUrl = Url;
 			if (QueryString != null && QueryString != string.Empty)
 				reqUrl += "?" + QueryString;
-			Uri uri = new Uri (baseUri, Url);
+			//Uri uri = new Uri (baseUri, Url);
+			Uri uri = new Uri(Url);
 			HttpWebRequest wr = (HttpWebRequest) WebRequest.Create (uri);
 			wr.UserAgent = UserAgent;
 			wr.Headers.Add (headers);

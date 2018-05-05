@@ -48,6 +48,7 @@ Globalization/IStringLocalizerProvider.cs
 Globalization/ResourceFileStringLocalizerProvider.cs
 Globalization/StringLocalizerProviders.cs
 Hosting/ApplicationMonitors.cs
+Hosting/CoreWorkerRequest.cs
 Hosting/ICustomLoaderHelperFunctions.cs
 Hosting/CustomLoaderHelper.cs
 Hosting/CustomLoaderAttribute.cs

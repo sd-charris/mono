@@ -362,21 +362,21 @@ namespace System.Web
 
 			defaultCaps.Add ("cdf", "False");
 
-			defaultCaps.Add ("clrversion", "0");
+			defaultCaps.Add ("clrversion", "4.5");
 
 			defaultCaps.Add ("cookies", "False");
 
 			defaultCaps.Add ("crawler", "False");
 
-			defaultCaps.Add ("css", "0");
+			//defaultCaps.Add ("css", "0");
 
-			defaultCaps.Add ("cssversion", "0");
+			//defaultCaps.Add ("cssversion", "0");
 
-			defaultCaps.Add ("ecmascriptversion", "0.0");
+			defaultCaps.Add ("ecmascriptversion", "3.0");
 
-			defaultCaps.Add ("frames", "False");
+			defaultCaps.Add ("frames", "Talse");
 
-			defaultCaps.Add ("iframes", "False");
+			defaultCaps.Add ("iframes", "Talse");
 
 			defaultCaps.Add ("isbanned", "False");
 
@@ -386,7 +386,9 @@ namespace System.Web
 
 			defaultCaps.Add ("javaapplets", "False");
 
-			defaultCaps.Add ("javascript", "False");
+			defaultCaps.Add ("javascript", "True");
+
+			defaultCaps.Add ("javascriptversion", "1.7");
 
 			defaultCaps.Add ("majorver", "0");
 
@@ -400,15 +402,15 @@ namespace System.Web
 
 			defaultCaps.Add ("stripper", "False");
 
-			defaultCaps.Add ("supportscss", "False");
+			defaultCaps.Add ("supportscss", "True");
 
-			defaultCaps.Add ("tables", "False");
+			defaultCaps.Add ("tables", "True");
 
 			defaultCaps.Add ("vbscript", "False");
 
 			defaultCaps.Add ("version", "0");
 
-			defaultCaps.Add ("w3cdomversion", "0.0");
+			defaultCaps.Add ("w3cdomversion", "1.0");
 
 			defaultCaps.Add ("wap", "False");
 
@@ -524,7 +526,7 @@ namespace System.Web
 
 			defaultCaps.Add ("requiresurlencodedpostfieldvalues", "False");
 
-			defaultCaps.Add ("screenbitdepth", "1");
+			defaultCaps.Add ("screenbitdepth", "8");
 
 			defaultCaps.Add ("screencharactersheight", "6");
 
@@ -542,19 +544,19 @@ namespace System.Web
 
 			defaultCaps.Add ("supportscachecontrolmetatag", "True");
 
-			defaultCaps.Add ("supportscallback", "False");
+			defaultCaps.Add ("supportscallback", "True");
 
 			defaultCaps.Add ("supportsdivalign", "True");
 
-			defaultCaps.Add ("supportsdivnowrap", "False");
+			defaultCaps.Add ("supportsdivnowrap", "True");
 
 			defaultCaps.Add ("supportsemptystringincookievalue", "False");
 
 			defaultCaps.Add ("supportsfontcolor", "True");
 
-			defaultCaps.Add ("supportsfontname", "False");
+			defaultCaps.Add ("supportsfontname", "True");
 
-			defaultCaps.Add ("supportsfontsize", "False");
+			defaultCaps.Add ("supportsfontsize", "True");
 
 			defaultCaps.Add ("supportsimagesubmit", "False");
 
@@ -578,11 +580,11 @@ namespace System.Web
 
 			defaultCaps.Add ("supportsuncheck", "True");
 
-			defaultCaps.Add ("supportsxmlhttp", "False");
+			defaultCaps.Add ("supportsxmlhttp", "True");
 
 			defaultCaps.Add ("tagwriter", "System.Web.UI.HtmlTextWriter");
 
-			defaultCaps.Add ("type", "Unknown");
+			defaultCaps.Add ("type", "Mozilla");
 
 		}
 

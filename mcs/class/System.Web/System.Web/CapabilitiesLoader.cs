@@ -374,9 +374,9 @@ namespace System.Web
 
 			defaultCaps.Add ("ecmascriptversion", "3.0");
 
-			defaultCaps.Add ("frames", "Talse");
+			defaultCaps.Add ("frames", "True");
 
-			defaultCaps.Add ("iframes", "Talse");
+			defaultCaps.Add ("iframes", "True");
 
 			defaultCaps.Add ("isbanned", "False");
 
@@ -394,7 +394,7 @@ namespace System.Web
 
 			defaultCaps.Add ("minorver", "0");
 
-			defaultCaps.Add ("msdomversion", "0.0");
+			defaultCaps.Add ("msdomversion", "0");
 
 			defaultCaps.Add ("netclr", "False");
 
@@ -410,7 +410,7 @@ namespace System.Web
 
 			defaultCaps.Add ("version", "0");
 
-			defaultCaps.Add ("w3cdomversion", "1.0");
+			defaultCaps.Add ("w3cdomversion", "4.0");
 
 			defaultCaps.Add ("wap", "False");
 

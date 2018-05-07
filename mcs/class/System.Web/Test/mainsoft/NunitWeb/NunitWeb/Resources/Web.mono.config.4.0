@@ -25,6 +25,7 @@
 				<add name="TestSiteMapProvider" type="Tests.TestSiteMapProvider" />
 			</providers>
 		</siteMap>
+		<browserCaps userAgentCacheKeyLength="64" />
 		<compilation debug="true" batch="false" numRecompilesBeforeAppRestart="100000" />
 		<httpHandlers>
 			<add path="WebResource.axd" verb="GET" type="System.Web.Handlers.AssemblyResourceLoader" validate="true" />

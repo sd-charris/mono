@@ -144,7 +144,7 @@ namespace System.Web.Configuration {
             _rule = null;
             _cachetime = TimeSpan.FromSeconds(60); // one minute default expiry
             _variables = new Hashtable();
-            _resultType = typeof(HttpCapabilitiesBase);
+            _resultType = typeof(HttpBrowserCapabilities);
         }
 
         //

@@ -47,6 +47,9 @@ RESOURCE_FILES_2 = \
 	resources/TreeView_tplus.gif \
 	resources/transparent.gif \
 	resources/webform.js \
+	resources/WebForms.js \
+	resources/SmartNav.htm \
+	resources/SmartNav.js \
 	resources/WebUIValidation_2.0.js \
 	resources/ErrorTemplateCommon_Top.html \
 	resources/DefaultErrorTemplate_CustomErrorDefault.html \

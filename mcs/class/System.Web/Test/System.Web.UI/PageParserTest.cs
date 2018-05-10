@@ -44,6 +44,7 @@ namespace MonoTests.System.Web.UI
 		
 		[Test]
 		[ExpectedException (typeof (HttpException))]
+		[Ignore("MONO REFSRC - Setting an invalid master page file doesn't throw, but acts like it's not set.")]
 		public void MissingMasterFile ()
 		{
 			string pageHtml = new WebTest ("MissingMasterFile.aspx").Run ();

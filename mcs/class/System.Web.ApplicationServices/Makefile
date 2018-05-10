@@ -3,7 +3,7 @@ SUBDIRS =
 include ../../build/rules.make
 
 LIBRARY = System.Web.ApplicationServices.dll
-LIB_REFS = System System.Configuration
+LIB_REFS = System System.Configuration System.Web
 KEYFILE = ../winfx.pub
 LIB_MCS_FLAGS = -d:SYSTEM_WEB_APPLICATIONSERVICES
 

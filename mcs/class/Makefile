@@ -241,7 +241,6 @@ net_4_x_dirs := \
 	System.Windows.Forms		\
 	$(xbuild_4_0_dirs)		\
 	Mono.Data.Sqlite		\
-	System.Web.ApplicationServices	\
 	Novell.Directory.Ldap		\
 	System.DirectoryServices	\
 	System.DirectoryServices.Protocols 	\
@@ -250,6 +249,7 @@ net_4_x_dirs := \
 	System.Web.RegularExpressions \
 	System.Web.Services		\
 	System.Web			\
+	System.Web.ApplicationServices	\
 	System.Runtime.Remoting		\
 	System.Configuration.Install 	\
 	System.Management		\

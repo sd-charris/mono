@@ -193,7 +193,7 @@ System.Web.UI.WebControls/CallBackTest.cs
 System.Web.UI.WebControls/ChangePasswordTest.cs
 System.Web.UI.WebControls/CheckBoxFieldTest.cs
 System.Web.UI.WebControls/CheckBoxListTest.cs
-#System.Web.UI.WebControls/CheckBoxTest.cs
+System.Web.UI.WebControls/CheckBoxTest.cs
 System.Web.UI.WebControls/CircleHotSpotTest.cs
 System.Web.UI.WebControls/CommandFieldTest.cs
 System.Web.UI.WebControls/CompareValidatorTest.cs

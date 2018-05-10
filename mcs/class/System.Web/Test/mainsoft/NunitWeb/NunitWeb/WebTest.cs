@@ -128,7 +128,8 @@ namespace MonoTests.SystemWeb.Framework
 			try {
 				WebTest newTestInstance = Host.Run (this);
 				CopyFrom (newTestInstance);
-			} finally {
+			} 
+			finally {
 				_unloadHandler.FinishedRequest();
 			}
 			return _response.Body;

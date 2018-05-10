@@ -152,6 +152,7 @@ TEST_RESOURCE_FILES = \
 	Test/mainsoft/NunitWebResources/CrossPagePosting2.aspx \
 	Test/mainsoft/NunitWebResources/MyDerived.master \
 	Test/mainsoft/NunitWebResources/MyPageWithDerivedMaster.aspx \
+	Test/mainsoft/NunitWebResources/MyPageWithMasterInvalidPlaceHolder.aspx \
 	Test/mainsoft/NunitWebResources/MasterTypeTest1.aspx \
 	Test/mainsoft/NunitWebResources/MasterTypeTest2.aspx \
 	Test/mainsoft/NunitWebResources/PageLifecycleTest.aspx \

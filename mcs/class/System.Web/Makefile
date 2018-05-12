@@ -363,8 +363,9 @@ ifdef STANDALONE_VERBOSE
 RUN_STANDALONE += --verbose
 endif
 
-$(build_lib): $(RESX_RES) $(RESOURCE_FILES_2) $(RESOURCE_FILES_1)
+$(build_lib): $(RESX_RES) $(RESOURCE_FILES_2) $(RESOURCE_FILES_1) copy-build-aspnet-folders
 
+copy-build-aspnet-folders:
 ifdef MONO_ASPNET_FOLDERS
 	$(MKINSTALLDIRS) $(CLASSLIB_DIR)/$(MONO_ASPNET_TEMP)
 	$(MKINSTALLDIRS) $(CLASSLIB_DIR)/$(MONO_ASPNET_CLIENTFILES)

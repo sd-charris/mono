@@ -101,7 +101,9 @@ namespace MonoTests.System.Web.Compilation {
 		[ExpectedException (typeof (HttpCompileException))]
 		public void InvalidPropertyBindTest1 ()
 		{
-			new WebTest ("InvalidPropertyBind1.aspx").Run ();
+			// test system does not property capture exceptions right now under 
+			// certain scenarios.
+			new WebTest ("InvalidPropertyBind1.aspx").Run();
 		}
 
 		[Test]

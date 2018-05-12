@@ -247,6 +247,14 @@ endif
 
 TXT_RESOURCE_STRINGS = ../referencesource/System.Web/System.Web.txt
 
+MONO_ASPNET_TEMP = mono-aspnet-temp 
+MONO_ASPNET_CLIENTFILES = asp.netclientfiles 
+MONO_ASPNET_CLIENTFILES_DATA = \
+	resources/SmartNav.htm \
+	resources/SmartNav.js \
+	resources/WebForms.js \
+	resources/WebUIValidation.js
+
 LIB_REFS = mscorlib System System.Core System.Drawing System.Data System.DirectoryServices System.DirectoryServices.Protocols System.Xml System.EnterpriseServices \
 	System.Runtime.Serialization.Formatters.Soap System.Web.Services System.Design \
 	System.Runtime.Caching System.Security System.Web.RegularExpressions System.ComponentModel.DataAnnotations System.Web.ApplicationServices System.Configuration Microsoft.Build Microsoft.Build.Framework Microsoft.Build.Utilities.v4.0 Microsoft.Build.Tasks.v4.0 Mono.Data.Sqlite
@@ -261,7 +269,9 @@ LIB_MCS_FLAGS = \
 
 #all-local: System.Web/UplevelHelper.cs 
 
-TEST_LIB_REFS = SystemWebTestShim
+TEST_LIB_REFS = SystemWebTestShim mscorlib System System.Core System.Drawing System.Data System.DirectoryServices System.DirectoryServices.Protocols System.Xml System.EnterpriseServices \
+	System.Runtime.Serialization.Formatters.Soap System.Web.Services System.Design \
+	System.Runtime.Caching System.Security System.Web.RegularExpressions System.ComponentModel.DataAnnotations System.Web.ApplicationServices System.Configuration Microsoft.Build Microsoft.Build.Framework Microsoft.Build.Utilities.v4.0 Microsoft.Build.Tasks.v4.0 Mono.Data.Sqlite
 TEST_MCS_FLAGS = $(LIB_MCS_FLAGS) -doc:$(test_lib:.dll=.xml) -nowarn:219,169,1591 \
 	$(NUNIT_RESOURCE_FILES:%=/resource:%) \
 	$(foreach file,$(NUNIT_APP_CODE_FILES),$(shell echo $(file) | sed -e 's;\(.*\)/\(.*\);/resource:\1/\2,App_Code/\2 ;g')) \
@@ -355,6 +365,12 @@ endif
 
 $(build_lib): $(RESX_RES) $(RESOURCE_FILES_2) $(RESOURCE_FILES_1)
 
+ifdef MONO_ASPNET_FOLDERS
+	$(MKINSTALLDIRS) $(CLASSLIB_DIR)/$(MONO_ASPNET_TEMP)
+	$(MKINSTALLDIRS) $(CLASSLIB_DIR)/$(MONO_ASPNET_CLIENTFILES)
+	$(INSTALL) $(MONO_ASPNET_CLIENTFILES_DATA) $(CLASSLIB_DIR)/$(MONO_ASPNET_CLIENTFILES)
+endif
+
 $(RESX_RES): %.resources: %.resx
 	$(RESGEN) `echo $< | $(PLATFORM_CHANGE_SEPARATOR_CMD)`
 
@@ -411,6 +427,13 @@ $(STANDALONE_RUNNER_SUPPORT_ASSEMBLY):
 
 Test/standalone-tests/Consts.cs: Test/standalone-tests/Consts.cs.in
 	@sed 's,@SystemWebClassDir@,$(shell pwd),' $< > $@
+
+install-local:
+ifdef MONO_ASPNET_FOLDERS
+	$(MKINSTALLDIRS) $(DESTDIR)$(mono_libdir)/mono/$(FRAMEWORK_VERSION)/$(MONO_ASPNET_TEMP)
+	$(MKINSTALLDIRS) $(DESTDIR)$(mono_libdir)/mono/$(FRAMEWORK_VERSION)/$(MONO_ASPNET_CLIENTFILES)
+	$(INSTALL) $(MONO_ASPNET_CLIENTFILES_DATA) $(DESTDIR)$(mono_libdir)/mono/$(FRAMEWORK_VERSION)/$(MONO_ASPNET_CLIENTFILES)
+endif
 
 clean-local:
 ifdef STANDALONE_TEST_COMPILABLE_TESTS

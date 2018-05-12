@@ -76,8 +76,12 @@ namespace System.Web {
 
         private static string DirectorySeparatorString = new string(Path.DirectorySeparatorChar, 1);
         private static string DoubleDirectorySeparatorString = new string(Path.DirectorySeparatorChar, 2);
-        private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
 
+#if MONO 
+        private static char[] s_InvalidPhysicalPathChars = Path.GetInvalidPathChars();
+#else
+        private static char[] s_InvalidPhysicalPathChars = { '/', '?', '*', '<', '>', '|', '"' };
+#endif
 
 
 #if OLD

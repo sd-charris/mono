@@ -141,9 +141,12 @@ namespace MonoTests.System.Web.Hosting {
 		}
 
 		[Test]
+		[ExpectedException (typeof (HttpException))]
 		public void CombineVirtualPaths1 ()
 		{
 			DummyVPP dummy = new DummyVPP ();
+
+			// can't combine base and relative if they are both roots. 
 			Assert.AreEqual ("/otherroot", dummy.CombineVirtualPaths ("/root", "/otherroot"));
 		}
 

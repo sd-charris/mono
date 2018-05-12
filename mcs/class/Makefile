@@ -248,8 +248,8 @@ net_4_x_dirs := \
 	System.Design			\
 	System.Web.RegularExpressions \
 	System.Web.Services		\
-	System.Web			\
 	System.Web.ApplicationServices	\
+	System.Web			\
 	System.Runtime.Remoting		\
 	System.Configuration.Install 	\
 	System.Management		\

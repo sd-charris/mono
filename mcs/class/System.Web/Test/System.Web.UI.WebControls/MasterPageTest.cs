@@ -141,11 +141,9 @@ namespace MonoTests.System.Web.UI.WebControls
 		}
 
 		// Bug #325114
-		//
-		// For whatever reason, this does not throw an httpexception.  The response is just 
-		// what *was* an HTTP Exception 
 		[Test]
 		[Category ("NunitWeb")]
+		[ExpectedException(typeof(HttpException))]
 		public void MasterPage_ContentPlaceHolder_Not_Found ()
 		{
 			Render_Helper (StandardUrl.PAGE_WITH_MASTER_INVALID_PLACE_HOLDER);

@@ -569,7 +569,6 @@ namespace MonoTests.SystemWeb.Framework
 			
 			CopyResource (myself, "My.ashx", "My.ashx");
 			CopyResource (myself, "Global.asax", "global.asax");
-			//CopyResource (myself, "Global.asax.cs", "Global.asax.cs");
 			CopyResource (myself, "MyPage.aspx", "MyPage.aspx");
 			CopyResource (myself, "MyPage.aspx.cs", "MyPage.aspx.cs");
 			CopyResource (myself, "MyPageWithMaster.aspx", "MyPageWithMaster.aspx");

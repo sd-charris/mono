@@ -38,7 +38,7 @@ namespace MonoTests.System.Web.Security
 			Assert.IsFalse (FormsAuthentication.RequireSSL, "RequireSSL");
 			Assert.IsTrue (FormsAuthentication.SlidingExpiration, "SlidingExpiration");
 			// MSDN: The default is an empty string ("") but null.
-			Assert.AreEqual ("", FormsAuthentication.CookieDomain, "CookieDomain");
+			Assert.AreEqual (true, String.IsNullOrEmpty(FormsAuthentication.CookieDomain), "CookieDomain");
 			Assert.AreEqual (HttpCookieMode.UseDeviceProfile, FormsAuthentication.CookieMode, "CookieMode");
 			Assert.IsTrue (FormsAuthentication.CookiesSupported, "CookiesSupported");
 			Assert.AreEqual ("/NunitWeb/default.aspx", FormsAuthentication.DefaultUrl);

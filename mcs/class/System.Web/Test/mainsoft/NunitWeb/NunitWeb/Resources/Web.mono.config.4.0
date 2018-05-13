@@ -20,6 +20,7 @@
 	</CustomTags>
 	
 	<system.web>
+		<customErrors mode="On" defaultRedirect="error.htm" />
 		<siteMap enabled="true">
 			<providers>
 				<add name="TestSiteMapProvider" type="Tests.TestSiteMapProvider" />

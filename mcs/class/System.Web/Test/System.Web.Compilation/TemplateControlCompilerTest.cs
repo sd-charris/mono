@@ -217,11 +217,10 @@ namespace MonoTests.System.Web.Compilation {
 		}
 
 		[Test (Description="Bug #524358")]
+		[ExpectedException (typeof (HttpException))]
 		public void DuplicateControlsInClientComment ()
 		{
-			// Just test if it throws an exception
-			string pageHtml = new WebTest ("DuplicateControlsInClientComment.aspx").Run ();
-			Assert.IsTrue (pageHtml.IndexOf ("[HttpParseException]:") != -1, "#A1");
+			new WebTest ("DuplicateControlsInClientComment.aspx").Run ();
 		}
 
 		[Test (Description="Bug #367723")]
@@ -315,12 +314,7 @@ comment end -->";
 		[Test]
 		public void ChildTemplatesTest ()
 		{
-			try {
-				WebTest.Host.AppDomain.AssemblyResolve += new ResolveEventHandler (ResolveAssemblyHandler);
-				new WebTest ("TemplateControlParsingTest.aspx").Run ();
-			} finally {
-				WebTest.Host.AppDomain.AssemblyResolve -= new ResolveEventHandler (ResolveAssemblyHandler);
-			}
+			new WebTest ("TemplateControlParsingTest.aspx").Run ();
 		}
 		
 		[TestFixtureTearDown]

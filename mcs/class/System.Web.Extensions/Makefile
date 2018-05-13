@@ -28,6 +28,11 @@ RESOURCE_FILES_DIST= \
 	Resources/MicrosoftAjaxExtension.js \
 	Resources/MicrosoftAjaxWebFormsExtension.js
 
+RESOURCE_DEFS = \
+	System.Web.Resources.AtlasWeb,Resources/System.Web.Resources.AtlasWeb.resx \
+	System.Web.Resources.ScriptLibrary.Res.debug,Resources/System.Web.Resources.ScriptLibrary.Res.debug.resx \
+	System.Web.Resources.ScriptLibrary.Res,Resources/System.Web.Resources.ScriptLibrary.Res.resx
+
 NUNIT_RESOURCE_FILES= \
 	Test/resources/Web.mono.config \
 	Test/resources/profile.config.4.x \

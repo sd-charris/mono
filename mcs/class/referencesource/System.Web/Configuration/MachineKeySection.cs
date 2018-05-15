@@ -317,9 +317,6 @@ namespace System.Web.Configuration
 
                 if( appName == null )
                 {
-#if !FEATURE_PAL // FEATURE_PAL does not enable cryptography
-			// FEATURE_PAL 
-
                     appName = System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName;
 
                     if( ValidationKey.Contains( "AutoGenerate" ) ||
@@ -331,7 +328,6 @@ namespace System.Web.Configuration
                         // Gernerate random keys
                         RandomNumberGenerator.GetBytes(bKeysRandom);
                     }
-#endif // !FEATURE_PAL
                 }
 
                 bool fAppIdSpecific = System.Web.Util.StringUtil.StringEndsWith(strKey, ",IsolateByAppId");

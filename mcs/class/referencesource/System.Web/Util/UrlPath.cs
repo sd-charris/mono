@@ -118,6 +118,7 @@ internal static class UrlPath {
     }
 
     internal static bool IsAbsolutePhysicalPath(string path) {
+        /* 
         if (path == null || path.Length < 3)
             return false;
         
@@ -126,6 +127,16 @@ internal static class UrlPath {
             && (Path.GetPathRoot(path).Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))) {
             return true;
         }
+
+        // e.g \\server\share\foo or //server/share/foo
+        return IsUncSharePath(path);
+        */
+        if (path == null || path.Length < 3)
+            return false;
+
+        // e.g c:\foo
+        if (path[1] == ':' && IsDirectorySeparatorChar(path[2]))
+            return true;
 
         // e.g \\server\share\foo or //server/share/foo
         return IsUncSharePath(path);

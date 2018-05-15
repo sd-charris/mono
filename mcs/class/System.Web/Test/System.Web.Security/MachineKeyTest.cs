@@ -43,13 +43,11 @@ namespace MonoTests.System.Web.Security
 		// TODO: Find out why the difference in result sizes exists between .NET and Mono
 		public void Encode ()
 		{
-#if DOT_NET
+			// NOTE - I have NO idea what to expect here...
+			// Need some expertise.
+			
 			const int ALL_EXPECTED_SIZE = 192;
 			const int ENCRYPTION_EXPECTED_SIZE = 128;
-#else
-			const int ALL_EXPECTED_SIZE = 128;
-			const int ENCRYPTION_EXPECTED_SIZE = 64;
-#endif
 			const int VALIDATION_EXPECTED_SIZE = 64;
 			
 			Assert.Throws<ArgumentNullException> (() => {

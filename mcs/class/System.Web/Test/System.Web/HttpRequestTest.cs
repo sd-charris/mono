@@ -820,7 +820,7 @@ namespace MonoTests.System.Web {
 			Assert.AreEqual ("http://www.mono-project.com/test.aspx", c.Request.UrlReferrer.ToString (), "REF1");
 
 			c = Cook (33);
-			Assert.AreEqual (null, c.Request.UrlReferrer, "REF1");			
+			Assert.AreEqual ("http://localhost:2020/x", c.Request.UrlReferrer.ToString(), "REF1");			
 		}
 		
 

@@ -658,10 +658,6 @@ namespace System.Web.Configuration
             int bytesWritten = 0;
             byte[] iv = new byte[ivLength];
 
-#if (MONO || FEATURE_PAL)
-            SHA1Managed shaMan = new SHA1Managed();
-#endif
-
             // get SHA1 hash of the buffer and copy to the IV.
             // if hash length is less than IV length, re-hash the hash and
             // append until IV is full.
@@ -671,7 +667,8 @@ namespace System.Web.Configuration
                 byte[] newHash;
 
 #if (MONO || FEATURE_PAL)
-                newHash = shaMan.ComputeHash(hash);
+                var hashAlgo = GetHashAlgorithmFromHashSize(_HashSize);
+                newHash = hashAlgo.ComputeHash(hash);
 #else
                 newHash = new byte[_HashSize];
                 int hr = UnsafeNativeMethods.GetSHA1Hash(hash, hash.Length, newHash, newHash.Length);
@@ -703,8 +700,8 @@ namespace System.Web.Configuration
             if (validationKey.Length > _AutoGenValidationKeySize)
             {
 #if (MONO || FEATURE_PAL)
-                SHA1Managed shaMan = new SHA1Managed();
-                key = shaMan.ComputeHash(validationKey);
+                var hashAlgo = GetHashAlgorithmFromHashSize(_HashSize);
+                key = hashAlgo.ComputeHash(validationKey);
 #else
                 key = new byte[_HashSize];
                 int hr = UnsafeNativeMethods.GetSHA1Hash(validationKey, validationKey.Length, key, key.Length);
@@ -736,7 +733,7 @@ namespace System.Web.Configuration
 
 #if (MONO || FEATURE_PAL)
             // ** This needs some help - may not be doing the right thing.
-            HMACSHA1 hmac = new HMACSHA1(s_outer);
+            HashAlgorithm hmac = GetHashAlgorithmFromHashSize (_HashSize);
 
             try 
             {
@@ -762,6 +759,32 @@ namespace System.Web.Configuration
             _UseHMACSHA = false;
             return null;
         }
+
+#if (MONO || FEATURE_PAL)
+        static HashAlgorithm GetHashAlgorithmFromHashSize(int size)
+        {
+            switch(size)
+            {
+                case HMACSHA256_HASH_SIZE:
+                    return new HMACSHA256();
+                    break;
+                case HMACSHA384_HASH_SIZE:
+                    return new HMACSHA384();
+                    break;
+                case HMACSHA512_HASH_SIZE:
+                    return new HMACSHA512();
+                    break;
+                case SHA1_HASH_SIZE:
+                    return SHA1.Create();
+                    break;
+                case MD5_HASH_SIZE:
+                    return MD5.Create();
+                    break;
+                default:
+                    throw new NotSupportedException ($"Can't map hash size to algorithm: {size}.");
+            }
+        }
+#endif
 
         [Obsolete(OBSOLETE_CRYPTO_API_MESSAGE)]
         internal static string HashAndBase64EncodeString(string s)
@@ -1265,8 +1288,13 @@ namespace System.Web.Configuration
                 return hashAlgo.ComputeHash(bAll);
             } else {
                 byte[] newHash = new byte[MD5_HASH_SIZE];
+#if (MONO || FEATURE_PAL)
+                var newHashAlgo = GetHashAlgorithmFromHashSize(newHash.Length);
+                newHash = newHashAlgo.ComputeHash(bAll);
+#else
                 int hr = UnsafeNativeMethods.GetSHA1Hash(bAll, bAll.Length, newHash, newHash.Length);
                 Marshal.ThrowExceptionForHR(hr);
+#endif
                 return newHash;
             }
         }

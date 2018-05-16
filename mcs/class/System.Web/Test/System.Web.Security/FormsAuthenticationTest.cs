@@ -101,11 +101,12 @@ namespace MonoTests.System.Web.Security
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void HashPasswordForStoringInConfigFile_SHA256 ()
 		{
-			FormsAuthentication.HashPasswordForStoringInConfigFile ("mono", "SHA256");
+			string s = FormsAuthentication.HashPasswordForStoringInConfigFile ("mono", "SHA256");
+			Assert.AreEqual("D7DE34B17B4691AA77AB8C17AFDD440B004BC87D5D9AB991A8296D032FADB867", s);
 		}
+
 		[Test]
 		[ExpectedException (typeof (NullReferenceException))]
 		public void RedirectToLoginPage ()

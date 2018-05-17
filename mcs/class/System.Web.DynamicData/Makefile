@@ -3,9 +3,23 @@ SUBDIRS =
 include ../../build/rules.make
 
 LIBRARY = System.Web.DynamicData.dll
-LIB_REFS = System System.Core System.ComponentModel.DataAnnotations System.Data System.Data.Linq System.Drawing System.Web System.Web.Extensions System.Web.Abstractions System.Web.Routing
+
+OTHER_RES = \
+	resources/System.Web.DynamicData.DynamicControl.bmp \
+	resources/System.Web.DynamicData.DynamicDataManager.bmp \
+	resources/System.Web.DynamicData.DynamicEntity.bmp \
+	resources/System.Web.DynamicData.DynamicHyperLink.bmp \
+	resources/System.Web.DynamicData.DynamicValidator.bmp \
+
+RESOURCE_DEFS = \
+	System.Web.Resources.DynamicDataResources,resources/System.Web.Resources.DynamicDataResources.resx
+
+
+LIB_REFS = System System.Core System.ComponentModel.DataAnnotations System.Data System.Data.Entity \
+	System.Data.Linq System.Drawing System.Web System.Web.Extensions System.Web.Entity System.Xml.Linq
 KEYFILE = ../winfx.pub
-LIB_MCS_FLAGS =
+LIB_MCS_FLAGS = \
+	$(OTHER_RES:%=/resource:%)
 
 ifeq (4, $(FRAMEWORK_VERSION_MAJOR))
 LIB_REFS += System.Web.ApplicationServices

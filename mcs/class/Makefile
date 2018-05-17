@@ -301,7 +301,8 @@ net_4_x_dirs := \
 	System.Net.Http.Formatting \
 	System.Web.Http \
 	System.Web.Http.SelfHost \
-	System.Web.Http.WebHost
+	System.Web.Http.WebHost \
+	System.Web.Mobile
 
 # These are the subdirs which depends on libs in net_4_x_dirs
 # or have proper dependencies between each other
@@ -349,7 +350,6 @@ net_4_x_parallel_dirs := \
 	WebMatrix.Data \
 	monodoc	\
 	System.Deployment \
-	System.Web.Mobile \
 	System.Workflow.Activities \
 	System.Workflow.ComponentModel \
 	System.Workflow.Runtime \

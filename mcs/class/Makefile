@@ -289,6 +289,7 @@ net_4_x_dirs := \
 	System.Web.Extensions.Design	\
 	System.Web.Entity			\
 	System.Web.DynamicData		\
+	System.Web.DataVisualization \
 	Microsoft.Web.Infrastructure \
 	System.ServiceModel.Web \
 	System.Net.Http	\

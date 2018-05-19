@@ -47,7 +47,7 @@ mainsoft/NunitWeb/NunitWeb/Tests/Author.cs
 mainsoft/NunitWeb/NunitWeb/Tests/AuthorConverter.cs
 mainsoft/NunitWeb/NunitWeb/Tests/Book.cs
 mainsoft/NunitWeb/NunitWeb/Tests/BookType.cs
-#System.Web/AppBrowsersTest.cs
+System.Web/AppBrowsersTest.cs
 System.Web/EventHandlerTaskAsyncHelperTest.cs
 System.Web/HttpApplicationTest.cs
 System.Web/HttpBrowserCapabilitiesTest.cs
@@ -64,9 +64,9 @@ System.Web/HttpRuntimeTest.cs
 System.Web/HttpServerUtilityTest.cs
 System.Web/HttpTaskAsyncHandlerTest.cs
 System.Web/HttpUtilityTest.cs
-#System.Web/SiteMapProviderTest.cs
-#System.Web/SiteMapNodeTest.cs
-#System.Web/StaticSiteMapProviderTest.cs
+System.Web/SiteMapProviderTest.cs
+System.Web/SiteMapNodeTest.cs
+System.Web/StaticSiteMapProviderTest.cs
 System.Web/TaskAsyncResultTest.cs
 System.Web/TraceContextRecordTest.cs
 System.Web.Compilation/BuildManagerTest.cs
@@ -74,7 +74,7 @@ System.Web.Compilation/ClientBuildManagerParameterTest.cs
 System.Web.Compilation/TemplateControlCompilerTest.cs
 System.Web.Compilation/AppSettingsExpressionBuilderTest.cs
 System.Web.Compilation/AppResourcesCompilerTest.cs
-#System.Web.Compilation/RouteUrlExpressionBuilderTest.cs
+System.Web.Compilation/RouteUrlExpressionBuilderTest.cs
 System.Web.Compilation/BuildProviderTest.cs
 System.Web.Configuration/AnonymousIdentificationSectionTest.cs
 System.Web.Configuration/AssemblyCollectionTest.cs
@@ -119,7 +119,7 @@ System.Web.UI/AttributeCollectionTest.cs
 System.Web.UI/ChtmlTextWriterTest.cs
 System.Web.UI/CleanHtmlTextWriter.cs
 System.Web.UI/ClientScriptManagerTest.cs
-#System.Web.UI/ControlTest.cs
+System.Web.UI/ControlTest.cs
 System.Web.UI/ControlCollectionTest.cs
 System.Web.UI/DataKeyPropertyAttributeTest.cs
 System.Web.UI/CssStyleCollectionTest.cs
@@ -127,7 +127,7 @@ System.Web.UI/DataBindingCollectionTest.cs
 System.Web.UI/DataBindingHandlerAttributeTest.cs
 System.Web.UI/DataSourceCacheDurationConverterTest.cs
 System.Web.UI/LiteralControlTest.cs
-#System.Web.UI.Adapters/ControlAdapterTest.cs
+System.Web.UI.Adapters/ControlAdapterTest.cs
 #System.Web.UI.Adapters/PageAdapterTest.cs
 System.Web.UI.HtmlControls/HtmlAnchorTest.cs
 System.Web.UI.HtmlControls/HtmlButtonTest.cs

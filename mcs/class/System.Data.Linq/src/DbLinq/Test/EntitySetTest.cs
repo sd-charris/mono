@@ -339,15 +339,13 @@ namespace DbLinqTest
             Assert.IsTrue(people.HasLoadedOrAssignedValues);
             Assert.AreEqual(1, people.Count);
             Assert.IsFalse(people.IsDeferred);
-            // WTF?!
-            Assert.IsFalse(changed);
+            Assert.IsTrue(changed);
 
             changed = false;
             people.Add(new Person { FirstName = "1", LastName = "2" });
             Assert.IsTrue(people.HasLoadedOrAssignedValues);
             Assert.AreEqual(2, people.Count);
-            // WTF?!
-            Assert.IsFalse(changed);
+            Assert.IsTrue(changed);
 
 
             changed = false;

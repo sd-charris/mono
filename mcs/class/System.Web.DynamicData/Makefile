@@ -100,6 +100,7 @@ TEST_RESOURCE_FILES = \
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Char.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Char.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Collections.Generic.List\`1[System.String].ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Collections.Generic.List\`1[System.String].ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Collections.Generic.List\`1[System.String].ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Collections.Generic.List\`1[System.String].ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Collections.Generic.List\`2[System.String].ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Collections.Generic.List\`2[System.String].ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Collections.ICollection.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Collections.ICollection.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Collections.ICollection.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Collections.ICollection.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int16.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int16.ascx	\
@@ -143,7 +144,7 @@ TEST_RESOURCE_FILES = \
 	Test/WebPages/DynamicData/PageTemplates/ListDetails.aspx,MonoTests.WebPages.DynamicData.PageTemplates.ListDetails.aspx	\
 	Test/WebPages/DynamicData/PageTemplates/ListDetails.aspx.cs,MonoTests.WebPages.DynamicData.PageTemplates.ListDetails.aspx.cs	\
 	Test/WebPages/DynamicData/web.config,MonoTests.WebPages.DynamicData.web.config	\
-	Test/WebPages/Global.asax,MonoTests.WebPages.Global.asax	\
+	Test/WebPages/global.asax,MonoTests.WebPages.Global.asax	\
 	Test/WebPages/ListView_DynamicControl_01.aspx,MonoTests.WebPages.ListView_DynamicControl_01.aspx	\
 	Test/WebPages/ListView_DynamicControl_01.aspx.cs,MonoTests.WebPages.ListView_DynamicControl_01.aspx.cs	\
 	Test/WebPages/ListView_DynamicControl_02.aspx,MonoTests.WebPages.ListView_DynamicControl_02.aspx	\

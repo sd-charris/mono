@@ -443,7 +443,7 @@ System.Web.UI.HtmlControls/HtmlAnchorCas.cs
 System.Web.UI.HtmlControls/HtmlButtonCas.cs
 System.Web.UI.HtmlControls/HtmlContainerControlCas.cs
 System.Web.UI.HtmlControls/HtmlEmptyTagControlBuilderCas.cs
-#System.Web.UI.HtmlControls/HtmlFormCas.cs
+System.Web.UI.HtmlControls/HtmlFormCas.cs
 System.Web.UI.HtmlControls/HtmlGenericControlCas.cs
 System.Web.UI.HtmlControls/HtmlHeadBuilderCas.cs
 System.Web.UI.HtmlControls/HtmlHeadCas.cs

@@ -1020,7 +1020,7 @@ namespace MonoTests.System.Web.DynamicData
 			MetaColumn mc = t.GetColumn ("Char_Column");
 			Assert.IsNotNull (mc, "#A1");
 			Assert.AreEqual (typeof (char), mc.ColumnType, "#A1-1");
-			Assert.AreEqual (TypeCode.Object, mc.TypeCode, "#A1-2");
+			Assert.AreEqual (TypeCode.Char, mc.TypeCode, "#A1-2");
 
 			mc = t.GetColumn ("String_Column");
 			Assert.IsNotNull (mc, "#B1");

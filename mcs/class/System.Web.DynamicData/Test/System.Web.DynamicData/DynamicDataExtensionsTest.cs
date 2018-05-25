@@ -76,14 +76,6 @@ namespace MonoTests.System.Web.DynamicData
 		}
 
 		[Test]
-		public void DynamicDataExtensions_GetTable_Test ()
-		{
-			IDynamicDataSource dds = null;
-
-			dds.GetTable ();
-		}
-
-		[Test]
 		[ExpectedException (typeof (InvalidOperationException))]
 		public void DynamicDataExtensions_GetTable_Test2()
 		{

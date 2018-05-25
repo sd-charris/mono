@@ -9,6 +9,7 @@ namespace System.Web.DynamicData.Util
     public static string GetLocalizedString(ValidationAttribute attribute, string displayName)
     {
       string str = (string) null;
+
       if (StringLocalizerUtil.UseStringLocalizerProvider(attribute))
       {
         if (attribute is RangeAttribute)
@@ -39,6 +40,7 @@ namespace System.Web.DynamicData.Util
         else
           str = StringLocalizerUtil.GetLocalizedString(attribute.ErrorMessage);
       }
+
       return str ?? attribute.FormatErrorMessage(displayName);
     }
 
@@ -46,6 +48,7 @@ namespace System.Web.DynamicData.Util
     {
       if (!string.IsNullOrEmpty(attribute.ErrorMessage) && string.IsNullOrEmpty(attribute.ErrorMessageResourceName))
         return attribute.ErrorMessageResourceType == (Type) null;
+      
       return false;
     }
 

@@ -280,11 +280,10 @@ namespace MonoTests.System.Web.DynamicData
 			var ftf = new FieldTemplateFactory ();
 
 			// And here we go again...
-			Assert.Throws<NullReferenceException> (() => {
+			Assert.Throws<ArgumentNullException> (() => {
 				ftf.GetFieldTemplateVirtualPath (null, DataBoundControlMode.ReadOnly, "Integer.ascx");
 			}, "#A1");
 
-#if TARGET_DOTNET
 			// ...and again
 			Assert.Throws<NullReferenceException> (() => {
 				ftf.GetFieldTemplateVirtualPath (mc, DataBoundControlMode.ReadOnly, null);
@@ -299,7 +298,6 @@ namespace MonoTests.System.Web.DynamicData
 			Assert.Throws<NullReferenceException> (() => {
 				ftf.GetFieldTemplateVirtualPath (mc, DataBoundControlMode.ReadOnly, "NoSuchTemplate");
 			}, "#A4");
-#endif
 		}
 
 		[Test]
@@ -601,7 +599,7 @@ namespace MonoTests.System.Web.DynamicData
 			ftf.Initialize (m);
 
 			// Ugh...
-			Assert.Throws<NullReferenceException> (() => {
+			Assert.Throws<ArgumentNullException> (() => {
 				ftf.GetFieldTemplateVirtualPath (null, DataBoundControlMode.ReadOnly, "Integer.ascx");
 			}, "#A1");
 
@@ -913,7 +911,7 @@ namespace MonoTests.System.Web.DynamicData
 			var ftf = new FieldTemplateFactory ();
 			ftf.Initialize (m);
 
-			Assert.Throws<NullReferenceException> (() => {
+			Assert.Throws<ArgumentNullException> (() => {
 				ftf.PreprocessMode (null, DataBoundControlMode.ReadOnly);
 			}, "#A1");
 

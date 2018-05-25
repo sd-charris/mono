@@ -128,15 +128,18 @@ internal class FileUtil {
     }
 
     private static int _maxPathLength = 259;
+
     // If the path is longer than the maximum length
     // Trim the end and append the hashcode to it.
     internal static String TruncatePathIfNeeded(string path, int reservedLength) {
-        int maxPathLength = _maxPathLength - reservedLength;
-        if (path.Length > maxPathLength) {
-            // 
+        if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX) {
+            int maxPathLength = _maxPathLength - reservedLength;
+            if (path.Length > maxPathLength) {
+                // 
 
-            path = path.Substring(0, maxPathLength - 13) +
-                path.GetHashCode().ToString(CultureInfo.InvariantCulture);
+                path = path.Substring(0, maxPathLength - 13) +
+                    path.GetHashCode().ToString(CultureInfo.InvariantCulture);
+            }
         }
 
         return path;
@@ -232,18 +235,34 @@ internal class FileUtil {
     static internal bool IsSuspiciousPhysicalPath(string physicalPath, out bool pathTooLong) {
         bool isSuspicious;
 
+
         // DevDiv 340712: GetConfigPathData generates n^2 exceptions where n is number of incorrectly placed '/'
         // Explicitly prevent frequent exception cases since this method is called a few times per url segment
-        if ((physicalPath != null) &&
-             (physicalPath.Length > _maxPathLength ||
-             physicalPath.IndexOfAny(s_invalidPathChars) != -1 ||
-             // Contains ':' at any position other than 2nd char
-             (physicalPath.Length > 0 && physicalPath[0] == ':') ||
-             (physicalPath.Length > 2 && physicalPath.IndexOf(':', 2) > 0))) {
+        if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX) {        
+            if ((physicalPath != null) &&
+                (physicalPath.Length > _maxPathLength ||
+                physicalPath.IndexOfAny(s_invalidPathChars) != -1 ||
+                // Contains ':' at any position other than 2nd char
+                (physicalPath.Length > 0 && physicalPath[0] == ':') ||
+                (physicalPath.Length > 2 && physicalPath.IndexOf(':', 2) > 0))) {
 
-            // see comment below
-            pathTooLong = true;
-            return true;
+                // see comment below
+                pathTooLong = true;
+                return true;
+            }
+        }
+        else {
+            // preserve the original check, but just take out the maxPathLength
+            if ((physicalPath != null) &&
+                (physicalPath.IndexOfAny(s_invalidPathChars) != -1 ||
+                // Contains ':' at any position other than 2nd char
+                (physicalPath.Length > 0 && physicalPath[0] == ':') ||
+                (physicalPath.Length > 2 && physicalPath.IndexOf(':', 2) > 0))) {
+
+                // see comment below
+                pathTooLong = true;
+                return true;
+            }
         }
 
         try {

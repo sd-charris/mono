@@ -741,9 +741,14 @@ namespace System.Web.Caching {
 
         // Timer callback function.
         static void PollCallback(object state) {
+#if (MONO || FEATURE_PAL)
+            PollDatabaseForChanges((DatabaseNotifState)state, true /*fromTimer*/);
+#else
             using (new ApplicationImpersonationContext()) {
                 PollDatabaseForChanges((DatabaseNotifState)state, true /*fromTimer*/);
+
             }
+#endif
         }
 
         // Query all the entries from the AspNet_SqlCacheTablesForChangeNotification 
@@ -1133,6 +1138,16 @@ namespace System.Web.Caching {
         // Do a on-demand polling of the database in order to obtain the latest
         // data.
         internal static void UpdateDatabaseNotifState(string database) {
+#if (MONO || FEATURE_PAL)
+            System.Web.Util.Debug.Trace("SqlCacheDependencyManager", "UpdateDatabaseNotifState called for database " + database +
+                "; running as " + WindowsIdentity.GetCurrent().Name);
+
+            // Make sure we have initialized the polling of this database
+            InitPolling(database);
+            System.Web.Util.Debug.Assert(s_DatabaseNotifStates[database] != null, "s_DatabaseNotifStates[database] != null");
+
+            PollDatabaseForChanges((DatabaseNotifState)s_DatabaseNotifStates[database], false /*fromTimer*/);
+#else
             using (new ApplicationImpersonationContext()) {
                 System.Web.Util.Debug.Trace("SqlCacheDependencyManager", "UpdateDatabaseNotifState called for database " + database +
                     "; running as " + WindowsIdentity.GetCurrent().Name);
@@ -1143,6 +1158,7 @@ namespace System.Web.Caching {
 
                 PollDatabaseForChanges((DatabaseNotifState)s_DatabaseNotifStates[database], false /*fromTimer*/);
             }
+#endif
         }
 
         // Update all initialized databases

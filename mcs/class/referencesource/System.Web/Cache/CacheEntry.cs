@@ -280,9 +280,13 @@ namespace System.Web.Caching {
                 try {
                     // for public need to impersonate if called outside of request context
                     if (HttpContext.Current == null) {
+#if (MONO || FEATURE_PAL)
+                        callback(_key, _value, reason);
+#else
                         using (new ApplicationImpersonationContext()) {
                             callback(_key, _value, reason);
                         }
+#endif
                     }
                     else {
                         callback(_key, _value, reason);
@@ -302,9 +306,13 @@ namespace System.Web.Caching {
             else {
                 // for private items just make the call and eat any exceptions
                 try {
+#if (MONO || FEATURE_PAL)
+                    callback(_key, _value, reason);
+#else
                     using (new ApplicationImpersonationContext()) {
                         callback(_key, _value, reason);
                     }
+#endif
                 }
                 catch {
                 }

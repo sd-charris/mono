@@ -181,7 +181,7 @@ namespace MonoTests.Common
 			"Object.ascx.cs",
 			"Byte[].ascx",
 			"Byte[].ascx.cs",
-			"FooEmpty.ascx",
+			"MonoTests.Common.FooEmpty.ascx",
 			"FooEmpty.ascx.cs",
 			"ICollection.ascx",
 			"ICollection.ascx.cs",
@@ -189,7 +189,7 @@ namespace MonoTests.Common
 
 		public static readonly List<FieldTemplateTestDescription> FieldTemplateNonDefaultShortColumns = new List<FieldTemplateTestDescription> ()
 		{
-			new FieldTemplateTestDescription ("FooEmpty_Column", "~/DynamicData/FieldTemplates/FooEmpty.ascx"),
+			new FieldTemplateTestDescription ("FooEmpty_Column", "~/DynamicData/FieldTemplates/MonoTests.Common.FooEmpty.ascx"),
 			new FieldTemplateTestDescription ("Char_Column", "~/DynamicData/FieldTemplates/Char.ascx"),
 			new FieldTemplateTestDescription ("Byte_Column", "~/DynamicData/FieldTemplates/Byte.ascx"),
 			new FieldTemplateTestDescription ("Int_Column", "~/DynamicData/FieldTemplates/Int32.ascx"),

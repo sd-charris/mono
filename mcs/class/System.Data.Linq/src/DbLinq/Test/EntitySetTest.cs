@@ -186,18 +186,22 @@ namespace DbLinqTest
             people.ListChanged += (o, e) => events.Add(e);
 
             people.Add(new Person { FirstName = "A", LastName = "B" });
-            AssertEqual(events);
+            AssertEqual(events, new ListChangedEventArgs(ListChangedType.ItemAdded, 0, -1));
 
             events.Clear();
             people.Clear();
-            AssertEqual(events, new ListChangedEventArgs(ListChangedType.Reset, 0, -1));
+            AssertEqual(events,
+                new ListChangedEventArgs(ListChangedType.ItemDeleted, 0, -1),
+                new ListChangedEventArgs(ListChangedType.Reset, 0, -1));
 
             events.Clear();
             people.AddRange(new[]{
                 new Person { FirstName = "1", LastName = "2" },
                 new Person { FirstName = "<", LastName = ">" },
             });
-            AssertEqual(events);
+            AssertEqual(events,
+                new ListChangedEventArgs(ListChangedType.ItemAdded, 0, -1),
+                new ListChangedEventArgs(ListChangedType.ItemAdded, 1, -1));
 
             events.Clear();
             var p = new Person { FirstName = "{", LastName = "}" };
@@ -206,7 +210,7 @@ namespace DbLinqTest
 
             events.Clear();
             Assert.IsTrue(people.Remove(p));
-            AssertEqual(events);
+            AssertEqual(events, new ListChangedEventArgs(ListChangedType.ItemDeleted, 1, -1));
 
             events.Clear();
             people.RemoveAt(0);
@@ -254,7 +258,10 @@ namespace DbLinqTest
             });
             Assert.IsTrue(people.HasLoadedOrAssignedValues);
             Assert.IsTrue(people.IsDeferred);
-            AssertEqual(events);
+            AssertEqual(events,
+                new ListChangedEventArgs(ListChangedType.ItemAdded, 0, -1),
+                new ListChangedEventArgs(ListChangedType.ItemAdded, 1, -1),
+                new ListChangedEventArgs(ListChangedType.ItemAdded, 2, -1));
 
             events.Clear();
             people.Clear();

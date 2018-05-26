@@ -181,8 +181,10 @@ namespace DbLinqTest {
             DataContext dc = new DataContext(connection);
             Assert.AreEqual(connection, dc.Connection);
 
-            dc = new DataContext (new DummyConnection());
-            Assert.AreEqual(null, dc.Connection);
+            var ex = Assert.Throws<Exception> ( () => new DataContext (new DummyConnection()));
+            Assert.Null(ex.InnerException);
+            Assert.NotNull(ex.Message);
+            Assert.True(ex.Message.IndexOf("'connection'") != -1);
         }
 
         [Test, ExpectedException(typeof(ArgumentNullException))]

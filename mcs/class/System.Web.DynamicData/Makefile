@@ -107,20 +107,34 @@ TEST_RESOURCE_FILES = \
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int16.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int16.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int32.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int32.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int32.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int32.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int32[].ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int32[].ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int32[].ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int32[].ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int64.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int64.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Int64.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Int64.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Object.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Object.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Object.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Object.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Object[].ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Object[].ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.Object[].ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.Object[].ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.SByte.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.SByte.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.SByte.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.SByte.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.SByte_Edit.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.SByte_Edit.ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.SByte_Edit.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.SByte_Edit.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.String.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.String.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.String.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.String.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.String[].ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.String[].ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.String[].ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.String[].ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt16.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt16.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt16.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt16.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt16_Edit.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt16_Edit.ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt16_Edit.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt16_Edit.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt32.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt32.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt32.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt32.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt32_Edit.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt32_Edit.ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt32_Edit.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt32_Edit.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt64.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt64.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt64.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt64.ascx.cs	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt64_Edit.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt64_Edit.ascx	\
+	Test/WebPages/DynamicData/FieldTemplates_NonDefault/System.UInt64_Edit.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.System.UInt64_Edit.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/UInt16.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.UInt16.ascx	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/UInt16.ascx.cs,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.UInt16.ascx.cs	\
 	Test/WebPages/DynamicData/FieldTemplates_NonDefault/UInt32.ascx,MonoTests.WebPages.DynamicData.FieldTemplates_NonDefault.UInt32.ascx	\

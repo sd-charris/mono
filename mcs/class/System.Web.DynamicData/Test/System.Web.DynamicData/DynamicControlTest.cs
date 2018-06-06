@@ -72,6 +72,9 @@ namespace MonoTests.System.Web.DynamicData
 			// This is ran before every test
 			FieldTemplatePathTables.CleanUp_FullTypeNameTemplates ();
 			FieldTemplatePathTables.CleanUp_ShortTypeNameTemplates ();
+
+			FieldTemplatePathTables.SetUp_FullTypeNameTemplates(this);
+			FieldTemplatePathTables.SetUp_ShortTypeNameTemplates(this);
 		}
 
 		[TestFixtureSetUp]

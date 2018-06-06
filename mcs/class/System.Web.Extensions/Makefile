@@ -68,7 +68,7 @@ ifeq (4, $(FRAMEWORK_VERSION_MAJOR))
 LIB_REFS += System.Web.ApplicationServices
 endif
 
-TEST_LIB_REFS = SystemWebTestShim
+TEST_LIB_REFS = SystemWebTestShim System.Web
 TEST_MCS_FLAGS = $(LIB_MCS_FLAGS) -doc:$(test_lib:.dll=.xml) -nowarn:219,169,1591 $(NUNIT_RESOURCE_FILES:%=/resource:%) -define:SYSTEM_WEB_EXTENSIONS
 
 EXTRA_DISTFILES = $(RESOURCE_FILES_DIST) $(NUNIT_RESOURCE_FILES) \

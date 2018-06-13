@@ -2374,9 +2374,30 @@ namespace System.Web {
         internal static string[] s_dirsToMonitor = new string[] {
         };
 
+        // Will clean this up with file watchers and what not...
+
         internal DateTime StartMonitoringFile(string alias, FileChangeEventHandler callback)
         {
-            return DateTime.Now;
+            FindFileData ffd = null;
+
+            if (alias == null) {
+                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Invalid_file_name_for_monitoring, String.Empty));
+            }
+            else if (!FileChangesMonitor.IsPathAFile(alias)) {
+                //don't bother tracking directories yet...
+                return DateTime.MinValue;
+            }
+            
+            string fullPathName = FileChangesMonitor.GetFullPath(alias);
+            
+            try {
+                FindFileData.FindFile(fullPathName, out ffd);
+            }
+            catch(FileNotFoundException) {
+                return DateTime.MinValue;
+            }
+            
+            return ffd.FileAttributesData.UtcLastWriteTime;
         }
         
         internal DateTime StartMonitoringPath(string alias, FileChangeEventHandler callback)
@@ -2388,11 +2409,18 @@ namespace System.Web {
             }
             else if (!FileChangesMonitor.IsPathAFile(alias)) {
                 //don't bother tracking directories yet...
-                return DateTime.Now;
+                return DateTime.MinValue;
             }
             
             string fullPathName = FileChangesMonitor.GetFullPath(alias);
-            FindFileData.FindFile(fullPathName, out ffd);
+            
+            try {
+                FindFileData.FindFile(fullPathName, out ffd);
+            }
+            catch(FileNotFoundException) {
+                return DateTime.MinValue;
+            }
+            
             
             return ffd.FileAttributesData.UtcLastWriteTime;
         }
@@ -2406,11 +2434,17 @@ namespace System.Web {
             }
             else if (!FileChangesMonitor.IsPathAFile(alias)) {
                 //don't bother tracking directories yet...
-                return DateTime.Now;
+                return DateTime.MinValue;
             }
 
             string fullPathName = FileChangesMonitor.GetFullPath(alias);
-            FindFileData.FindFile(fullPathName, out ffd);
+
+            try {
+                FindFileData.FindFile(fullPathName, out ffd);
+            }
+            catch(FileNotFoundException) {
+                return DateTime.MinValue;
+            }
             
             data = ffd.FileAttributesData;
             return ffd.FileAttributesData.UtcLastWriteTime;

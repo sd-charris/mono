@@ -29,7 +29,7 @@ namespace System.Web.Configuration {
 
     internal class HttpConfigurationSystem : IInternalConfigSystem {
         private const string InternalConfigSettingsFactoryTypeString = "System.Configuration.Internal.InternalConfigSettingsFactory, " + AssemblyRef.SystemConfiguration;
-        internal const string ConfigSystemTypeString = "System.Configuration.Internal.ClassicConfigSystem, " + AssemblyRef.SystemConfiguration;
+        internal const string ConfigSystemTypeString = "System.Configuration.Internal.ConfigSystem, " + AssemblyRef.SystemConfiguration;
 
 #if !PLATFORM_UNIX // File system paths must be lowercased in UNIX
         internal const string MachineConfigSubdirectory = "Config";
@@ -50,7 +50,7 @@ namespace System.Web.Configuration {
         static private IConfigSystem                    s_configSystem;
 
         static private IConfigMapPath                   s_configMapPath;
-        static private WebConfigurationHost             s_configHost;
+        static private IInternalConfigHost              s_configHost;
         static private FileChangeEventHandler           s_fileChangeEventHandler;
         static private string                           s_MsCorLibDirectory;
         static private string                           s_MachineConfigurationDirectory;
@@ -96,7 +96,9 @@ namespace System.Web.Configuration {
                                 HostingEnvironment.SiteID);                 // app site ID
 
                         s_configRoot = s_configSystem.Root;
-                        s_configHost = (WebConfigurationHost) s_configSystem.Host;
+
+                        // the host could be delegated and you wouldn't necessarily get WCH
+                        s_configHost = (IInternalConfigHost) s_configSystem.Host;
 
                         // Register for config changed notifications
                         HttpConfigurationSystem configSystem = new HttpConfigurationSystem();

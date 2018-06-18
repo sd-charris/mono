@@ -30,8 +30,6 @@ namespace System.Web.Configuration {
     //
     // Configuration host for web applications.
     //
-    // This is where (along with WebConfigManager) we can see if we can set the 
-    // config system to the classic system and use corefx system.configuration
     internal sealed class WebConfigurationHost : DelegatingConfigHost, IInternalConfigWebHost {
         const string InternalHostTypeName = "System.Configuration.Internal.InternalConfigHost, " + AssemblyRef.SystemConfiguration;
         const string InternalConfigConfigurationFactoryTypeName = "System.Configuration.Internal.InternalConfigConfigurationFactory, " + AssemblyRef.SystemConfiguration;

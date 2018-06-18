@@ -12,10 +12,16 @@ namespace System.Configuration {
             get => get_machine_config_path();
         }
 
-        [MethodImplAttribute (MethodImplOptions.InternalCall)]
-		internal extern static string get_machine_config_path ();
-    }  
+        internal static string BundledMachineConfig {
+            get => get_bundled_machine_config();
+        }
 
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static string get_machine_config_path();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static string get_bundled_machine_config();
+    }  
 }
 
 #endif

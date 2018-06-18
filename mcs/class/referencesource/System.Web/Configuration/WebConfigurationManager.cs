@@ -12,10 +12,7 @@ namespace System.Web.Configuration {
     using System.Security;
     using System.Security.Permissions;
     using System.Web.Hosting;
-    
-
-    // This is where (along with WebConfigHost) we can see if we can set the 
-    // config system to the classic system and use corefx system.configuration 
+     
     public static class WebConfigurationManager {
 
         public static NameValueCollection AppSettings {

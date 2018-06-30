@@ -8,6 +8,7 @@ System/Configuration/ConfigurationBuilderSettings.cs
 System/Configuration/ConfigurationBuildersSection.cs
 System/Configuration/ConfigurationStringConstants.cs
 System/Configuration/DefaultConfig.cs
+System/Configuration/TypeUtil.cs
 System/Configuration/Internal/IInternalConfigurationBuilderHost.cs
 System/Configuration/SR.cs
 corefx/SR.cs

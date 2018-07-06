@@ -160,6 +160,7 @@ System.Web.UI/OutputCacheParametersTest.cs
 System.Web.UI/PageParserTest.cs
 System.Web.UI/PageParserFilterTest.cs
 #System.Web.UI/PageTest.cs
+System.Web.UI/PageEncryptionTest.cs
 System.Web.UI/PostBackOptionsTest.cs
 System.Web.UI/PropertyConverterTest.cs
 System.Web.UI/StateBagTest.cs

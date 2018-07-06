@@ -732,18 +732,17 @@ namespace System.Web.Configuration
                 throw new ArgumentException(System.Web.SR.GetString(System.Web.SR.InvalidArgumentValue, "length"));
 
 #if (MONO || FEATURE_PAL)
-            // ** This needs some help - may not be doing the right thing.
-            HashAlgorithm hmac = GetHashAlgorithmFromHashSize (_HashSize);
-
+            HashAlgorithm hmac = GetHMACHashAlgorithmFromHashSize(_HashSize);
+           
             try 
-            {
-                
-                byte[] hash = hmac.ComputeHash(buf);
+            {   
+                byte[] hash = hmac.ComputeHash(buf, start, length);
 
                 return hash;
             }
-            catch{ }
-            finally {
+            catch { }
+            finally 
+            {
                 hmac.Dispose();
             }
 #else
@@ -766,19 +765,43 @@ namespace System.Web.Configuration
             switch(size)
             {
                 case HMACSHA256_HASH_SIZE:
-                    return new HMACSHA256();
+                    return new SHA256Managed();
                     break;
                 case HMACSHA384_HASH_SIZE:
-                    return new HMACSHA384();
+                    return new SHA384Managed();
                     break;
                 case HMACSHA512_HASH_SIZE:
-                    return new HMACSHA512();
+                    return new SHA512Managed();
                     break;
                 case SHA1_HASH_SIZE:
-                    return SHA1.Create();
+                    return new SHA1Managed();
                     break;
                 case MD5_HASH_SIZE:
                     return MD5.Create();
+                    break;
+                default:
+                    throw new NotSupportedException ($"Can't map hash size to algorithm: {size}.");
+            }
+        }
+
+        static HashAlgorithm GetHMACHashAlgorithmFromHashSize(int size) 
+        {
+            switch(size)
+            {
+                case HMACSHA256_HASH_SIZE:
+                    return new HMACSHA256(s_validationKey);
+                    break;
+                case HMACSHA384_HASH_SIZE:
+                    return new HMACSHA384(s_validationKey);
+                    break;
+                case HMACSHA512_HASH_SIZE:
+                    return new HMACSHA512(s_validationKey);
+                    break;
+                case SHA1_HASH_SIZE:
+                    return new HMACSHA1(s_validationKey, true);
+                    break;
+                case MD5_HASH_SIZE:
+                    return new HMACMD5(s_validationKey);
                     break;
                 default:
                     throw new NotSupportedException ($"Can't map hash size to algorithm: {size}.");

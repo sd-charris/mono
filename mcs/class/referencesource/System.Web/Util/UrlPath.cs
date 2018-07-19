@@ -118,23 +118,32 @@ internal static class UrlPath {
     }
 
     internal static bool IsAbsolutePhysicalPath(string path) {
+        if (path == null || path.Length < 3)
+            return false;
+
+#if (MONO || FEATURE_PAL)
+        bool exists = false;
+        bool isDirectory = false;
+
+        // This one is tough because user controls pass in the virtual path (among others), 
+        // which on 
+        // *nix looks like a physical path.  So, we need to make sure the root doesn't 
+        // start with the virtual path 
+        if (IsRooted(path)) {
+            FileUtil.PhysicalPathStatus(path, false, false, out exists, out isDirectory);
+            
+            if (exists)
+                return true;
+        }   
+
         /* 
-        if (path == null || path.Length < 3)
-            return false;
-        
-        if ((path.IndexOfAny(Path.GetInvalidPathChars()) == -1)
-            && (Path.IsPathRooted(path))
-            && (Path.GetPathRoot(path).Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))) {
-            return true;
+        else {
+            if (Path.IsPathRooted(path) && (!VirtualPathStartsWithAppPath(path)))
+                return true;
         }
-
-        // e.g \\server\share\foo or //server/share/foo
-        return IsUncSharePath(path);
         */
-        if (path == null || path.Length < 3)
-            return false;
-
-        // e.g c:\foo
+#endif
+        // e.g c:\foo or /foo
         if (path[1] == ':' && IsDirectorySeparatorChar(path[2]))
             return true;
 
@@ -553,6 +562,11 @@ internal static class UrlPath {
 
     internal static bool VirtualPathStartsWithAppPath(string virtualPath) {
         System.Web.Util.Debug.Assert(HttpRuntime.AppDomainAppVirtualPathObject != null);
+#if (MONO || FEATURE_PAL)
+        if (HttpRuntime.AppDomainAppVirtualPathString == null) {
+            return false;
+        }
+#endif
         return VirtualPathStartsWithVirtualPath(virtualPath,
             HttpRuntime.AppDomainAppVirtualPathString);
     }

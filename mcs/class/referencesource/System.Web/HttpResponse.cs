@@ -910,10 +910,11 @@ namespace System.Web {
 
         public NameValueCollection Headers {
             get {
+#if (!MONO || !FEATURE_PAL)
                 if ( !(_wr is IIS7WorkerRequest) ) {
                     throw new PlatformNotSupportedException(System.Web.SR.GetString(System.Web.SR.Requires_Iis_Integrated_Mode));
                 }
-
+#endif
                 if (_headers == null) {
                     _headers = new HttpHeaderCollection(_wr, this, 16);
                 }

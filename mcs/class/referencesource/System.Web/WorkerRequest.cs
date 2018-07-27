@@ -919,6 +919,29 @@ namespace System.Web {
         internal virtual void SendStatus(int statusCode, int subStatusCode, String statusDescription) {
             SendStatus(statusCode, statusDescription);
         }
+/* 
+#if (MONO || FEATURE_PAL)
+        internal virtual void SetRequestHeader(string name, string value, bool replace) {
+            int knownIndex = GetKnownRequestHeaderIndex(name);
+            if (knownIndex >= 0) {
+                SetKnownRequestHeader(knownIndex, value, replace);
+            }
+            else {
+                SetUnknownRequestHeader(name, value, replace);
+            }
+        }
+
+        internal virtual void SetResponseHeader(string name, string value, bool replace) {
+            int knownIndex = GetKnownResponseHeaderIndex(name);
+            if (knownIndex >= 0) {
+                SendKnownResponseHeader(knownIndex, value, replace);
+            }
+            else {
+                SendUnknownResponseHeader(name, value, replace);
+            }
+        }
+#endif
+*/
 
         /// <devdoc>
         ///    <para>[To be supplied.]</para>

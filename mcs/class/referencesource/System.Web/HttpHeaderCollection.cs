@@ -26,7 +26,6 @@ namespace System.Web {
         private HttpResponse _response;
         private IIS7WorkerRequest _iis7WorkerRequest;
         
-
         // This constructor creates the header collection for request headers.
         // Try to preallocate the base collection with a size that should be sufficient
         // to store the headers for most requests.
@@ -35,7 +34,6 @@ namespace System.Web {
             // if this is an IIS7WorkerRequest, then the collection will be writeable and we will
             // call into IIS7 to update the header blocks when changes are made.
             _iis7WorkerRequest = wr as IIS7WorkerRequest;
-
             _request = request;
         }
 
@@ -46,8 +44,7 @@ namespace System.Web {
 
             // if this is an IIS7WorkerRequest, then the collection will be writeable and we will
             // call into IIS7 to update the header blocks when changes are made.
-            _iis7WorkerRequest = wr as IIS7WorkerRequest;
-
+            _iis7WorkerRequest = wr as IIS7WorkerRequest;           
             _response = response;
         }
 
@@ -58,7 +55,7 @@ namespace System.Web {
 
             _request = col._request;
             _response = col._response;
-            _iis7WorkerRequest = col._iis7WorkerRequest;
+            _iis7WorkerRequest = col._iis7WorkerRequest;            
         }
 
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags=SecurityPermissionFlag.SerializationFormatter)]
@@ -70,9 +67,11 @@ namespace System.Web {
         }
 
         public override void Add(String name, String value) {
+#if (!MONO || !FEATURE_PAL)
             if (_iis7WorkerRequest == null) {
                 throw new PlatformNotSupportedException();
             }
+#endif
             // append to existing value
             SetHeader(name, value, false /*replace*/);
         }
@@ -90,9 +89,11 @@ namespace System.Web {
         }
 
         public override void Set(String name, String value) {
+#if (!MONO || !FEATURE_PAL)
             if (_iis7WorkerRequest == null) {
                 throw new PlatformNotSupportedException();
             }
+#endif
             // set new value
             SetHeader(name, value, true /*replace*/);
         }
@@ -109,7 +110,9 @@ namespace System.Web {
             }
 
             if (_request != null) {
+#if (!MONO || !FEATURE_PAL)
                 _iis7WorkerRequest.SetRequestHeader(name, value, replace);
+#endif
             }
             else {
                 if (_response.HeadersWritten) {
@@ -123,12 +126,12 @@ namespace System.Web {
                 if (HttpRuntime.EnableHeaderChecking) {
                     HttpEncoder.Current.HeaderNameValueEncode(name, value, out encodedName, out encodedValue);
                 }
-                
+
+#if (!MONO || !FEATURE_PAL)
                 // set the header encoding to the selected encoding
                 _iis7WorkerRequest.SetHeaderEncoding(_response.HeaderEncoding);
-
                 _iis7WorkerRequest.SetResponseHeader(encodedName, encodedValue, replace);
-
+#endif
                 if (_response.HasCachePolicy && System.Web.Util.StringUtil.EqualsIgnoreCase("Set-Cookie", name)) {
                     _response.Cache.SetHasSetCookieHeader();
                 }
@@ -174,14 +177,17 @@ namespace System.Web {
         }
 
         public override void Remove(String name) {
+#if (!MONO || !FEATURE_PAL)
             if (_iis7WorkerRequest == null) {
                 throw new PlatformNotSupportedException();
             }
+#endif
 
             if (name == null) {
                 throw new ArgumentNullException("name");
             }           
 
+#if (!MONO || !FEATURE_PAL)
             if (_request != null) {
                 // delete by sending null value
                 _iis7WorkerRequest.SetRequestHeader(name, null /*value*/, false /*replace*/);
@@ -189,7 +195,7 @@ namespace System.Web {
             else {
                 _iis7WorkerRequest.SetResponseHeader(name, null /*value*/, false /*replace*/);
             }
-
+#endif
             base.Remove(name);
             if (_request != null) {
                 // update managed copy of server variable

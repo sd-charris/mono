@@ -2135,6 +2135,7 @@ namespace System.Web.Hosting {
 #endif
         }
 
+//#if (!MONO || !FEATURE_PAL)
         internal void SetRequestHeader(string name, string value, bool replace) {
             int knownIndex = HttpWorkerRequest.GetKnownRequestHeaderIndex(name);
             if (knownIndex >= 0) {
@@ -2144,6 +2145,7 @@ namespace System.Web.Hosting {
                 SetUnknownRequestHeader(name, value, replace);
             }
         }
+//#endif
 
         [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.High)]
         private void SetKnownRequestHeader(int index, string value, bool replace) {
@@ -2172,6 +2174,7 @@ namespace System.Web.Hosting {
 #endif
         }
 
+//#if (!MONO || !FEATURE_PAL)
         internal void SetResponseHeader(string name, string value, bool replace) {
             int knownIndex = HttpWorkerRequest.GetKnownResponseHeaderIndex(name);
             if (knownIndex >= 0) {
@@ -2181,6 +2184,7 @@ namespace System.Web.Hosting {
                 SetUnknownResponseHeader(name, value, replace);
             }
         }
+//#endif
 
         private void SetKnownResponseHeader(int index, string value, bool replace) {
 #if (!MONO || !FEATURE_PAL)

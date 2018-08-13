@@ -255,7 +255,7 @@ namespace MonoTests.System.Web {
 		}
 	
 		[Test]
-		[ExpectedException (typeof (PlatformNotSupportedException))]
+		[ExpectedException (typeof (NotSupportedException))]
 		public void ReadOnlyHeadersAdd ()
 		{
 			var r = new HttpRequest ("file", "http://www.gnome.org", "key=value&key2=value%32second");
@@ -263,7 +263,7 @@ namespace MonoTests.System.Web {
 		}
 
 		[Test]
-		[ExpectedException (typeof (PlatformNotSupportedException))]
+		[ExpectedException (typeof (NotSupportedException))]
 		public void ReadOnlyHeadersSet ()
 		{
 			var r = new HttpRequest ("file", "http://www.gnome.org", "key=value&key2=value%32second");
@@ -271,7 +271,7 @@ namespace MonoTests.System.Web {
 		}
 
 		[Test]
-		[ExpectedException (typeof (PlatformNotSupportedException))]
+		[ExpectedException (typeof (NotSupportedException))]
 		public void ReadOnlyHeadersRemove ()
 		{
 			var r = new HttpRequest ("file", "http://www.gnome.org", "key=value&key2=value%32second");

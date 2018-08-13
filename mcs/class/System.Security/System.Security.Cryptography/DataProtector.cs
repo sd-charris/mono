@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Crypto = System.Security.Cryptography.Translation;
 
 namespace System.Security.Cryptography
 {
@@ -15,15 +16,15 @@ namespace System.Security.Cryptography
     protected DataProtector(string applicationName, string primaryPurpose, string[] specificPurposes)
     {
       if (string.IsNullOrWhiteSpace(applicationName))
-        throw new ArgumentException(SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (applicationName));
+        throw new ArgumentException(Crypto.SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (applicationName));
       if (string.IsNullOrWhiteSpace(primaryPurpose))
-        throw new ArgumentException(SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (primaryPurpose));
+        throw new ArgumentException(Crypto.SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (primaryPurpose));
       if (specificPurposes != null)
       {
         foreach (string specificPurpose in specificPurposes)
         {
           if (string.IsNullOrWhiteSpace(specificPurpose))
-            throw new ArgumentException(SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (specificPurposes));
+            throw new ArgumentException(Crypto.SR.Cryptography_DataProtector_InvalidAppNameOrPurpose, nameof (specificPurposes));
         }
       }
       this.m_applicationName = applicationName;
@@ -129,7 +130,7 @@ namespace System.Security.Cryptography
           flag = false;
       }
       if (!flag)
-        throw new CryptographicException(SR.Cryptography_DataProtector_InvalidPurpose);
+        throw new CryptographicException(Crypto.SR.Cryptography_DataProtector_InvalidPurpose);
       byte[] numArray2 = new byte[numArray1.Length - hashedPurpose.Length];
       Array.Copy((Array) numArray1, hashedPurpose.Length, (Array) numArray2, 0, numArray2.Length);
       return numArray2;

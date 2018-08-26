@@ -797,7 +797,7 @@ debugger_agent_parse_options (char *options)
 	agent_config.server = FALSE;
 	agent_config.defer = FALSE;
 	agent_config.address = NULL;
-
+	
 	//agent_config.log_level = 10;
 
 	args = g_strsplit (options, ",", -1);
@@ -7856,7 +7856,8 @@ type_commands_internal (int command, MonoClass *klass, MonoDomain *domain, guint
 	case CMD_TYPE_GET_METHODS_BY_NAME_FLAGS: {
 		char *name = decode_string (p, &p, end);
 		int i, flags = decode_int (p, &p, end);
-		int mlisttype = decode_int (p, &p, end);
+		//int mlisttype = decode_int (p, &p, end);
+		int mlisttype = 2;
 		ERROR_DECL (error);
 		GPtrArray *array;
 
@@ -9559,6 +9560,7 @@ debugger_thread (void *arg)
 			err = field_commands (command, p, end, &buf);
 			break;
 		case CMD_SET_TYPE:
+			DEBUG_PRINTF (1, "[dbg] Command Number %d \n", command);
 			err = type_commands (command, p, end, &buf);
 			break;
 		case CMD_SET_METHOD:

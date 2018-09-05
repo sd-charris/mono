@@ -65,10 +65,7 @@ namespace System.Web.Security {
 
         static public bool Enabled
         {
-            get {
-                if (HostingEnvironment.IsHosted && !HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low))
-                    return false;
-
+            get {                
                 if (!s_Initialized && !s_EnabledSet) {
                     RoleManagerSection config = RuntimeConfig.GetAppConfig().RoleManager;
                     s_Enabled = config.Enabled;
@@ -488,10 +485,7 @@ namespace System.Web.Security {
                 }
 
                 try
-                {
-                    if (HostingEnvironment.IsHosted)
-                        HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+                {                    
                     RoleManagerSection settings = RuntimeConfig.GetAppConfig().RoleManager;
                         //s_InitializeException = new ProviderException(System.Web.SR.GetString(System.Web.SR.Roles_feature_not_enabled));
                     if (!s_EnabledSet) {

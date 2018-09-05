@@ -17,8 +17,7 @@ namespace System.Web.Configuration
 
     public static class ProvidersHelper {
         ///////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Low)]
+        ///////////////////////////////////////////////////////////////////////////////        
         public static ProviderBase InstantiateProvider(ProviderSettings providerSettings, Type providerType)
         {
             ProviderBase provider = null;
@@ -46,8 +45,7 @@ namespace System.Web.Configuration
 
             return provider;
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Low)]
+        
         internal static ProviderBase InstantiateProvider(NameValueCollection providerSettings, Type providerType) {
             ProviderBase provider = null;
             try {
@@ -75,8 +73,7 @@ namespace System.Web.Configuration
 
             return provider;
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Low)]
+        
         public static void InstantiateProviders(ProviderSettingsCollection configProviders, ProviderCollection providers, Type providerType)
         {
             foreach (ProviderSettings ps in configProviders) {

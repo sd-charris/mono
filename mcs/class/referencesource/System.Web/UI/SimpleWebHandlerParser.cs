@@ -308,11 +308,6 @@ public abstract class SimpleWebHandlerParser  : IAssemblyDependencyParser {
         if (Util.GetAndRemoveBooleanAttribute(directive, "debug", ref fDebug))
             compilParams.IncludeDebugInformation = fDebug;
 
-        if (compilParams.IncludeDebugInformation &&
-            !HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-            throw new HttpException(System.Web.SR.GetString(System.Web.SR.Insufficient_trust_for_attribute, "debug"));
-        }
-
         int warningLevel=0;
         if (Util.GetAndRemoveNonNegativeIntegerAttribute(directive, "warninglevel", ref warningLevel)) {
             compilParams.WarningLevel = warningLevel;

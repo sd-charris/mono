@@ -2309,16 +2309,8 @@ namespace System.Web {
                         + ", ShutdownMessage=" + _theRuntime._shutDownMessage);
 
             if (String.IsNullOrEmpty(stackTrace) && !BuildManagerHost.InClientBuildManager) {
-                // Avoid calling Environment.StackTrace if we are in the ClientBuildManager (Dev10 bug 824659)
-
-                // Instrument to be able to see what's causing a shutdown
-                new EnvironmentPermission(PermissionState.Unrestricted).Assert();
-                try {
-                    _theRuntime._shutDownStack = Environment.StackTrace;
-                }
-                finally {
-                    CodeAccessPermission.RevertAssert();
-                }
+                // Avoid calling Environment.StackTrace if we are in the ClientBuildManager (Dev10 bug 824659)                                
+                _theRuntime._shutDownStack = Environment.StackTrace;                
             }
             else {
                 _theRuntime._shutDownStack = stackTrace;
@@ -2396,8 +2388,7 @@ namespace System.Web {
         /// <devdoc>
         ///    <para><SPAN>The method that drives
         ///       all ASP.NET web processing execution.</SPAN></para>
-        /// </devdoc>
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Medium)]
+        /// </devdoc>        
         public static void ProcessRequest(HttpWorkerRequest wr) {
             if (wr == null)
                 throw new ArgumentNullException("wr");
@@ -2524,8 +2515,7 @@ namespace System.Web {
                 return _theRuntime._hostSecurityPolicyResolverType;
             }
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Unrestricted)]
+        
         public static NamedPermissionSet GetNamedPermissionSet() {
             NamedPermissionSet namedPermissionSet = _theRuntime._namedPermissionSet;
             if (namedPermissionSet == null) {
@@ -2636,6 +2626,9 @@ namespace System.Web {
 
         internal static bool HasDbPermission(DbProviderFactory factory) {
 
+#if MONO || FEATURE_PAL
+            return true;
+#else
             // Make sure we have already initialized the trust level
             System.Web.Util.Debug.Assert(TrustLevel != null || !HostingEnvironment.IsHosted);
 
@@ -2655,6 +2648,7 @@ namespace System.Web {
             }
 
             return fAccess;
+#endif
         }
 
         internal static bool HasPathDiscoveryPermission(string path) {
@@ -2724,11 +2718,11 @@ namespace System.Web {
         }
 
         internal static bool HasAspNetHostingPermission(AspNetHostingPermissionLevel level) {
-
+#if (MONO && FEATURE_PAL)
+            return true;
+#else
             // Make sure we have already initialized the trust level
             // 
-
-
 
             // If we don't have a NamedPermissionSet, we're in full trust
             if (NamedPermissionSet == null)
@@ -2740,12 +2734,11 @@ namespace System.Web {
                 return false;
 
             return (permission.Level >= level);
+#endif
         }
 
         internal static void CheckAspNetHostingPermission(AspNetHostingPermissionLevel level, String errorMessageId) {
-            if (!HasAspNetHostingPermission(level)) {
-                throw new HttpException(System.Web.SR.GetString(errorMessageId));
-            }
+            
         }
 
         // If we're not in full trust, fail if the passed in type doesn't have the APTCA bit
@@ -2780,11 +2773,15 @@ namespace System.Web {
         // Check if the type is allowed to be used in config by checking the APTCA bit
         internal static bool IsTypeAllowedInConfig(Type t) {
 
+#if (MONO && FEATURE_PAL)
+            return true;
+#else
             // Allow everything in full trust
             if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Unrestricted))
                 return true;
 
             return IsTypeAccessibleFromPartialTrust(t);
+#endif
         }
 
         internal static bool IsTypeAccessibleFromPartialTrust(Type t) {
@@ -3037,8 +3034,7 @@ namespace System.Web {
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
-        public static String AppDomainId {
-            [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.High)]
+        public static String AppDomainId {            
             get {
                 return AppDomainIdInternal;
             }
@@ -3082,8 +3078,7 @@ namespace System.Web {
         /// <devdoc>
         ///    <para>[To be supplied.]</para>
         /// </devdoc>
-        public static bool IsOnUNCShare {
-            [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Low)]
+        public static bool IsOnUNCShare {            
             get {
                 return IsOnUNCShareInternal;
             }

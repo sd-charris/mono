@@ -448,9 +448,7 @@ public class SmtpMail {
 
     /// <devdoc>
     ///    <para>[To be supplied.]</para>
-    /// </devdoc>
-    [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
-    [SecurityPermission(SecurityAction.Assert, UnmanagedCode=true)]
+    /// </devdoc>        
     public static void Send(String from, String to, String subject, String messageText) {
         lock (_lockObject) {
 #if !FEATURE_PAL // FEATURE_PAL does not enable SmtpMail
@@ -475,9 +473,7 @@ public class SmtpMail {
 
     /// <devdoc>
     ///    <para>[To be supplied.]</para>
-    /// </devdoc>
-    [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
-    [SecurityPermission(SecurityAction.Assert, UnmanagedCode=true)]
+    /// </devdoc>    
     public static void Send(MailMessage message) {
         lock (_lockObject) {
 #if !FEATURE_PAL // FEATURE_PAL does not enable SmtpMail

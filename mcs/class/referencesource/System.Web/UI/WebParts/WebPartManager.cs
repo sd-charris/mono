@@ -460,11 +460,8 @@ if (zoneElement != null) {{
         // Used for during Import for type deserialization.
         protected virtual PermissionSet MediumPermissionSet {
             get {
-                if (_mediumPermissionSet == null) {
-                    _mediumPermissionSet = new PermissionSet(PermissionState.None);
-                    _mediumPermissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-                    _mediumPermissionSet.AddPermission(new AspNetHostingPermission(AspNetHostingPermissionLevel.Medium));
-                }
+                if (_mediumPermissionSet == null) 
+                    _mediumPermissionSet = new PermissionSet(PermissionState.Unrestricted);                
                 return _mediumPermissionSet;
             }
         }
@@ -474,9 +471,7 @@ if (zoneElement != null) {{
         protected virtual PermissionSet MinimalPermissionSet {
             get {
                 if (_minimalPermissionSet == null) {
-                    _minimalPermissionSet = new PermissionSet(PermissionState.None);
-                    _minimalPermissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-                    _minimalPermissionSet.AddPermission(new AspNetHostingPermission(AspNetHostingPermissionLevel.Minimal));
+                    _minimalPermissionSet = new PermissionSet(PermissionState.Unrestricted);
                 }
                 return _minimalPermissionSet;
             }
@@ -2700,13 +2695,7 @@ if (zoneElement != null) {{
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
-
-            bool permitOnly = false;
-
-            if (UsePermitOnly) {
-                MinimalPermissionSet.PermitOnly();
-                permitOnly = true;
-            }
+            
             string importErrorMessage = string.Empty;
             // Extra try-catch block to prevent elevation of privilege attack via exception filter
             try {
@@ -2745,24 +2734,9 @@ if (zoneElement != null) {{
                         // If we are in shared scope, we are importing a shared WebPart
                         bool isShared = (Personalization.Scope == PersonalizationScope.Shared);
 
-                        if (!String.IsNullOrEmpty(partTypeName)) {
-
-                            if (UsePermitOnly) {
-                                CodeAccessPermission.RevertPermitOnly();
-                                permitOnly = false;
-                                MediumPermissionSet.PermitOnly();
-                                permitOnly = true;
-                            }
-
+                        if (!String.IsNullOrEmpty(partTypeName)) {                            
                             partType = WebPartUtil.DeserializeType(partTypeName, true);
-
-                            if (UsePermitOnly) {
-                                CodeAccessPermission.RevertPermitOnly();
-                                permitOnly = false;
-                                MinimalPermissionSet.PermitOnly();
-                                permitOnly = true;
-                            }
-
+                            
                             // First check if the type is authorized
                             if (!IsAuthorized(partType, null, null, isShared)) {
                                 errorMessage = System.Web.SR.GetString(System.Web.SR.WebPartManager_ForbiddenType);
@@ -2793,17 +2767,10 @@ if (zoneElement != null) {{
                                 errorMessage = System.Web.SR.GetString(System.Web.SR.WebPartManager_ForbiddenType);
                                 return null;
                             }
-
-                            if (UsePermitOnly) {
-                                CodeAccessPermission.RevertPermitOnly();
-                                permitOnly = false;
-                            }
+                            
                             childControl = Page.LoadControl(userControlTypeName);
                             partType = childControl.GetType();
-                            if (UsePermitOnly) {
-                                MinimalPermissionSet.PermitOnly();
-                                permitOnly = true;
-                            }
+                            
                             childControl.ID = CreateDynamicWebPartID(partType);
                             part = CreateWebPart(childControl);
                         }
@@ -2829,16 +2796,8 @@ if (zoneElement != null) {{
                     if (!reader.IsEmptyElement) {
                         reader.ReadStartElement(ExportPropertiesElement);
                         // Special-case IPersonalizable controls
-                        // ImportFromReader will set the right permission set when appropriate, reverting before we call
-                        if (UsePermitOnly) {
-                            CodeAccessPermission.RevertPermitOnly();
-                            permitOnly = false;
-                        }
-                        ImportIPersonalizable(reader, (childControl != null ? childControl : part));
-                        if (UsePermitOnly) {
-                            MinimalPermissionSet.PermitOnly();
-                            permitOnly = true;
-                        }
+                        // ImportFromReader will set the right permission set when appropriate, reverting before we call                        
+                        ImportIPersonalizable(reader, (childControl != null ? childControl : part));                        
                     }
                     // Set property values from XML description
                     IDictionary personalizableProperties;
@@ -2857,30 +2816,14 @@ if (zoneElement != null) {{
                                 }
                             }                            
                             
-                            // ImportFromReader will set the right permission set when appropriate, reverting before we call
-                            if (UsePermitOnly) {
-                                CodeAccessPermission.RevertPermitOnly();
-                                permitOnly = false;
-                            }
-                            ImportFromReader(personalizableProperties, childControl, reader);
-                            if (UsePermitOnly) {
-                                MinimalPermissionSet.PermitOnly();
-                                permitOnly = true;
-                            }
+                            // ImportFromReader will set the right permission set when appropriate, reverting before we call                            
+                            ImportFromReader(personalizableProperties, childControl, reader);                            
                         }
                         // And then for the generic WebPart
                         ImportSkipTo(reader, ExportGenericPartPropertiesElement);
                         reader.ReadStartElement(ExportGenericPartPropertiesElement);
-                        // ImportFromReader will set the right permission set when appropriate, reverting before we call
-                        if (UsePermitOnly) {
-                            CodeAccessPermission.RevertPermitOnly();
-                            permitOnly = false;
-                        }
-                        ImportIPersonalizable(reader, part);
-                        if (UsePermitOnly) {
-                            MinimalPermissionSet.PermitOnly();
-                            permitOnly = true;
-                        }
+                        // ImportFromReader will set the right permission set when appropriate, reverting before we call                        
+                        ImportIPersonalizable(reader, part);                        
                         personalizableProperties = PersonalizableAttribute.GetPersonalizablePropertyEntries(part.GetType());
                     }
                     else {
@@ -2896,16 +2839,8 @@ if (zoneElement != null) {{
                         }
                     }
 
-                    // ImportFromReader will set the right permission set when appropriate, reverting before we call
-                    if (UsePermitOnly) {
-                        CodeAccessPermission.RevertPermitOnly();
-                        permitOnly = false;
-                    }
-                    ImportFromReader(personalizableProperties, part, reader);
-                    if (UsePermitOnly) {
-                        MinimalPermissionSet.PermitOnly();
-                        permitOnly = true;
-                    }
+                    // ImportFromReader will set the right permission set when appropriate, reverting before we call                    
+                    ImportFromReader(personalizableProperties, part, reader);                    
                     errorMessage = null;
                     // Return imported part
                     return part;
@@ -2924,13 +2859,7 @@ if (zoneElement != null) {{
                         errorMessage = e.Message;
                     }
                     return null;
-                }
-                finally {
-                    if (permitOnly) {
-                        // revert if you're not just exiting the stack frame anyway
-                        CodeAccessPermission.RevertPermitOnly();
-                    }
-                }
+                }                
             }
             catch {
                 throw;
@@ -2966,203 +2895,159 @@ if (zoneElement != null) {{
             System.Web.Util.Debug.Assert(target != null);
 
             ImportReadTo(reader, ExportPropertyElement);
+            
+            try {                
+                IDictionary properties;
+                if (personalizableProperties != null) {
+                    properties = new HybridDictionary();
+                }
+                else {
+                    properties = new PersonalizationDictionary();
+                }
+                // Set properties from the xml document
+                while (reader.Name == ExportPropertyElement) {
+                    // Get the name of the property
+                    string propertyName = reader.GetAttribute(ExportPropertyNameAttribute);
+                    string typeName = reader.GetAttribute(ExportPropertyTypeAttribute);
+                    string scope = reader.GetAttribute(ExportPropertyScopeAttribute);
+                    bool isNull = String.Equals(
+                        reader.GetAttribute(ExportPropertyNullAttribute),
+                        "true",
+                        StringComparison.OrdinalIgnoreCase);
 
-            bool permitOnly = false;
+                    // Do not import Zone information or AuthorizationFilter or custom data
+                    if (propertyName == AuthorizationFilterName ||
+                            propertyName == ZoneIDName ||
+                            propertyName == ZoneIndexName) {
 
-            if (UsePermitOnly) {
-                MinimalPermissionSet.PermitOnly();
-                permitOnly = true;
-            }
-
-            try {
-                try {
-                    IDictionary properties;
-                    if (personalizableProperties != null) {
-                        properties = new HybridDictionary();
+                        reader.ReadElementString();
+                        if (!reader.Read()) {
+                            throw new XmlException();
+                        }
                     }
                     else {
-                        properties = new PersonalizationDictionary();
-                    }
-                    // Set properties from the xml document
-                    while (reader.Name == ExportPropertyElement) {
-                        // Get the name of the property
-                        string propertyName = reader.GetAttribute(ExportPropertyNameAttribute);
-                        string typeName = reader.GetAttribute(ExportPropertyTypeAttribute);
-                        string scope = reader.GetAttribute(ExportPropertyScopeAttribute);
-                        bool isNull = String.Equals(
-                            reader.GetAttribute(ExportPropertyNullAttribute),
-                            "true",
-                            StringComparison.OrdinalIgnoreCase);
-
-                        // Do not import Zone information or AuthorizationFilter or custom data
-                        if (propertyName == AuthorizationFilterName ||
-                             propertyName == ZoneIDName ||
-                             propertyName == ZoneIndexName) {
-
-                            reader.ReadElementString();
-                            if (!reader.Read()) {
-                                throw new XmlException();
+                        string valString = reader.ReadElementString();
+                        object val = null;
+                        bool valueComputed = false;
+                        PropertyInfo pi = null;
+                        if (personalizableProperties != null) {
+                            // Get the relevant personalizable property on the target (no need to check the property is personalizable)
+                            PersonalizablePropertyEntry entry = (PersonalizablePropertyEntry)(personalizableProperties[propertyName]);
+                            if (entry != null) {
+                                pi = entry.PropertyInfo;
+                                System.Web.Util.Debug.Assert(pi != null);
+                                // If the property is a url, validate protocol (VSWhidbey 290418)
+                                UrlPropertyAttribute urlAttr = Attribute.GetCustomAttribute(pi, typeof(UrlPropertyAttribute), true) as UrlPropertyAttribute;
+                                if (urlAttr != null && CrossSiteScriptingValidation.IsDangerousUrl(valString)) {
+                                    throw new InvalidDataException(System.Web.SR.GetString(System.Web.SR.WebPart_BadUrl, valString));
+                                }
                             }
                         }
-                        else {
-                            string valString = reader.ReadElementString();
-                            object val = null;
-                            bool valueComputed = false;
-                            PropertyInfo pi = null;
-                            if (personalizableProperties != null) {
-                                // Get the relevant personalizable property on the target (no need to check the property is personalizable)
-                                PersonalizablePropertyEntry entry = (PersonalizablePropertyEntry)(personalizableProperties[propertyName]);
-                                if (entry != null) {
-                                    pi = entry.PropertyInfo;
-                                    System.Web.Util.Debug.Assert(pi != null);
-                                    // If the property is a url, validate protocol (VSWhidbey 290418)
-                                    UrlPropertyAttribute urlAttr = Attribute.GetCustomAttribute(pi, typeof(UrlPropertyAttribute), true) as UrlPropertyAttribute;
-                                    if (urlAttr != null && CrossSiteScriptingValidation.IsDangerousUrl(valString)) {
-                                        throw new InvalidDataException(System.Web.SR.GetString(System.Web.SR.WebPart_BadUrl, valString));
-                                    }
-                                }
-                            }
 
-                            Type type = null;
-                            if (!String.IsNullOrEmpty(typeName)) {
-                                if (UsePermitOnly) {
-                                    // Need medium trust to call BuildManager.GetType()
-                                    CodeAccessPermission.RevertPermitOnly();
-                                    permitOnly = false;
-                                    MediumPermissionSet.PermitOnly();
-                                    permitOnly = true;
-                                }
-                                type = GetExportType(typeName);
+                        Type type = null;
+                        if (!String.IsNullOrEmpty(typeName)) {                                
+                            type = GetExportType(typeName);                                
+                        }
 
-                                if (UsePermitOnly) {
-                                    CodeAccessPermission.RevertPermitOnly();
-                                    permitOnly = false;
-                                    MinimalPermissionSet.PermitOnly();
-                                    permitOnly = true;
-                                }
-                            }
-
-                            if ((pi != null) && ((pi.PropertyType == type) || (type == null))) {
-                                // Look at the target property
-                                // See if the property itself has a type converter associated with it
-                                TypeConverterAttribute attr = Attribute.GetCustomAttribute(pi, typeof(TypeConverterAttribute), true) as TypeConverterAttribute;
-                                if (attr != null) {
-                                    if (UsePermitOnly) {
-                                        // Need medium trust to call BuildManager.GetType()
-                                        CodeAccessPermission.RevertPermitOnly();
-                                        permitOnly = false;
-                                        MediumPermissionSet.PermitOnly();
-                                        permitOnly = true;
-                                    }
-
-                                    Type converterType = WebPartUtil.DeserializeType(attr.ConverterTypeName, false);
-
-                                    if (UsePermitOnly) {
-                                        CodeAccessPermission.RevertPermitOnly();
-                                        permitOnly = false;
-                                        MinimalPermissionSet.PermitOnly();
-                                        permitOnly = true;
-                                    }
-
-                                    // SECURITY: Check that the type is a subclass of TypeConverter before instantiating.
-                                    if (converterType != null && converterType.IsSubclassOf(typeof(TypeConverter))) {
-                                        TypeConverter converter = (TypeConverter)(Internals.CreateObjectFromType(converterType));
-                                        if (Util.CanConvertToFrom(converter, typeof(string))) {
-                                            if (!isNull) {
-                                                val = converter.ConvertFromInvariantString(valString);
-                                            }
-                                            valueComputed = true;
-                                        }
-                                    }
-                                }
-                                // Then, look at the converters on the property type
-                                if (!valueComputed) {
-                                    // Use the type converter associated with the type itself
-                                    TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
+                        if ((pi != null) && ((pi.PropertyType == type) || (type == null))) {
+                            // Look at the target property
+                            // See if the property itself has a type converter associated with it
+                            TypeConverterAttribute attr = Attribute.GetCustomAttribute(pi, typeof(TypeConverterAttribute), true) as TypeConverterAttribute;
+                            if (attr != null) {                                
+                                Type converterType = WebPartUtil.DeserializeType(attr.ConverterTypeName, false);
+                                
+                                // SECURITY: Check that the type is a subclass of TypeConverter before instantiating.
+                                if (converterType != null && converterType.IsSubclassOf(typeof(TypeConverter))) {
+                                    TypeConverter converter = (TypeConverter)(Internals.CreateObjectFromType(converterType));
                                     if (Util.CanConvertToFrom(converter, typeof(string))) {
                                         if (!isNull) {
                                             val = converter.ConvertFromInvariantString(valString);
                                         }
                                         valueComputed = true;
-                                        // Not importing anything else for security reasons
                                     }
                                 }
                             }
-                            // finally, use the XML-specified type
-                            if (!valueComputed && (type != null)) {
-                                // Look at the XML-declared type
-                                if (type == typeof(string)) {
+                            // Then, look at the converters on the property type
+                            if (!valueComputed) {
+                                // Use the type converter associated with the type itself
+                                TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
+                                if (Util.CanConvertToFrom(converter, typeof(string))) {
                                     if (!isNull) {
-                                        val = valString;
+                                        val = converter.ConvertFromInvariantString(valString);
+                                    }
+                                    valueComputed = true;
+                                    // Not importing anything else for security reasons
+                                }
+                            }
+                        }
+                        // finally, use the XML-specified type
+                        if (!valueComputed && (type != null)) {
+                            // Look at the XML-declared type
+                            if (type == typeof(string)) {
+                                if (!isNull) {
+                                    val = valString;
+                                }
+                                valueComputed = true;
+                            }
+                            else {
+                                TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
+                                if (Util.CanConvertToFrom(typeConverter, typeof(string))) {
+                                    if (!isNull) {
+                                        val = typeConverter.ConvertFromInvariantString(valString);
                                     }
                                     valueComputed = true;
                                 }
-                                else {
-                                    TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
-                                    if (Util.CanConvertToFrom(typeConverter, typeof(string))) {
-                                        if (!isNull) {
-                                            val = typeConverter.ConvertFromInvariantString(valString);
-                                        }
-                                        valueComputed = true;
-                                    }
-                                }
                             }
+                        }
 
-                            // Always want to import a null IPersonalizable value, since we will never have a type
-                            // converter for the value.  However, we should not import a null Personalizable value
-                            // unless the PropertyInfo had a type converter, since the property may be a value type
-                            // that cannot accept null as a value. (VSWhidbey 537895)
-                            if (isNull && personalizableProperties == null) {
-                                valueComputed = true;
-                            }
+                        // Always want to import a null IPersonalizable value, since we will never have a type
+                        // converter for the value.  However, we should not import a null Personalizable value
+                        // unless the PropertyInfo had a type converter, since the property may be a value type
+                        // that cannot accept null as a value. (VSWhidbey 537895)
+                        if (isNull && personalizableProperties == null) {
+                            valueComputed = true;
+                        }
 
-                            // Now we should have a value (val)
-                            if (valueComputed) {
-                                if (personalizableProperties != null) {
-                                    properties.Add(propertyName, val);
-                                }
-                                else {
-                                    // Determine scope:
-                                    PersonalizationScope personalizationScope =
-                                        String.Equals(scope, PersonalizationScope.Shared.ToString(), StringComparison.OrdinalIgnoreCase) ?
-                                        PersonalizationScope.Shared : PersonalizationScope.User;
-                                    properties.Add(propertyName, new PersonalizationEntry(val, personalizationScope));
-                                }
+                        // Now we should have a value (val)
+                        if (valueComputed) {
+                            if (personalizableProperties != null) {
+                                properties.Add(propertyName, val);
                             }
                             else {
-                                throw new HttpException(System.Web.SR.GetString(System.Web.SR.WebPartManager_ImportInvalidData, propertyName));
+                                // Determine scope:
+                                PersonalizationScope personalizationScope =
+                                    String.Equals(scope, PersonalizationScope.Shared.ToString(), StringComparison.OrdinalIgnoreCase) ?
+                                    PersonalizationScope.Shared : PersonalizationScope.User;
+                                properties.Add(propertyName, new PersonalizationEntry(val, personalizationScope));
                             }
                         }
-                        while (reader.Name != ExportPropertyElement) {
-                            if (reader.EOF ||
-                                (reader.Name == ExportGenericPartPropertiesElement) ||
-                                (reader.Name == ExportPropertiesElement) ||
-                                ((reader.Name == ExportIPersonalizableElement) && (reader.NodeType == XmlNodeType.EndElement))) {
-                                goto EndOfData;
-                            }
-                            reader.Skip();
+                        else {
+                            throw new HttpException(System.Web.SR.GetString(System.Web.SR.WebPartManager_ImportInvalidData, propertyName));
                         }
                     }
-                    EndOfData:
-                    if (personalizableProperties != null) {
-                        IDictionary unused = BlobPersonalizationState.SetPersonalizedProperties(target, properties);
-                        if ((unused != null) && (unused.Count > 0)) {
-                            IVersioningPersonalizable versioningTarget = target as IVersioningPersonalizable;
-                            if (versioningTarget != null) {
-                                versioningTarget.Load(unused);
-                            }
+                    while (reader.Name != ExportPropertyElement) {
+                        if (reader.EOF ||
+                            (reader.Name == ExportGenericPartPropertiesElement) ||
+                            (reader.Name == ExportPropertiesElement) ||
+                            ((reader.Name == ExportIPersonalizableElement) && (reader.NodeType == XmlNodeType.EndElement))) {
+                            goto EndOfData;
                         }
-                    }
-                    else {
-                        System.Web.Util.Debug.Assert(target is IPersonalizable);
-                        ((IPersonalizable)target).Load((PersonalizationDictionary)properties);
+                        reader.Skip();
                     }
                 }
-                finally {
-                    if (permitOnly) {
-                        // revert if you're not just exiting the stack frame anyway
-                        CodeAccessPermission.RevertPermitOnly();
+                EndOfData:
+                if (personalizableProperties != null) {
+                    IDictionary unused = BlobPersonalizationState.SetPersonalizedProperties(target, properties);
+                    if ((unused != null) && (unused.Count > 0)) {
+                        IVersioningPersonalizable versioningTarget = target as IVersioningPersonalizable;
+                        if (versioningTarget != null) {
+                            versioningTarget.Load(unused);
+                        }
                     }
+                }
+                else {
+                    System.Web.Util.Debug.Assert(target is IPersonalizable);
+                    ((IPersonalizable)target).Load((PersonalizationDictionary)properties);
                 }
             }
             catch {

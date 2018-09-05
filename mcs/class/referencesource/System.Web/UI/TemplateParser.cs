@@ -1256,11 +1256,7 @@ public abstract class TemplateParser : BaseParser, IAssemblyDependencyParser {
         // Override certain settings if they were specified on the page
         if (flags[hasDebugAttribute])
             compilParams.IncludeDebugInformation = flags[debug];
-
-        // Debugging requires medium trust level
-        if (compilParams.IncludeDebugInformation)
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.Debugging_not_supported_in_low_trust);
-
+        
         // If warningLevel was specified in the page, use it
         if (_warningLevel >= 0) {
             compilParams.WarningLevel = _warningLevel;
@@ -1902,11 +1898,7 @@ public abstract class TemplateParser : BaseParser, IAssemblyDependencyParser {
             break;
 
         case "debug":
-            flags[debug] = Util.GetBooleanAttribute(name, value);
-            if (flags[debug] && !HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Insufficient_trust_for_attribute, "debug"));
-            }
-
+            flags[debug] = Util.GetBooleanAttribute(name, value);            
             flags[hasDebugAttribute] = true;
             break;
 

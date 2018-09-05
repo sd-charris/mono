@@ -434,9 +434,7 @@ namespace System.Web.UI.WebControls.WebParts {
             return count;
         }
 
-        public override void Initialize(string name, NameValueCollection configSettings) {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+        public override void Initialize(string name, NameValueCollection configSettings) {            
             // configSettings cannot be null because there are required settings needed below
             if (configSettings == null) {
                 throw new ArgumentNullException("configSettings");

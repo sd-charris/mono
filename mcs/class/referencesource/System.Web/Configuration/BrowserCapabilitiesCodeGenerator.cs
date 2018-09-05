@@ -852,10 +852,7 @@ namespace System.Web.Configuration {
             }
         }
 
-        private static string LoadPublicKeyTokenFromFile(string filename) {
-            IStackWalk fileReadAccess = InternalSecurityPermissions.FileReadAccess(filename);
-            System.Web.Util.Debug.Assert(fileReadAccess != null);
-            fileReadAccess.Assert();
+        private static string LoadPublicKeyTokenFromFile(string filename) {            
             if (!File.Exists(filename)) {
                 return null;
             }
@@ -874,10 +871,7 @@ namespace System.Web.Configuration {
 
                 // Don't throw exception if we don't have permission to the file.
                 return null;
-            }
-            finally {
-                CodeAccessPermission.RevertAssert();
-            }
+            }            
         }
 
         internal void GenerateOverrideBrowserElements(CodeTypeDeclaration typeDeclaration) {

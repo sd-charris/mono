@@ -865,8 +865,7 @@ namespace System.Web {
         ///       the server machine name.
         ///    </para>
         /// </devdoc>
-        public string MachineName {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        public string MachineName {            
             get {
                 return GetMachineNameInternal();
             }
@@ -914,8 +913,7 @@ namespace System.Web {
                     return HttpRuntimeSection.DefaultExecutionTimeout;
                 }
             }
-
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+            
             set {
                 if (_context == null)
                     throw new HttpException(System.Web.SR.GetString(System.Web.SR.Server_not_available));

@@ -362,12 +362,7 @@ public sealed class PageParser : TemplateControlParser {
 
         case "culture":
             _culture = Util.GetNonEmptyAttribute(name, value);
-
-            // Setting culture requires medium permission
-            if (!HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Insufficient_trust_for_attribute, "culture"));
-            }
-
+            
             //do not verify at parse time if potentially using browser AutoDetect
             if(System.Web.Util.StringUtil.EqualsIgnoreCase(value, HttpApplication.AutoCulture)) {
                 return false;
@@ -472,12 +467,7 @@ public sealed class PageParser : TemplateControlParser {
             OnFoundAttributeRequiringCompilation(name);
 
             flags[asyncMode] = Util.GetBooleanAttribute(name, value);
-
-            // Async requires Medium trust
-            if (!HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                throw new HttpException(System.Web.SR.GetString(System.Web.SR.Insufficient_trust_for_attribute, "async"));
-            }
-
+            
             break;
 
         case "tracemode":
@@ -620,12 +610,7 @@ public sealed class PageParser : TemplateControlParser {
             _transactionMode = (int) tmpObj;
 
             // Add a reference to the transaction assembly only if needed
-            if (_transactionMode != 0 /*TransactionOption.Disabled*/) {
-
-                if (!HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                    throw new HttpException(System.Web.SR.GetString(System.Web.SR.Insufficient_trust_for_attribute, "transaction"));
-                }
-
+            if (_transactionMode != 0 /*TransactionOption.Disabled*/) {                
                 AddAssemblyDependency(typeof(TransactionOption).Assembly);
             }
         }

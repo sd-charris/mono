@@ -96,9 +96,7 @@ namespace System.Web {
         private static void Initialize() {
             if (_providers != null)
                 return;
-
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+            
             lock (_lockObject) {
                 if (_providers != null)
                     return;

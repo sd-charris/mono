@@ -2146,8 +2146,7 @@ namespace System.Web.Hosting {
             }
         }
 //#endif
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.High)]
+        
         private void SetKnownRequestHeader(int index, string value, bool replace) {
 #if (!MONO || !FEATURE_PAL)
             System.Web.Util.Debug.Assert(HttpWorkerRequest.HeaderUserAgent == 39, "HttpWorkerRequest.HeaderUserAgent == 39");
@@ -2161,8 +2160,7 @@ namespace System.Web.Hosting {
             Misc.ThrowIfFailedHr(result);
 #endif
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.High)]
+        
         private void SetUnknownRequestHeader(string name, string value, bool replace) {
 #if (!MONO || !FEATURE_PAL)
             byte[] valueBytes;

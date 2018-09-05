@@ -42,8 +42,7 @@ namespace System.Web.Security {
 
 
         public event RoleManagerEventHandler GetRoles {
-            add {
-                HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+            add {                
                 _eventHandler += value;
             }
             remove {

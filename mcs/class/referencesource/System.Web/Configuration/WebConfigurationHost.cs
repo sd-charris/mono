@@ -339,8 +339,7 @@ namespace System.Web.Configuration {
 
             return configPath.Substring(indexVPath);
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        
         void IInternalConfigWebHost.GetSiteIDAndVPathFromConfigPath(string configPath, out string siteID, out string vpath) {
             VirtualPath virtualPath;
             WebConfigurationHost.GetSiteIDAndVPathFromConfigPath(configPath, out siteID, out virtualPath);
@@ -372,8 +371,7 @@ namespace System.Web.Configuration {
                 vpath = VirtualPath.CreateAbsolute(configPath.Substring(indexVPath));
             }
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        
         string IInternalConfigWebHost.GetConfigPathFromSiteIDAndVPath(string siteID, string vpath) {
             return WebConfigurationHost.GetConfigPathFromSiteIDAndVPath(
                 siteID, VirtualPath.CreateAbsoluteAllowNull(vpath));
@@ -728,12 +726,16 @@ namespace System.Web.Configuration {
         }
 
         public override bool IsFullTrustSectionWithoutAptcaAllowed(IInternalConfigRecord configRecord) {
+#if (MONO || FEATURE_PAL)
+            return true;
+#else
             if (HostingEnvironment.IsHosted) {
                 return HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Unrestricted);
             }
             else {
                 return Host.IsFullTrustSectionWithoutAptcaAllowed(configRecord);
             }
+#endif
         }
 
         public override void GetRestrictedPermissions(IInternalConfigRecord configRecord, out PermissionSet permissionSet, out bool isHostReady) {

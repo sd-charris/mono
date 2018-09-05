@@ -102,8 +102,7 @@ namespace System.Web.Security {
             throw new ProviderException(System.Web.SR.GetString(System.Web.SR.API_failed_due_to_error, error.ToString()));
         }
 
-        public override string [] GetRolesForUser(string username){
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.API_not_supported_at_this_level);
+        public override string [] GetRolesForUser(string username){            
             if (username == null)
                 throw new ArgumentNullException("username");
             username = username.Trim();

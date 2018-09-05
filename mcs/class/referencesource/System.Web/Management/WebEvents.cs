@@ -470,14 +470,12 @@ namespace System.Web.Management {
                 _occurrenceNumber = Interlocked.Increment(ref ceco._occurrence);
             }
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        
         virtual public void Raise() {
             Raise(this);
         }
 
-        // Internally raised events don't go thru this method.  They go directly to RaiseSystemEvent --> RaiseInternal
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        // Internally raised events don't go thru this method.  They go directly to RaiseSystemEvent --> RaiseInternal        
         static public void Raise(WebBaseEvent eventRaised) {
             if (eventRaised.EventCode < WebEventCodes.WebExtendedBase) {
                 throw new HttpException(System.Web.SR.GetString(System.Web.SR.System_eventCode_not_allowed,

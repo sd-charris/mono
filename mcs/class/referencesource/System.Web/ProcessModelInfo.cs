@@ -14,8 +14,7 @@ namespace System.Web {
     
 
     public class ProcessModelInfo {
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        
         static public ProcessInfo    GetCurrentProcessInfo() {
             HttpContext context = HttpContext.Current;
             if (context == null || context.WorkerRequest == null || 
@@ -43,9 +42,7 @@ namespace System.Web {
             return new ProcessInfo(startTime, age, pid, dwReqExecuted, 
                                    ProcessStatus.Alive, ProcessShutdownReason.None, mem);
         }
-
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        
         static public ProcessInfo[]  GetHistory(int numRecords) {
             HttpContext context = HttpContext.Current;
             if (context == null || context.WorkerRequest == null || 

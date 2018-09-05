@@ -307,10 +307,7 @@ namespace System.Web.Security
         [DirectoryServicesPermission(SecurityAction.Demand, Unrestricted=true)]
         [DirectoryServicesPermission(SecurityAction.InheritanceDemand, Unrestricted=true)]
         public override void Initialize(string name, NameValueCollection config)
-        {
-            if (System.Web.Hosting.HostingEnvironment.IsHosted)
-                HttpRuntime.CheckAspNetHostingPermission (AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+        {            
             if (initialized)
                 return;
 

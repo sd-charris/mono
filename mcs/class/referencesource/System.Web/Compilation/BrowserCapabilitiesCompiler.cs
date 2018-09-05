@@ -95,65 +95,58 @@ namespace System.Web.Compilation {
 
         internal static Type GetBrowserCapabilitiesType() {
 
-            //Need to assert here to check directories and files
-            InternalSecurityPermissions.Unrestricted.Assert();
-
             BuildResult result = null;
 
-            try {
-                // Try the cache first, and if it's not there, compile it
-                result = BuildManager.GetBuildResultFromCache(browerCapabilitiesCacheKey);
-                if (result == null) {
-                    DateTime utcStart = DateTime.UtcNow;
+            // Try the cache first, and if it's not there, compile it
+            result = BuildManager.GetBuildResultFromCache(browerCapabilitiesCacheKey);
+            if (result == null) {
+                DateTime utcStart = DateTime.UtcNow;
 
-                    VirtualDirectory directory = AppBrowsersVirtualDir.GetDirectory();
+                VirtualDirectory directory = AppBrowsersVirtualDir.GetDirectory();
 
-                    // first try if app browser dir exists
-                    string physicalDir = HostingEnvironment.MapPathInternal(AppBrowsersVirtualDir);
+                // first try if app browser dir exists
+                string physicalDir = HostingEnvironment.MapPathInternal(AppBrowsersVirtualDir);
 
-                    /* DevDivBugs 173531
-                     * For the App_Browsers scenario, we need to cache the generated browser caps processing 
-                     * code. We need to add path dependency on all files so that changes to them will 
-                     * invalidate the cache entry and cause recompilation. */
-                    if (directory != null && Directory.Exists(physicalDir)) {
-                        ArrayList browserFileList = new ArrayList();
-                        ArrayList browserFileDependenciesList = new ArrayList();
-                        bool hasCustomCaps = AddBrowserFilesToList(directory, browserFileList, false);
-                        if (hasCustomCaps) {
-                            AddBrowserFilesToList(directory, browserFileDependenciesList, true);
+                /* DevDivBugs 173531
+                    * For the App_Browsers scenario, we need to cache the generated browser caps processing 
+                    * code. We need to add path dependency on all files so that changes to them will 
+                    * invalidate the cache entry and cause recompilation. */
+                if (directory != null && Directory.Exists(physicalDir)) {
+                    ArrayList browserFileList = new ArrayList();
+                    ArrayList browserFileDependenciesList = new ArrayList();
+                    bool hasCustomCaps = AddBrowserFilesToList(directory, browserFileList, false);
+                    if (hasCustomCaps) {
+                        AddBrowserFilesToList(directory, browserFileDependenciesList, true);
+                    }
+                    else {
+                        browserFileDependenciesList = browserFileList;
+                    }
+
+                    if (browserFileDependenciesList.Count > 0) {
+                        ApplicationBrowserCapabilitiesBuildProvider buildProvider = new ApplicationBrowserCapabilitiesBuildProvider();
+                        foreach (string virtualPath in browserFileList) {
+                            buildProvider.AddFile(virtualPath);
                         }
-                        else {
-                            browserFileDependenciesList = browserFileList;
-                        }
+                        
+                        BuildProvidersCompiler bpc = new BuildProvidersCompiler(null /*configPath*/,
+                            BuildManager.GenerateRandomAssemblyName(BuildManager.AppBrowserCapAssemblyNamePrefix));
+                        
+                        bpc.SetBuildProviders(new SingleObjectCollection(buildProvider));
+                        CompilerResults results = bpc.PerformBuild();
+                        Assembly assembly = results.CompiledAssembly;
+                        // Get the type we want from the assembly
+                        Type t = assembly.GetType(
+                            BaseCodeDomTreeGenerator.defaultNamespace + "." + ApplicationBrowserCapabilitiesCodeGenerator.FactoryTypeName);
+                        // Cache it for next time
+                        result = new BuildResultCompiledType(t);
+                        result.VirtualPath = AppBrowsersVirtualDir;
+                        result.AddVirtualPathDependencies(browserFileDependenciesList);
 
-                        if (browserFileDependenciesList.Count > 0) {
-                            ApplicationBrowserCapabilitiesBuildProvider buildProvider = new ApplicationBrowserCapabilitiesBuildProvider();
-                            foreach (string virtualPath in browserFileList) {
-                                buildProvider.AddFile(virtualPath);
-                            }
-                            
-                            BuildProvidersCompiler bpc = new BuildProvidersCompiler(null /*configPath*/,
-                                BuildManager.GenerateRandomAssemblyName(BuildManager.AppBrowserCapAssemblyNamePrefix));
-                            
-                            bpc.SetBuildProviders(new SingleObjectCollection(buildProvider));
-                            CompilerResults results = bpc.PerformBuild();
-                            Assembly assembly = results.CompiledAssembly;
-                            // Get the type we want from the assembly
-                            Type t = assembly.GetType(
-                                BaseCodeDomTreeGenerator.defaultNamespace + "." + ApplicationBrowserCapabilitiesCodeGenerator.FactoryTypeName);
-                            // Cache it for next time
-                            result = new BuildResultCompiledType(t);
-                            result.VirtualPath = AppBrowsersVirtualDir;
-                            result.AddVirtualPathDependencies(browserFileDependenciesList);
-
-                            BuildManager.CacheBuildResult(browerCapabilitiesCacheKey, result, utcStart);
-                        }
+                        BuildManager.CacheBuildResult(browerCapabilitiesCacheKey, result, utcStart);
                     }
                 }
             }
-            finally {
-                CodeAccessPermission.RevertAssert();
-            }
+           
 
             // Simply return the global factory type.
             if (result == null)

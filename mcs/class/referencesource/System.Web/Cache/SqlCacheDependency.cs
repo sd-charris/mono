@@ -1199,8 +1199,7 @@ namespace System.Web.Caching {
 #endif
         }
     }
-
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level=AspNetHostingPermissionLevel.High)]
+    
     public static class SqlCacheDependencyAdmin {
         
         // Note:

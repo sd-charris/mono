@@ -372,10 +372,7 @@ namespace System.Web.Security {
             }
             if (s_InitializeException != null)
                 throw s_InitializeException;
-
-            if (HostingEnvironment.IsHosted)
-                HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+            
             lock (s_lock) {
                 if (s_Initialized && s_InitializedDefaultProvider) {
                     return;

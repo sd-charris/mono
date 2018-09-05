@@ -321,8 +321,6 @@ namespace System.Web.Configuration {
             IDictionaryEnumerator de = _variables.GetEnumerator();
             StringBuilder sb = new StringBuilder(_cacheKeyPrefix);
 
-            InternalSecurityPermissions.AspNetHostingPermissionLevelLow.Assert();
-
             while (de.MoveNext()) {
                 string key = (string)de.Key;
                 string value;
@@ -338,9 +336,7 @@ namespace System.Web.Configuration {
                     sb.Append(value);
                 }    
             }
-
-            CodeAccessPermission.RevertAssert();
-
+            
             sb.Append(BrowserCapabilitiesFactoryBase.GetBrowserCapKey(BrowserCapFactory.InternalGetMatchedHeaders(), request));
             string fullCacheKey = sb.ToString();
 

@@ -18,8 +18,6 @@ using System.Web.Compilation;
 using System.Web.Util;
 using System.Security.Permissions;
 
-[AspNetHostingPermission(SecurityAction.LinkDemand, Level=AspNetHostingPermissionLevel.Medium)]
-[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level=AspNetHostingPermissionLevel.Medium)]
 public abstract class PageParserFilter {
 
     private VirtualPath _virtualPath;

@@ -75,8 +75,7 @@ namespace System.Web.Security
         //////////////////////////////////////////////////////////////////////
 
         public override void Initialize(string name, NameValueCollection config)
-        {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+        {            
             if (String.IsNullOrEmpty(name))
                 name = "AuthorizationStoreRoleProvider";
             if (config == null)
@@ -160,8 +159,7 @@ namespace System.Web.Security
         //////////////////////////////////////////////////////////////////////
 
         public override void CreateRole(string roleName)
-        {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.API_not_supported_at_this_level);
+        {            
             SecUtility.CheckParameter(ref roleName, true, true, true, 0, "roleName");
             InitApp();
             object[] args = new object[2];
@@ -191,8 +189,7 @@ namespace System.Web.Security
         //////////////////////////////////////////////////////////////////////
 
         public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
-        {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.API_not_supported_at_this_level);
+        {            
             SecUtility.CheckParameter(ref roleName, true, true, true, 0, "roleName");
             InitApp();
             if (throwOnPopulatedRole)
@@ -256,8 +253,7 @@ namespace System.Web.Security
         //////////////////////////////////////////////////////////////////////
 
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
-        {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.API_not_supported_at_this_level);
+        {            
             SecUtility.CheckArrayParameter(ref roleNames,
                                             true,
                                             true,
@@ -311,8 +307,7 @@ namespace System.Web.Security
         //////////////////////////////////////////////////////////////////////
 
         public override void RemoveUsersFromRoles(string[] userNames, string[] roleNames)
-        {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Medium, System.Web.SR.API_not_supported_at_this_level);
+        {            
             SecUtility.CheckArrayParameter(ref roleNames,
                                             true,
                                             true,
@@ -388,25 +383,10 @@ namespace System.Web.Security
             StringCollection userNameCollection = new StringCollection();
 
             try
-            {
-                if ( HostingEnvironment.IsHosted && _XmlFileName != null )
-                {
-                    InternalSecurityPermissions.Unrestricted.Assert();
-                }
-
-                try
-                {
-                    IEnumerable allUsers = (IEnumerable)memberNames;
-                    foreach (object objUserName in allUsers)
-                        userNameCollection.Add((string)objUserName);
-                }
-                finally
-                {
-                    if( HostingEnvironment.IsHosted && _XmlFileName != null )
-                    {
-                        CodeAccessPermission.RevertAssert();
-                    }
-                }
+            {                                
+                IEnumerable allUsers = (IEnumerable)memberNames;
+                foreach (object objUserName in allUsers)
+                    userNameCollection.Add((string)objUserName);                
             }
             catch
             {
@@ -429,28 +409,13 @@ namespace System.Web.Security
             StringCollection roleNameCollection = new StringCollection();
 
             try
-            {
-                if( HostingEnvironment.IsHosted && _XmlFileName != null )
+            {                
+                IEnumerable allRoles = (IEnumerable)objAllRoles;
+                foreach (object role in allRoles)
                 {
-                    InternalSecurityPermissions.Unrestricted.Assert();
-                }
-
-                try
-                {
-                    IEnumerable allRoles = (IEnumerable)objAllRoles;
-                    foreach (object role in allRoles)
-                    {
-                        string name = (string)CallProperty(role, "Name", null);
-                        roleNameCollection.Add(name);
-                    }
-                }
-                finally
-                {
-                    if( HostingEnvironment.IsHosted && _XmlFileName != null )
-                    {
-                        CodeAccessPermission.RevertAssert();
-                    }
-                }
+                    string name = (string)CallProperty(role, "Name", null);
+                    roleNameCollection.Add(name);
+                }                
             }
             catch
             {
@@ -729,31 +694,17 @@ namespace System.Web.Security
                 return false;
 
             try
-            {
-                if( HostingEnvironment.IsHosted && _XmlFileName != null )
+            {                                
+                IEnumerable allRoles = (IEnumerable)objAllRoles;
+
+                foreach (object objRoleName in allRoles)
                 {
-                    InternalSecurityPermissions.Unrestricted.Assert();
+                    string strRoleName = (string)objRoleName;
+                    if (strRoleName != null && System.Web.Util.StringUtil.EqualsIgnoreCase(strRoleName, roleName))
+                        return true;
                 }
 
-                try
-                {
-                    IEnumerable allRoles = (IEnumerable)objAllRoles;
-
-                    foreach (object objRoleName in allRoles)
-                    {
-                        string strRoleName = (string)objRoleName;
-                        if (strRoleName != null && System.Web.Util.StringUtil.EqualsIgnoreCase(strRoleName, roleName))
-                            return true;
-                    }
-                    return false;
-                }
-                finally
-                {
-                    if( HostingEnvironment.IsHosted && _XmlFileName != null )
-                    {
-                        CodeAccessPermission.RevertAssert();
-                    }
-                }
+                return false;                
             }
             catch
             {
@@ -776,29 +727,14 @@ namespace System.Web.Security
             StringCollection roleNameCollection = new StringCollection();
 
             try
-            {
-                if( HostingEnvironment.IsHosted && _XmlFileName != null )
+            {                
+                IEnumerable allRoles = (IEnumerable)objAllRoles;
+                foreach (object objRoleName in allRoles)
                 {
-                    InternalSecurityPermissions.Unrestricted.Assert();
-                }
-
-                try
-                {
-                    IEnumerable allRoles = (IEnumerable)objAllRoles;
-                    foreach (object objRoleName in allRoles)
-                    {
-                        string strRoleName = (string)objRoleName;
-                        if (strRoleName != null)
-                            roleNameCollection.Add(strRoleName);
-                    }
-                }
-                finally
-                {
-                if( HostingEnvironment.IsHosted && _XmlFileName != null )
-                    {
-                        CodeAccessPermission.RevertAssert();
-                    }
-                }
+                    string strRoleName = (string)objRoleName;
+                    if (strRoleName != null)
+                        roleNameCollection.Add(strRoleName);
+                }                
             }
             catch
             {

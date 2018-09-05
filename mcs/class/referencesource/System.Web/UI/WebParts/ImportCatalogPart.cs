@@ -168,14 +168,7 @@ namespace System.Web.UI.WebControls.WebParts {
                 _availableWebPartDescriptions = new WebPartDescriptionCollection();
                 return;
             }
-
-            // Run in minimal trust
-            PermissionSet pset = new PermissionSet(PermissionState.None);
-            // add in whatever perms are appropriate
-            pset.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            pset.AddPermission(new AspNetHostingPermission(AspNetHostingPermissionLevel.Minimal));
-
-            pset.PermitOnly();
+            
             bool permitOnly = true;
             string title = null;
             string description = null;
@@ -213,24 +206,9 @@ namespace System.Web.UI.WebControls.WebParts {
                                 // If we are in shared scope, we are importing a shared WebPart
                                 bool isShared = (WebPartManager.Personalization.Scope == PersonalizationScope.Shared);
 
-                                if (!String.IsNullOrEmpty(partTypeName)) {
-                                    // Need medium trust to call BuildManager.GetType()
-                                    PermissionSet mediumPset = new PermissionSet(PermissionState.None);
-                                    mediumPset.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-                                    mediumPset.AddPermission(new AspNetHostingPermission(AspNetHostingPermissionLevel.Medium));
-
-                                    CodeAccessPermission.RevertPermitOnly();
-                                    permitOnly = false;
-                                    mediumPset.PermitOnly();
-                                    permitOnly = true;
-
+                                if (!String.IsNullOrEmpty(partTypeName)) {                                    
                                     Type partType = WebPartUtil.DeserializeType(partTypeName, true);
-
-                                    CodeAccessPermission.RevertPermitOnly();
-                                    permitOnly = false;
-                                    pset.PermitOnly();
-                                    permitOnly = true;
-
+                                    
                                     // First check if the type is authorized
                                     if (!WebPartManager.IsAuthorized(partType, null, null, isShared)) {
                                         _importErrorMessage = System.Web.SR.GetString(System.Web.SR.WebPartManager_ForbiddenType);
@@ -299,13 +277,7 @@ namespace System.Web.UI.WebControls.WebParts {
                         _importErrorMessage :
                         System.Web.SR.GetString(System.Web.SR.WebPart_DefaultImportErrorMessage);
                     return;
-                }
-                finally {
-                    if (permitOnly) {
-                        // revert if you're not just exiting the stack frame anyway
-                        CodeAccessPermission.RevertPermitOnly();
-                    }
-                }
+                }                
             }
             catch {
                 throw;

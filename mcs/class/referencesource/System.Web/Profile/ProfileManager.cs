@@ -289,8 +289,7 @@ namespace System.Web.Profile
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
         public static bool AutomaticSaveEnabled {
-            get {
-                HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+            get {                
                 // WOS #1544130: Don't initialize providers when getting this property, because it is called in ProfileModule.Init
                 InitializeEnabled(false);
                 return s_AutomaticSaveEnabled;
@@ -299,8 +298,7 @@ namespace System.Web.Profile
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
         public static ProfileProvider Provider {
-            get {
-                HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+            get {                
                 Initialize(true);
                 if (s_Provider == null) {
                     throw new InvalidOperationException(System.Web.SR.GetString(System.Web.SR.Profile_default_provider_not_found));
@@ -312,8 +310,7 @@ namespace System.Web.Profile
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
         public static ProfileProviderCollection Providers {
-            get {
-                HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+            get {                
                 Initialize(true);
                 return s_Providers;
             }
@@ -331,7 +328,7 @@ namespace System.Web.Profile
                         try {
                             ProfileSection config = MTConfigUtil.GetProfileAppConfig();
                             if (!s_InitializedEnabled) {
-                                s_Enabled = config.Enabled && HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low);
+                                s_Enabled = config.Enabled;
                                 s_AutomaticSaveEnabled = s_Enabled && config.AutomaticSaveEnabled;
                                 s_InitializedEnabled = true;
                             }

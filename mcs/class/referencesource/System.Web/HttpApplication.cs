@@ -480,8 +480,7 @@ namespace System.Web {
         Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)
         ]
-        public HttpModuleCollection Modules {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        public HttpModuleCollection Modules {            
             get {
                 if (_moduleCollection == null)
                     _moduleCollection = new HttpModuleCollection();

@@ -1998,11 +1998,8 @@ namespace System.Web {
         // Params collection - combination of query string, form, server vars
         //    Gets a combined collection of QueryString+Form+ ServerVariable+Cookies.
         public NameValueCollection Params {
-            get {
-                if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low))
-                    return GetParams();
-                else
-                    return GetParamsWithDemand();
+            get {                
+                return GetParams();                
             }
         }
 
@@ -2020,8 +2017,7 @@ namespace System.Web {
             }
             return _params;
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Low)]
+        
         private NameValueCollection GetParamsWithDemand()
         {
             return GetParams();
@@ -2260,19 +2256,15 @@ namespace System.Web {
         // Server vars collection
         // Gets a collection of web server variables.
         public NameValueCollection ServerVariables {
-            get {
-                if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low))
-                    return GetServerVars();
-                else
-                    return GetServerVarsWithDemand();
+            get {                
+                return GetServerVars();                
             }
         }
 
         internal NameValueCollection GetServerVarsWithoutDemand() {
             return GetServerVars();
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Low)]
+        
         private NameValueCollection GetServerVarsWithDemand()
         {
             return GetServerVars();
@@ -2501,8 +2493,7 @@ namespace System.Web {
 
         // Client Certificate
         //    Gets information on the current request's client security certificate.
-        public HttpClientCertificate ClientCertificate {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Low)]
+        public HttpClientCertificate ClientCertificate {            
             get {
                 if (_clientCertificate == null) {
                     _clientCertificate = CreateHttpClientCertificateWithAssert();
@@ -2519,8 +2510,7 @@ namespace System.Web {
 
 
         //    Gets LOGON_USER as WindowsIdentity
-        public WindowsIdentity LogonUserIdentity {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        public WindowsIdentity LogonUserIdentity {            
             get {
                 if (_logonUserIdentity == null) {
                     if (_wr != null) {
@@ -3179,8 +3169,7 @@ namespace System.Web {
         // Only supported on IIS7 and later.
         // This is a wrapper for the IIS 7.0 IHttpRequest::InsertEntityBody method.
         // If you want to provide IIS with a copy of the request entity previously read by ASP.NET,
-        // call the InsertEntityBody overload that takes no arguments.
-        [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.High)]
+        // call the InsertEntityBody overload that takes no arguments.        
         public void InsertEntityBody(byte[] buffer, int offset, int count) {
             EnsureHasNotTransitionedToWebSocket();
 

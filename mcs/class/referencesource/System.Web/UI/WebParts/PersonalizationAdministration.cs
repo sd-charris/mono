@@ -49,9 +49,7 @@ namespace System.Web.UI.WebControls.WebParts {
             }
         }
 
-        private static void Initialize() {
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
-
+        private static void Initialize() {            
             if (_initialized) {
                 return;
             }

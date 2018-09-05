@@ -117,8 +117,7 @@ namespace System.Web.Management {
             get { return _sqlException; }
         }
     }
-
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level=AspNetHostingPermissionLevel.High)]
+    
     public static class SqlServices {
         public static void Install(string server, string user, string password, string database, SqlFeatures features) {
             SetupApplicationServices(server, user, password, false, null, database, null, features, true);

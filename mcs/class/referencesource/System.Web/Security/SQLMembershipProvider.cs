@@ -104,8 +104,7 @@ namespace System.Web.Security {
         //////////////////////////////////////////////////////////////////////
 
         public override void Initialize(string name, NameValueCollection config)
-        {
-            HttpRuntime.CheckAspNetHostingPermission (AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+        {            
             if (config == null)
                 throw new ArgumentNullException("config");
             if (String.IsNullOrEmpty(name))

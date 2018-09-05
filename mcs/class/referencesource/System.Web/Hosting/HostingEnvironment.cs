@@ -623,14 +623,8 @@ namespace System.Web.Hosting {
             HttpRuntime.SetShutdownReason(ApplicationShutdownReason.HostingEnvironment, "HostingEnvironment initiated shutdown");
 
             // Avoid calling Environment.StackTrace if we are in the ClientBuildManager (Dev10 bug 824659)
-            if (!BuildManagerHost.InClientBuildManager) {
-                new EnvironmentPermission(PermissionState.Unrestricted).Assert();
-                try {
-                    _shutDownStack = Environment.StackTrace;
-                }
-                finally {
-                    CodeAccessPermission.RevertAssert();
-                }
+            if (!BuildManagerHost.InClientBuildManager) {                                
+                _shutDownStack = Environment.StackTrace;                
             }
 
             // waitChangeNotification need not be honored in ClientBuildManager (Dev11 bug 264894)
@@ -937,15 +931,8 @@ namespace System.Web.Hosting {
                     if (_siteName == null) {
                         String s = null;
 
-                        if (_appHost != null) {
-                            // 
-                            InternalSecurityPermissions.Unrestricted.Assert();
-                            try {
-                                s = _appHost.GetSiteName();
-                            }
-                            finally {
-                                CodeAccessPermission.RevertAssert();
-                            }
+                        if (_appHost != null) {                                                        
+                            s = _appHost.GetSiteName();                            
                         }
 
                         if (s == null)
@@ -967,15 +954,8 @@ namespace System.Web.Hosting {
                     if (_siteID == null) {
                         String s = null;
 
-                        if (_appHost != null) {
-                            // 
-                            InternalSecurityPermissions.Unrestricted.Assert();
-                            try {
-                                s = _appHost.GetSiteID();
-                            }
-                            finally {
-                                CodeAccessPermission.RevertAssert();
-                            }
+                        if (_appHost != null) {                            
+                            s = _appHost.GetSiteID();                            
                         }
 
                         if (s == null)
@@ -1335,8 +1315,7 @@ namespace System.Web.Hosting {
             get {
                 if (_theHostingEnvironment == null)
                     return null;
-
-                InternalSecurityPermissions.AspNetHostingPermissionLevelHigh.Demand();
+                
                 return _theHostingEnvironment._appId;
             }
         }
@@ -1392,8 +1371,7 @@ namespace System.Web.Hosting {
             get {
                 if (_theHostingEnvironment == null)
                     return null;
-
-                InternalSecurityPermissions.AspNetHostingPermissionLevelMedium.Demand();
+                
                 return _theHostingEnvironment.GetSiteName();
             }
         }

@@ -433,42 +433,31 @@ namespace System.Web {
                 // Get the configuration message as though there were user code on the stack,
                 // so that the full path to the configuration file is not shown if the app
                 // does not have PathDiscoveryPermission.
-                // 
-                bool revertPermitOnly = false;
-                try {
-                    PermissionSet ps = HttpRuntime.NamedPermissionSet;
-                    if (ps != null) {
-                        ps.PermitOnly();
-                        revertPermitOnly = true;
+                //                                 
+                int errorNumber = 0;
+                foreach(ConfigurationException configurationError in configErrors.Errors) {
+                    if (errorNumber > 0) {
+                        sb.Append(configurationError.Message);
+                        sb.Append("<BR/>\r\n");
                     }
-                    
-                    int errorNumber = 0;
-                    foreach(ConfigurationException configurationError in configErrors.Errors) {
-                        if (errorNumber > 0) {
-                            sb.Append(configurationError.Message);
-                            sb.Append("<BR/>\r\n");
-                        }
 
-                        errorNumber++;
-                    }
+                    errorNumber++;
                 }
-                finally {
-                    if (revertPermitOnly) {
-                        CodeAccessPermission.RevertPermitOnly();
-                    }
-                }
-
+                
                 sb.Append(endExpandableBlock);
                 sb.Append(toggleScript);
             }
             // If it's a FileNotFoundException/FileLoadException/BadImageFormatException with a FusionLog,
             // write it out (ASURT 83587)
+#if (!MONO || !FEATURE_PAL)
             if (!dontShowSensitiveInfo && Exception != null) {
+
                 // (Only display the fusion log in medium or higher (ASURT 126827)
                 if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
                     WriteFusionLogWithAssert(sb);
-                }
+                }            
             }
+#endif
 
             WriteColoredSquare(sb, ColoredSquare2Title, ColoredSquare2Description, ColoredSquare2Content, false);
 
@@ -930,8 +919,12 @@ namespace System.Web {
                     // Also, if trust is less than medium, never display the message that
                     // explains how to turn on debugging, since it's not allowed (Whidbey 9176)
                     string msg;
+#if (!MONO || !FEATURE_PAL)                    
                     if (!_fGeneratedCodeOnStack ||
                         !HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
+#else
+                    if (!_fGeneratedCodeOnStack) {
+#endif
                         msg = System.Web.SR.GetString(System.Web.SR.Src_not_available_nodebug);
                     }
                     else {
@@ -1643,13 +1636,12 @@ namespace System.Web {
                         string htmlEncodedText = HttpUtility.HtmlEncode(e.ErrorNumber);
                         string adaptiveContentLine = htmlEncodedText;
                         sb.Append(htmlEncodedText);
-                        // Don't show the error message in low trust (VSWhidbey 87012)
-                        if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                            htmlEncodedText = HttpUtility.HtmlEncode(e.ErrorText);
-                            sb.Append(": ");
-                            sb.Append(htmlEncodedText);
-                            adaptiveContentLine += ": " + htmlEncodedText;
-                        }
+                                                
+                        htmlEncodedText = HttpUtility.HtmlEncode(e.ErrorText);
+                        sb.Append(": ");
+                        sb.Append(htmlEncodedText);
+                        adaptiveContentLine += ": " + htmlEncodedText;
+                        
                         AdaptiveMiscContent.Add(adaptiveContentLine);
                         sb.Append("<br><br>\r\n");
 
@@ -1701,11 +1693,10 @@ namespace System.Web {
                             sb.Append(System.Web.SR.GetString(System.Web.SR.TmplCompilerWarningSecTitle));
                             sb.Append(":</b> ");
                             sb.Append(HttpUtility.HtmlEncode(e.ErrorNumber));
-                            // Don't show the error message in low trust (VSWhidbey 87012)
-                            if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                                sb.Append(": ");
-                                sb.Append(HttpUtility.HtmlEncode(e.ErrorText));
-                            }
+                                                        
+                            sb.Append(": ");
+                            sb.Append(HttpUtility.HtmlEncode(e.ErrorText));
+                            
                             sb.Append("<br>\r\n");
 
                             sb.Append("<b>");
@@ -1732,24 +1723,19 @@ namespace System.Web {
                 }
 
                 if (!_hideDetailedCompilerOutput) {
-                    if (results.Output.Count > 0) {
-                        // (Only display the compiler output in medium or higher (ASURT 126827)
-                        if (HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-                            sb.Append(String.Format(CultureInfo.CurrentCulture, startExpandableBlock, "compilerOutputDiv",
-                                System.Web.SR.GetString(System.Web.SR.TmplCompilerCompleteOutput)));
-                            foreach (string line in results.Output) {
-                                sb.Append(HttpUtility.HtmlEncode(line));
-                                sb.Append("\r\n");
-                            }
-                            sb.Append(endExpandableBlock);
+                    if (results.Output.Count > 0) {                                                
+                        sb.Append(String.Format(CultureInfo.CurrentCulture, startExpandableBlock, "compilerOutputDiv",
+                            System.Web.SR.GetString(System.Web.SR.TmplCompilerCompleteOutput)));
+                        foreach (string line in results.Output) {
+                            sb.Append(HttpUtility.HtmlEncode(line));
+                            sb.Append("\r\n");
                         }
+                        sb.Append(endExpandableBlock);                        
                     }
 
                     // If we have the generated source code, display it
                     // (Only display the source in medium or higher (ASURT 128039)
-                    if (_excep.SourceCodeWithoutDemand != null &&
-                        HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
-
+                    if (_excep.SourceCodeWithoutDemand != null) {
                         sb.Append(String.Format(CultureInfo.CurrentCulture, startExpandableBlock, "dynamicCodeDiv",
                             System.Web.SR.GetString(System.Web.SR.TmplCompilerGeneratedFile)));
 

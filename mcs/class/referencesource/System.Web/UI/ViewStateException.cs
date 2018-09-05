@@ -59,8 +59,7 @@ namespace System.Web.UI {
             HttpResponse response = context != null ? context.Response : null;
 
             // Return the generic viewstate error if the request does not have permission to ServerVariables
-            if (request == null || response == null || 
-                !HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low)) {
+            if (request == null || response == null) {                
                 _message = ShortMessage;
                 return;
             }

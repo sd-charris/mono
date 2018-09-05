@@ -181,9 +181,10 @@ namespace System.Web.DataAccess {
 
             if (File.Exists(fullFileName))
                 return;
-
+#if (!MONO || !FEATURE_PAL)
             if (!HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.High))
                 throw new ProviderException(System.Web.SR.GetString(System.Web.SR.Provider_can_not_create_file_in_this_trust_level));
+#endif
 
             if (!connectionString.Contains("Database=master"))
                 connectionString += ";Database=master";

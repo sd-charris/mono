@@ -1201,8 +1201,7 @@ namespace System.Web {
 
                         // Write a stack dump in an HTML comment for debugging purposes
                         // Only show it for Asp permission medium or higher (ASURT 126373)
-                        if (!dontShowSensitiveErrors &&
-                            HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium)) {
+                        if (!dontShowSensitiveErrors) {                            
                             _writer.Write("<!-- \r\n");
                             WriteExceptionStack(e);
                             _writer.Write("-->");
@@ -2263,8 +2262,7 @@ namespace System.Web {
 
         /// <devdoc>
         ///    <para>Adds custom log information to the IIS log file.</para>
-        /// </devdoc>
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.Medium)]
+        /// </devdoc>        
         public void AppendToLog(String param) {
             // only makes sense for IIS
             if (_wr is System.Web.Hosting.ISAPIWorkerRequest)

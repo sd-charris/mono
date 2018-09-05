@@ -250,7 +250,7 @@ namespace System.Web.SessionState {
             switch (config.Mode) {
                 case SessionStateMode.SQLServer:
                 case SessionStateMode.StateServer:
-                    return HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Medium);
+                    return true;
 
                 default:
                 case SessionStateMode.Off:
@@ -258,8 +258,7 @@ namespace System.Web.SessionState {
                     return true;
             }
         }
-
-        [AspNetHostingPermission(SecurityAction.Assert, Level=AspNetHostingPermissionLevel.Low)]
+        
         private SessionStateStoreProviderBase SecureInstantiateProvider(ProviderSettings settings) {
             return (SessionStateStoreProviderBase)ProvidersHelper.InstantiateProvider(settings, typeof(SessionStateStoreProviderBase));
         }

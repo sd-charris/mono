@@ -194,7 +194,7 @@ namespace System.Web.Profile {
                     return s_SingletonInstance;
                 }
             }
-            HttpRuntime.CheckAspNetHostingPermission(AspNetHostingPermissionLevel.Low, System.Web.SR.Feature_not_supported_at_this_level);
+            
             return CreateMyInstance(username, isAuthenticated);
         }
 
@@ -389,12 +389,11 @@ namespace System.Web.Profile {
                     ProfileSection config = MTConfigUtil.GetProfileAppConfig();
                     bool fAnonEnabled = (HostingEnvironment.IsHosted ? AnonymousIdentificationModule.Enabled : true);
                     Type baseType = ProfileBase.InheritsFromType;
-                    bool hasLowTrust = HttpRuntime.HasAspNetHostingPermission(AspNetHostingPermissionLevel.Low);
-
+                    
                     s_Properties = new SettingsPropertyCollection();
 
                     // Step 0: Add all dynamic profile properties set programatically during PreAppStart
-                    ProfileBase.AddPropertySettingsFromConfig(baseType, fAnonEnabled, hasLowTrust, ProfileManager.DynamicProfileProperties, null);
+                    ProfileBase.AddPropertySettingsFromConfig(baseType, fAnonEnabled, true, ProfileManager.DynamicProfileProperties, null);
 
                     //////////////////////////////////////////////////////////////////////
                     // Step 1: Add Properties from the base class (if not ProfileBase)
@@ -412,7 +411,7 @@ namespace System.Web.Profile {
                         foreach (PropertyInfo prop in props) {
                             if (baseProperties[prop.Name] == null) { //not in the base class
 
-                                ProfileProvider prov = hasLowTrust ? ProfileManager.Provider : null;
+                                ProfileProvider prov = ProfileManager.Provider;
                                 bool readOnly = false;
                                 SettingsSerializeAs serializeAs = SettingsSerializeAs.ProviderSpecific;
                                 string defaultValue = String.Empty;
@@ -441,7 +440,7 @@ namespace System.Web.Profile {
                                     else if (attrib is CustomProviderDataAttribute) {
                                         customData = ((CustomProviderDataAttribute)attrib).CustomProviderData;
                                     }
-                                    else if (hasLowTrust && attrib is ProfileProviderAttribute) {
+                                    else if (attrib is ProfileProviderAttribute) {
                                         prov = ProfileManager.Providers[((ProfileProviderAttribute)attrib).ProviderName];
                                         if (prov == null)
                                             throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Profile_provider_not_found, ((ProfileProviderAttribute)attrib).ProviderName), config.ElementInformation.Properties["inherits"].Source, config.ElementInformation.Properties["inherits"].LineNumber);
@@ -463,9 +462,9 @@ namespace System.Web.Profile {
                     //////////////////////////////////////////////////////////////////////
                     // Step 6: Add all properties from config
                     if (config.PropertySettings != null) {
-                        AddPropertySettingsFromConfig(baseType, fAnonEnabled, hasLowTrust, config.PropertySettings, null);
+                        AddPropertySettingsFromConfig(baseType, fAnonEnabled, true, config.PropertySettings, null);
                         foreach (ProfileGroupSettings pgs in config.PropertySettings.GroupSettings) {
-                            AddPropertySettingsFromConfig(baseType, fAnonEnabled, hasLowTrust, pgs.PropertySettings, pgs.Name);
+                            AddPropertySettingsFromConfig(baseType, fAnonEnabled, true, pgs.PropertySettings, pgs.Name);
                         }
                     }
                 }

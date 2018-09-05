@@ -212,8 +212,7 @@ namespace System.Web {
             String s = Get(name);
             return(s != null) ? new String[1] { s} : null;
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        
         public override void Set(String name, String value) {
             if (_iis7workerRequest == null) {
                 throw new PlatformNotSupportedException();
@@ -299,8 +298,7 @@ namespace System.Web {
             // this will update an existing entry, or create one if it's new
             BaseSet(name, new HttpServerVarsCollectionEntry(name, value));
         }
-
-        [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        
         public override void Remove(String name) {
             if (_iis7workerRequest == null) {
                 throw new PlatformNotSupportedException();

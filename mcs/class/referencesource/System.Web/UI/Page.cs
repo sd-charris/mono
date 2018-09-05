@@ -892,8 +892,7 @@ public class Page: TemplateControl, IHttpHandler {
     ///    The control that has was last focused (empty if there was no such control)
     /// </devdoc>
     // We
-    internal string LastFocusedControl {
-        [AspNetHostingPermission(SecurityAction.Assert, Level = AspNetHostingPermissionLevel.Low)]
+    internal string LastFocusedControl {        
         get {
             if (RequestInternal != null) {
                 // SECURITY: Change this to just check form + query string

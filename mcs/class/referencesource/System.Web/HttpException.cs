@@ -388,8 +388,7 @@ namespace System.Web {
         /// <devdoc>
         ///    <para> The CompilerResults object describing the compile error.</para>
         /// </devdoc>
-        public CompilerResults Results {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        public CompilerResults Results {            
             get { 
                 return _results;
             } 
@@ -404,8 +403,7 @@ namespace System.Web {
         /// <devdoc>
         ///    <para> The source code that was compiled.</para>
         /// </devdoc>
-        public string SourceCode {
-            [AspNetHostingPermission(SecurityAction.Demand, Level=AspNetHostingPermissionLevel.High)]
+        public string SourceCode {            
             get { 
                 return _sourceCode; 
             }

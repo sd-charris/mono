@@ -27,6 +27,28 @@ namespace System.Web.Hosting {
         private ApplicationHost() {
         }
 
+#if MONO || FEATURE_PAL
+        public static Object CreateApplicationHost(Type hostType, string virtualDir, string physicalDir, bool isProcessBased) {
+			if (!isProcessBased) {
+				return CreateApplicationHost(hostType, virtualDir, physicalDir);
+			}
+
+			if (!System.Web.Util.StringUtil.StringEndsWith(physicalDir, Path.DirectorySeparatorChar))
+                physicalDir = physicalDir + Path.DirectorySeparatorChar;
+
+            ApplicationManager appManager = ApplicationManager.GetApplicationManager();
+
+            String appId = System.Web.Util.StringUtil.GetNonRandomizedHashCode(String.Concat(virtualDir, physicalDir)).ToString("x");
+
+            // In a new app domain, but with probing rules relaxed... To fit within a hosted process.
+            ObjectHandle h = appManager.CreateHostingInstance(
+                                hostType, appId, VirtualPath.CreateNonRelative(virtualDir), physicalDir);
+
+            return h.Unwrap();
+		}
+
+#endif
+
         /*
          * Creates new app domain for hosting of ASP.NET apps with a
          * user defined 'host' object in it.  The host is needed to make

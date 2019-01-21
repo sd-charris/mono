@@ -2774,6 +2774,58 @@ namespace MonoTests.System.IO
 		public static extern int symlink (string oldpath, string newpath);
 
 		[Test]
+		public void SymLinkStats() {
+			if (!RunningOnUnix)
+				Assert.Ignore ("Symlink are hard on windows");
+
+			var name1 = Path.GetRandomFileName ();
+			var name2 = Path.GetRandomFileName ();
+
+			var path1 = Path.Combine (Path.GetTempPath (), name1);
+			var path2 = Path.Combine (Path.GetTempPath (), name2);
+
+			File.Delete (path1);
+			File.Delete (path2);
+
+			try {
+				using (var f = File.Create(path1)) {
+					Assert.IsNotNull (f, "Path1 must be created for symlink stats");
+				}
+
+				if (symlink (path1, path2) != 0)
+					Assert.Fail ("symlink #1 failed with errno={0}", Marshal.GetLastWin32Error ());
+				
+				Assert.IsTrue (File.Exists (path1), "File.Exists must return true for path1 symlink stats");
+				Assert.IsTrue (File.Exists (path2), "File.Exists must return true for path2 symlink stats");
+
+				try {					
+					File.SetLastWriteTime (path1, DateTime.Now.AddMinutes(-5));
+					Assert.AreNotEqual (File.GetLastWriteTime(path1), File.GetLastWriteTime (path2), "Path1 and Path2 should not have the same last write times");
+				}
+				catch(IOException e) {
+					Assert.Fail ("Symlink stats should allow GetLastWriteTime \n\n" + e.ToString());
+				}
+
+				File.Delete (path2);
+				Assert.IsTrue (File.Exists(path1), "Original file must still exist for symlink stats");
+				Assert.IsFalse (File.Exists(path2), "File.Delete must delete symlink only for symlink stats");
+
+				File.Delete (path1); 
+				Assert.IsFalse (File.Exists (path1), "File.Delete must delete symlink stats");
+
+			} finally {
+				try {
+					File.Delete (path1);
+					File.Delete (path2);
+				} catch (IOException) {
+					//Don't double fault any exception from the tests.
+				}
+
+			}
+		}
+
+		
+		[Test]
 #if __TVOS__
 		[Ignore ("See bug #59239")]
 #endif
@@ -2802,12 +2854,12 @@ namespace MonoTests.System.IO
 
 				try {
 					using (var f = File.Open (path1, FileMode.Open, FileAccess.Read)) {
-						Assert.Fail ("File.Open must throw for symlink loops");
+						Assert.IsNotNull (f, "File.Open must throw for symlink loops");
 					}
 				} catch (IOException ex) {
 					Assert.AreEqual (0x80070781u, (uint)ex.HResult, "Ensure HRESULT is correct");
 				}
-
+				
 				File.Delete (path1); //Delete must not throw and must work
 				Assert.IsFalse (File.Exists (path1), "File.Delete must delete symlink loops");
 

@@ -824,6 +824,497 @@ namespace System.Web.Hosting {
         //
         // helper to support legacy APIs (AppHost.CreateAppHost)
         //
+#if MONO || FEATURE_PAL
+        internal ObjectHandle CreateHostingInstance(Type type, string appId, VirtualPath virtualPath, string physicalPath) {
+            System.Web.Util.Debug.Trace("AppManager", "CreateHostingInstance, type=" + type.FullName);
+
+            IApplicationHost appHost = new SimpleApplicationHost(virtualPath, physicalPath);
+
+            HostingEnvironmentParameters hostingParameters = new HostingEnvironmentParameters();
+            hostingParameters.HostingFlags = HostingEnvironmentFlags.HideFromAppManager;
+
+            HostingEnvironment env = CreateProcessedBasedHostingEnvironment(appId, appHost, hostingParameters);
+            
+            // Only difference here is that we're using one app domain instead of spawing a new one.
+            return env.CreateInstance(type.AssemblyQualifiedName);
+        }
+
+        // SP - Trying to see if I can just do this whole function and apply it to the currently running 
+        // AppDomain.  Will pluck out stuff later...
+
+        private HostingEnvironment CreateProcessedBasedHostingEnvironment(
+            String appId,
+            IApplicationHost appHost,
+            HostingEnvironmentParameters hostingParameters) {
+
+            String physicalPath = appHost.GetPhysicalPath();
+            if (!System.Web.Util.StringUtil.StringEndsWith(physicalPath, Path.DirectorySeparatorChar))
+                physicalPath = physicalPath + Path.DirectorySeparatorChar;
+
+            String domainId = ConstructAppDomainId(appId);
+            String appName = (System.Web.Util.StringUtil.GetStringHashCode(String.Concat(appId.ToLower(CultureInfo.InvariantCulture),
+                physicalPath.ToLower(CultureInfo.InvariantCulture)))).ToString("x", CultureInfo.InvariantCulture);
+            VirtualPath virtualPath = VirtualPath.Create(appHost.GetVirtualPath());
+
+            System.Web.Util.Debug.Trace("AppManager", "CreateAppDomainWithHostingEnvironment, path=" + physicalPath + "; appId=" + appId + "; domainId=" + domainId);
+
+            IDictionary bindings = new Hashtable(20);
+            AppDomainSetup setup = new AppDomainSetup();
+            AppDomainSwitches switches = new AppDomainSwitches();
+            
+            PopulateProcessBasedDomainBindings(domainId, appId, appName, physicalPath, virtualPath, setup, bindings);
+                        
+            //  Create the app domain
+
+            AppDomain appDomain = null;
+            Dictionary<string, object> appDomainAdditionalData = new Dictionary<string, object>();
+            Exception appDomainCreationException = null;
+
+            string siteID = appHost.GetSiteID();
+            string appSegment = virtualPath.VirtualPathStringNoTrailingSlash;
+            bool inClientBuildManager = false;
+            Configuration appConfig = null;
+            PolicyLevel policyLevel = null;
+            PermissionSet permissionSet = null;
+            List<StrongName> fullTrustAssemblies = new List<StrongName>();
+            string[] defaultPartialTrustVisibleAssemblies = new[] { "System.Web, PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293",
+                                                                    "System.Web.Extensions, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9",
+                                                                    "System.Web.Abstractions, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9",
+                                                                    "System.Web.Routing, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9",
+                                                                    "System.Web.DynamicData, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9",
+                                                                    "System.Web.DataVisualization, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9",
+                                                                    "System.Web.ApplicationServices, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9" };
+
+            Exception appDomainStartupConfigurationException = null;
+            ImpersonationContext ictxConfig = null;
+            IntPtr uncTokenConfig = IntPtr.Zero;
+            HostingEnvironmentFlags hostingFlags = HostingEnvironmentFlags.Default;
+            if (hostingParameters != null) {
+                hostingFlags = hostingParameters.HostingFlags;
+                if ((hostingFlags & HostingEnvironmentFlags.ClientBuildManager) != 0) {
+                    inClientBuildManager = true;
+                    // The default hosting policy in VS has changed (from MultiDomainHost to MultiDomain), 
+                    // so we need to specify explicitly to allow generated assemblies 
+                    // to be unloaded subsequently. (Dev10 bug)
+                    setup.LoaderOptimization = LoaderOptimization.MultiDomainHost;
+                }
+            }
+            try {
+                bool requireHostExecutionContextManager = false;
+                bool requireHostSecurityManager = false;
+
+                AppDomain.CurrentDomain.SetData(_configBuildersIgnoreLoadFailuresSwitch, true);
+
+                uncTokenConfig = appHost.GetConfigToken();
+                if (uncTokenConfig != IntPtr.Zero) {
+                    ictxConfig = new ImpersonationContext(uncTokenConfig);
+                }
+
+                try {
+                    // Did the custom loader fail to load?
+                    ExceptionDispatchInfo customLoaderException = ProcessHost.GetExistingCustomLoaderFailureAndClear(appId);
+                    if (customLoaderException != null) {
+                        customLoaderException.Throw();
+                    }
+
+                    // We support randomized string hash code, but not for the default AppDomain
+                    // Don't allow string hash randomization for the defaul AppDomain (i.e. <runtime/UseRandomizedStringHashAlgorithm enabled="1">)
+                    // Application should use AppSettings instead to opt-in.
+                    
+                    // SP ----> NEED TO SEE IF THIS MATTERS
+                    //  
+                    // By default, this is true and it skips the entire config loading process.
+                    // I can't figure out a way to default the environment differently.    
+                    //
+                    //if (EnvironmentInfo.IsStringHashCodeRandomizationDetected) {
+                    //    throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Require_stable_string_hash_codes));
+                    //}
+
+                    bool skipAdditionalConfigChecks = false;
+                    if (inClientBuildManager && hostingParameters.IISExpressVersion != null) {
+                        permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                        setup.PartialTrustVisibleAssemblies = defaultPartialTrustVisibleAssemblies;
+                        appConfig = GetAppConfigIISExpress(siteID, appSegment, hostingParameters.IISExpressVersion);
+                        skipAdditionalConfigChecks = true;
+                    }
+                    else {
+                        //Hosted by IIS, we already have an IISMap.
+                        if (appHost is ISAPIApplicationHost) {
+                            string cacheKey = System.Web.Caching.CacheInternal.PrefixMapPath + siteID + virtualPath.VirtualPathString;
+                            MapPathCacheInfo cacheInfo = (MapPathCacheInfo)HttpRuntime.Cache.InternalCache.Remove(cacheKey);
+                            appConfig = WebConfigurationManager.OpenWebConfiguration(appSegment, siteID);
+                        }
+                        // For non-IIS hosting scenarios, we need to get config map from application host in a generic way.
+                        else {
+                            appConfig = GetAppConfigGeneric(appHost, siteID, appSegment, virtualPath, physicalPath);
+                        }
+                    }
+
+                    HttpRuntimeSection httpRuntimeSection = (HttpRuntimeSection)appConfig.GetSection("system.web/httpRuntime");
+                    if (httpRuntimeSection == null) {
+                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Config_section_not_present, "httpRuntime"));
+                    }
+
+                    // DevDiv #403846 - Change certain config defaults if <httpRuntime targetFramework="4.5" /> exists in config.
+                    // We store this information in the AppDomain data because certain configuration sections (like <compilation>)
+                    // are loaded before config is "baked" in the child AppDomain, and if we make <compilation> and other sections
+                    // dependent on <httpRuntime> which may not have been loaded yet, we risk introducing ----s. Putting this value
+                    // in the AppDomain data guarantees that it is available before the first call to the config system.
+                    FrameworkName targetFrameworkName = httpRuntimeSection.GetTargetFrameworkName();
+                    if (targetFrameworkName != null) {
+                        appDomainAdditionalData[System.Web.Util.BinaryCompatibility.TargetFrameworkKey] = targetFrameworkName;
+                    }
+
+                    if (!skipAdditionalConfigChecks) {
+                        // DevDiv #71268 - Add <httpRuntime defaultRegexMatchTimeout="HH:MM:SS" /> configuration attribute
+                        if (httpRuntimeSection.DefaultRegexMatchTimeout != TimeSpan.Zero) {
+                            appDomainAdditionalData[_regexMatchTimeoutKey] = httpRuntimeSection.DefaultRegexMatchTimeout;
+                        }
+
+                        // DevDiv #258274 - Add support for CLR quirks mode to ASP.NET
+                        if (targetFrameworkName != null) {
+                            setup.TargetFrameworkName = targetFrameworkName.ToString();
+                        }
+
+                        // DevDiv #286354 - Having a Task-friendly SynchronizationContext requires overriding the AppDomain's HostExecutionContextManager.
+                        // DevDiv #403846 - If we can't parse the <appSettings> switch, use the <httpRuntime/targetFramework> setting to determine the default.
+                        AppSettingsSection appSettingsSection = appConfig.AppSettings;
+                        KeyValueConfigurationElement useTaskFriendlySynchronizationContextElement = appSettingsSection.Settings["aspnet:UseTaskFriendlySynchronizationContext"];
+                        if (!(useTaskFriendlySynchronizationContextElement != null && Boolean.TryParse(useTaskFriendlySynchronizationContextElement.Value, out requireHostExecutionContextManager))) {
+                            requireHostExecutionContextManager = new System.Web.Util.BinaryCompatibility(targetFrameworkName).TargetsAtLeastFramework45 ? true : false;
+                        }
+
+                        // DevDiv #390704 - Add support for randomized string hash algorithm
+                        KeyValueConfigurationElement useRandomizedStringHashAlgorithmElement = appSettingsSection.Settings["aspnet:UseRandomizedStringHashAlgorithm"];
+                        bool useRandomizedStringHashAlgorithm = false;
+                        if (useRandomizedStringHashAlgorithmElement != null && Boolean.TryParse(useRandomizedStringHashAlgorithmElement.Value, out useRandomizedStringHashAlgorithm)) {
+                            switches.UseRandomizedStringHashAlgorithm = useRandomizedStringHashAlgorithm;
+                        }
+
+                        // DevDiv #1041102 - Allow specifying quirks via <appSettings> switches
+                        // The keys must begin with "AppContext.SetSwitch" and have a non-zero key name length,
+                        // and the values must be parseable as Booleans.
+                        Dictionary<string, bool> clrQuirks = null;
+                        foreach (KeyValueConfigurationElement element in appSettingsSection.Settings) {
+                            if (element.Key != null && element.Key.Length > _clrQuirkAppSettingsAppContextPrefix.Length && element.Key.StartsWith(_clrQuirkAppSettingsAppContextPrefix, StringComparison.OrdinalIgnoreCase)) {
+                                bool value;
+                                if (Boolean.TryParse(element.Value, out value)) {
+                                    if (clrQuirks == null) {
+                                        clrQuirks = new Dictionary<string, bool>();
+                                    }
+                                    
+                                    clrQuirks[element.Key.Substring(_clrQuirkAppSettingsAppContextPrefix.Length)] = value;
+                                }
+                            }
+                        }
+                        
+                        if (clrQuirks != null && clrQuirks.Count > 0) {
+                            if (hostingParameters == null) {
+                                hostingParameters = new HostingEnvironmentParameters();
+                            }
+                            
+                            hostingParameters.ClrQuirksSwitches = clrQuirks.ToArray();
+                        }
+
+                        // DevDiv #248126 - Allow configuration of FileChangeMonitor behavior
+                        if (httpRuntimeSection.FcnMode != FcnMode.NotSet) {
+                            if (hostingParameters == null) {
+                                hostingParameters = new HostingEnvironmentParameters();
+                            }
+                            hostingParameters.FcnMode = httpRuntimeSection.FcnMode;
+                        }
+
+                        // DevDiv #322858 - Allow FileChangesMonitor to skip reading DACLs as a perf improvement
+                        KeyValueConfigurationElement disableFcnDaclReadElement = appSettingsSection.Settings["aspnet:DisableFcnDaclRead"];
+                        if (disableFcnDaclReadElement != null) {
+                            bool skipReadingAndCachingDacls;
+                            Boolean.TryParse(disableFcnDaclReadElement.Value, out skipReadingAndCachingDacls);
+                            if (skipReadingAndCachingDacls) {
+                                if (hostingParameters == null) {
+                                    hostingParameters = new HostingEnvironmentParameters();
+                                }
+                                hostingParameters.FcnSkipReadAndCacheDacls = true;
+                            }
+                        }
+
+                        // Allow apps to use their own CacheStoreProvider implementations
+                        CacheSection cacheConfig = (CacheSection)appConfig.GetSection("system.web/caching/cache");
+                        if (cacheConfig != null && cacheConfig.DefaultProvider != null && !String.IsNullOrWhiteSpace(cacheConfig.DefaultProvider)) {
+                            ProviderSettingsCollection cacheProviders = cacheConfig.Providers;
+                            if (cacheProviders == null || cacheProviders.Count < 1) {
+                                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.Def_provider_not_found));
+                            }
+
+                            ProviderSettings cacheProviderSettings = cacheProviders[cacheConfig.DefaultProvider];
+                            if (cacheProviderSettings == null) {
+                                throw new ProviderException(System.Web.SR.GetString(System.Web.SR.Def_provider_not_found));
+                            } else {
+                                NameValueCollection settings = cacheProviderSettings.Parameters;
+                                settings["name"] = cacheProviderSettings.Name;
+                                settings["type"] = cacheProviderSettings.Type;
+                                appDomainAdditionalData[".defaultObjectCacheProvider"] = settings;
+                            }
+                        }
+
+                        // If we were launched from a development environment, we might want to enable the application to do things
+                        // it otherwise wouldn't normally allow, such as enabling an administrative control panel. For security reasons,
+                        // we only do this check if <deployment retail="false" /> [the default value] is specified, since the
+                        // <deployment> element can only be set at machine-level in a hosted environment.
+                        DeploymentSection deploymentSection = (DeploymentSection)appConfig.GetSection("system.web/deployment");
+                        bool isDevEnvironment = false;
+                        if (deploymentSection != null && !deploymentSection.Retail && EnvironmentInfo.WasLaunchedFromDevelopmentEnvironment) {
+                            appDomainAdditionalData[".devEnvironment"] = true;
+                            isDevEnvironment = true;
+
+                            // DevDiv #275724 - Allow LocalDB support in partial trust scenarios
+                            // Normally LocalDB requires full trust since it's the equivalent of unmanaged code execution. If this is
+                            // a development environment and not a retail deployment, we can assume that the user developing the
+                            // application is actually in charge of the host, so we can trust him with LocalDB execution.
+                            // Technically this also means that the developer could have set <trust level="Full" /> in his application,
+                            // but he might want to deploy his application on a Medium-trust server and thus test how the rest of his
+                            // application works in a partial trust environment. (He would use SQL in production, whch is safe in
+                            // partial trust.)
+                            appDomainAdditionalData["ALLOW_LOCALDB_IN_PARTIAL_TRUST"] = true;
+                        }
+
+                        TrustSection trustSection = (TrustSection)appConfig.GetSection("system.web/trust");
+                        if (trustSection == null || String.IsNullOrEmpty(trustSection.Level)) {
+                            throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Config_section_not_present, "trust"));
+                        }
+
+                        switches.UseLegacyCas = trustSection.LegacyCasModel;
+
+                        if (inClientBuildManager) {
+                            permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                            setup.PartialTrustVisibleAssemblies = defaultPartialTrustVisibleAssemblies;
+                        }
+                        else {
+                            if (!switches.UseLegacyCas) {
+                                if (trustSection.Level == "Full") {
+                                    permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                                    setup.PartialTrustVisibleAssemblies = defaultPartialTrustVisibleAssemblies;
+                                }
+                                else {
+                                    SecurityPolicySection securityPolicySection = (SecurityPolicySection)appConfig.GetSection("system.web/securityPolicy");
+                                    CompilationSection compilationSection = (CompilationSection)appConfig.GetSection("system.web/compilation");
+                                    FullTrustAssembliesSection fullTrustAssembliesSection = (FullTrustAssembliesSection)appConfig.GetSection("system.web/fullTrustAssemblies");
+                                    policyLevel = GetPartialTrustPolicyLevel(trustSection, securityPolicySection, compilationSection, physicalPath, virtualPath, isDevEnvironment);
+                                    permissionSet = policyLevel.GetNamedPermissionSet(trustSection.PermissionSetName);
+                                    if (permissionSet == null) {
+                                        throw new ConfigurationErrorsException(System.Web.SR.GetString(System.Web.SR.Permission_set_not_found, trustSection.PermissionSetName));
+                                    }
+
+                                    // read full trust assemblies and populate the strong name list
+                                    if (fullTrustAssembliesSection != null) {
+                                        FullTrustAssemblyCollection fullTrustAssembliesCollection = fullTrustAssembliesSection.FullTrustAssemblies;
+                                        if (fullTrustAssembliesCollection != null) {
+                                            fullTrustAssemblies.AddRange(from FullTrustAssembly fta in fullTrustAssembliesCollection
+                                                                         select CreateStrongName(fta.AssemblyName, fta.Version, fta.PublicKey));
+                                        }
+                                    }
+
+                                    // DevDiv #27645 - We need to add future versions of Microsoft.Web.Infrastructure to <fullTrustAssemblies> so that ASP.NET
+                                    // can version out-of-band releases. We should only do this if V1 of M.W.I is listed.
+                                    if (fullTrustAssemblies.Contains(_mwiV1StrongName)) {
+                                        fullTrustAssemblies.AddRange(CreateFutureMicrosoftWebInfrastructureStrongNames());
+                                    }
+
+                                    // Partial-trust AppDomains using a non-legacy CAS model require our special HostSecurityManager
+                                    requireHostSecurityManager = true;
+                                }
+                            }
+                            if (trustSection.Level != "Full") {
+                                PartialTrustVisibleAssembliesSection partialTrustVisibleAssembliesSection = (PartialTrustVisibleAssembliesSection)appConfig.GetSection("system.web/partialTrustVisibleAssemblies");
+                                string[] partialTrustVisibleAssemblies = null;
+                                if (partialTrustVisibleAssembliesSection != null) {
+                                    PartialTrustVisibleAssemblyCollection partialTrustVisibleAssembliesCollection = partialTrustVisibleAssembliesSection.PartialTrustVisibleAssemblies;
+                                    if (partialTrustVisibleAssembliesCollection != null && partialTrustVisibleAssembliesCollection.Count != 0) {
+                                        partialTrustVisibleAssemblies = new string[partialTrustVisibleAssembliesCollection.Count + defaultPartialTrustVisibleAssemblies.Length];
+                                        for (int i = 0; i < partialTrustVisibleAssembliesCollection.Count; i++) {
+                                            partialTrustVisibleAssemblies[i] = partialTrustVisibleAssembliesCollection[i].AssemblyName +
+                                                ", PublicKey=" +
+                                                NormalizePublicKeyBlob(partialTrustVisibleAssembliesCollection[i].PublicKey);
+                                        }
+                                        defaultPartialTrustVisibleAssemblies.CopyTo(partialTrustVisibleAssemblies, partialTrustVisibleAssembliesCollection.Count);
+                                    }
+                                }
+                                if (partialTrustVisibleAssemblies == null) {
+                                    partialTrustVisibleAssemblies = defaultPartialTrustVisibleAssemblies;
+                                }
+                                setup.PartialTrustVisibleAssemblies = partialTrustVisibleAssemblies;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    appDomainStartupConfigurationException = e;
+                    permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                }
+
+                // Set the AppDomainManager if needed
+                Type appDomainManagerType = AspNetAppDomainManager.GetAspNetAppDomainManagerType(requireHostExecutionContextManager, requireHostSecurityManager);
+                if (appDomainManagerType != null) {
+                    setup.AppDomainManagerType = appDomainManagerType.FullName;
+                    setup.AppDomainManagerAssembly = appDomainManagerType.Assembly.FullName;
+                }
+
+                // Apply compatibility switches
+                switches.Apply(setup);
+
+                try {
+                    if (switches.UseLegacyCas) {
+                        appDomain = AppDomain.CreateDomain(domainId,
+#if FEATURE_PAL // FEATURE_PAL: hack to avoid non-supported hosting features
+                                                           null,
+#else // FEATURE_PAL
+GetDefaultDomainIdentity(),
+#endif // FEATURE_PAL
+setup);
+                    }
+                    else {
+                        appDomain = AppDomain.CreateDomain(domainId,
+#if FEATURE_PAL // FEATURE_PAL: hack to avoid non-supported hosting features
+                                                           null,
+#else // FEATURE_PAL
+GetDefaultDomainIdentity(),
+#endif // FEATURE_PAL
+setup,
+                                                           permissionSet);
+                    }
+                    foreach (DictionaryEntry e in bindings)
+                        appDomain.SetData((String)e.Key, (String)e.Value);
+                    foreach (var entry in appDomainAdditionalData)
+                        appDomain.SetData(entry.Key, entry.Value);
+                }
+                catch (Exception e) {
+                    System.Web.Util.Debug.Trace("AppManager", "AppDomain.CreateDomain failed", e);
+                    appDomainCreationException = e;
+                }
+            }
+            finally {
+                if (ictxConfig != null) {
+                    ictxConfig.Undo();
+                    ictxConfig = null;
+                }
+                if (uncTokenConfig != IntPtr.Zero) {
+                    UnsafeNativeMethods.CloseHandle(uncTokenConfig);
+                    uncTokenConfig = IntPtr.Zero;
+                }
+            }
+
+            if (appDomain == null) {
+                throw new SystemException(System.Web.SR.GetString(System.Web.SR.Cannot_create_AppDomain), appDomainCreationException);
+            }
+
+            // Create hosting environment in the new app domain
+
+            Type hostType = typeof(HostingEnvironment);
+            String module = hostType.Module.Assembly.FullName;
+            String typeName = hostType.FullName;
+            ObjectHandle h = null;
+
+            // impersonate UNC identity, if any
+            ImpersonationContext ictx = null;
+            IntPtr uncToken = IntPtr.Zero;
+
+            //
+            // fetching config can fail due to a ---- with the 
+            // native config reader
+            // if that has happened, force a flush
+            //
+            int maxRetries = 10;
+            int numRetries = 0;
+
+            while (numRetries < maxRetries) {
+                try {
+                    uncToken = appHost.GetConfigToken();
+                    // no throw, so break
+                    break;
+                }
+                catch (InvalidOperationException) {
+                    numRetries++;
+                    System.Threading.Thread.Sleep(250);
+                }
+            }
+
+
+            if (uncToken != IntPtr.Zero) {
+                try {
+                    ictx = new ImpersonationContext(uncToken);
+                }
+                catch {
+                }
+                finally {
+                    UnsafeNativeMethods.CloseHandle(uncToken);
+                }
+            }
+
+            try {
+
+                // Create the hosting environment in the app domain
+#if DBG
+                try {
+                    h = Activator.CreateInstance(appDomain, module, typeName);
+                }
+                catch (Exception e) {
+                    System.Web.Util.Debug.Trace("AppManager", "appDomain.CreateInstance failed; identity=" + System.Security.Principal.WindowsIdentity.GetCurrent().Name, e);
+                    throw;
+                }
+#else
+                h = Activator.CreateInstance(appDomain, module, typeName);
+#endif
+            }
+            finally {
+                // revert impersonation
+                if (ictx != null)
+                    ictx.Undo();
+
+                if (h == null) {
+                    AppDomain.Unload(appDomain);
+                }
+            }
+
+            HostingEnvironment env = (h != null) ? h.Unwrap() as HostingEnvironment : null;
+
+            if (env == null)
+                throw new SystemException(System.Web.SR.GetString(System.Web.SR.Cannot_create_HostEnv));
+
+            // initialize the hosting environment
+            IConfigMapPathFactory configMapPathFactory = appHost.GetConfigMapPathFactory();
+            if (appDomainStartupConfigurationException == null) {
+                env.Initialize(this, appHost, configMapPathFactory, hostingParameters, policyLevel);
+            }
+            else {
+                env.Initialize(this, appHost, configMapPathFactory, hostingParameters, policyLevel, appDomainStartupConfigurationException);
+            }
+            return env;
+        }
+
+        private void PopulateProcessBasedDomainBindings(String domainId, String appId, String appName,
+                                                    String appPath, VirtualPath appVPath,
+                                                    AppDomainSetup setup, IDictionary dict) {
+            // assembly loading settings
+
+            // We put both the old and new bin dir names on the private bin path            
+            setup.ShadowCopyFiles       = "true";
+            setup.ApplicationBase       = appPath;
+            setup.ApplicationName       = appName;
+            setup.PrivateBinPath        = "bin" + Path.DirectorySeparatorChar + "Debug" + ";bin" + Path.DirectorySeparatorChar + "Release";
+            setup.ConfigurationFile     = HttpConfigurationSystem.WebConfigFileName;
+
+            // Disallow code download, since it's unreliable in services (ASURT 123836/127606)
+            setup.DisallowCodeDownload  = true;
+
+            // internal settings
+            dict.Add(".appDomain",     "*");
+            dict.Add(".appId",         appId);
+            dict.Add(".appPath",       appPath);
+            dict.Add(".appVPath",      appVPath.VirtualPathString);
+            dict.Add(".domainId",      domainId);
+        }
+
+#endif
+
 
         internal ObjectHandle CreateInstanceInNewWorkerAppDomain(
                                 Type type,

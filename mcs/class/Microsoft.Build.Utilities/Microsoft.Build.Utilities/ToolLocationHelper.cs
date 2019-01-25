@@ -29,6 +29,8 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace Microsoft.Build.Utilities
 {
@@ -236,6 +238,27 @@ namespace Microsoft.Build.Utilities
 				throw new NotImplementedException ();
 			}
 		}
+
+		public static IList<string> GetPathToReferenceAssemblies(string targetFrameworkIdentifier, string targetFrameworkVersion, string targetFrameworkProfile)
+		{
+			return new List<string>();
+		}
+
+    	public static IList<string> GetPathToReferenceAssemblies(FrameworkName frameworkName)
+    	{
+			return new List<string>();
+		}
+
+		public static IList<string> GetPathToReferenceAssemblies(string targetFrameworkRootPath, FrameworkName frameworkName)
+		{
+			return new List<string>();
+		}
+
+		public static IList<string> GetSupportedTargetFrameworks()
+		{
+			return new List<string>();
+		}
+
 
 #if XBUILD_12
 		public static string CurrentToolsVersion {

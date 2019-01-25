@@ -13,7 +13,7 @@ LOCAL_MCS_FLAGS = \
 	-resource:$(dbmetal_src)/Language/GermanWords.txt,$(ns).GermanWords.txt   \
 	-publicsign
 
-LIB_REFS = System.Configuration System.Core System.Data System.Data.Linq System.Xml System
+LIB_REFS = System.Configuration System.Core System.Data System.Xml System System.Runtime.Serialization
 	
 SQLMETAL_RESOURCES = \
 	$(dbmetal_src)/Language/EnglishWords.txt \

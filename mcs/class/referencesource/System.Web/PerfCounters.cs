@@ -44,7 +44,7 @@ namespace System.Web {
         private PerfCounters () {}
 
         internal static void Open(string appName) {
-            Debug.Assert(appName != null);
+            System.Web.Util.Debug.Assert(appName != null);
             
             OpenCounter(appName);
         }
@@ -80,7 +80,7 @@ namespace System.Web {
                 }
             }
             catch (Exception e) {
-                Debug.Trace("Perfcounters", "Exception: " + e.StackTrace);
+                System.Web.Util.Debug.Trace("Perfcounters", "Exception: " + e.StackTrace);
             }
         }
 

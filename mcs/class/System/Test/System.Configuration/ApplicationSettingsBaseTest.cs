@@ -182,6 +182,10 @@ namespace MonoTests.System.Configuration {
 
 			Environment.SetEnvironmentVariable ("XDG_DATA_HOME", localAppData);
 			Environment.SetEnvironmentVariable ("XDG_CONFIG_HOME", appData);
+
+			Console.WriteLine("Waiting For You at: " + appData);
+			Console.WriteLine("And: " + localAppData);
+			Console.Read();
 		}
 
 		[TestFixtureTearDown]
@@ -707,6 +711,9 @@ namespace MonoTests.System.Configuration {
 				MyObject = new Bug15818Class { Name = "Some Name", Value = 15818 }
 			};
 			settings.Save ();
+
+			Console.WriteLine("Stopping before Read");
+			Console.Read();
 
 			var settings2 = new Bug15818Settings2 ();
 			Assert.AreEqual ("foo", settings2.Text);

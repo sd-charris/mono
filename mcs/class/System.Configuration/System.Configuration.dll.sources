@@ -43,7 +43,7 @@ corefx/SR.cs
 #../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/NameValueFileSectionHandler.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/TimeSpanValidatorAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/HResults.cs
-../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/UserScopedSettingAttribute.cs
+#../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/UserScopedSettingAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ClientConfigurationSystem.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/FactoryRecord.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/DpapiProtectedConfigurationProvider.cs
@@ -142,7 +142,7 @@ corefx/SR.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigurationValueFlags.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SectionXmlInfo.cs
 #../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigurationException.cs
-../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ApplicationScopedSettingAttribute.cs
+#../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ApplicationScopedSettingAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/BaseConfigurationRecord.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/PropertyInformation.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ProviderSettings.cs
@@ -167,7 +167,7 @@ corefx/SR.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigurationPropertyOptions.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/TypeUtil.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ExeContext.cs
-../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsProviderAttribute.cs
+#../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsProviderAttribute.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/IgnoreSection.cs
 #../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/SettingsAttributeDictionary.cs
 ../../../external/corefx/src/System.Configuration.ConfigurationManager/src/System/Configuration/ConfigurationConverterBase.cs

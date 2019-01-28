@@ -726,38 +726,14 @@ namespace System.Configuration
 		{			
 			string prefix = (sectionGroupName == userSettingsGroupName) ? userSettingsGroupPrefix : applicationSettingsGroupPrefix;
             
-			ConfigurationManager.RefreshSection(prefix + groupName);
-            ClientSettingsSection section = ConfigurationManager.GetSection(prefix + groupName) as ClientSettingsSection;
+			Configuration config = ConfigurationManager.OpenMappedExeConfiguration (exeMap,level);
+            ClientSettingsSection section = config.GetSection(prefix + groupName) as ClientSettingsSection;
  
             if (section != null) {
                 foreach (SettingElement setting in section.Settings) {
 					LoadPropertyValue(collection, setting, allowOverwrite);
-                    //settings[setting.Name] = new StoredSetting(setting.SerializeAs, setting.Value.ValueXml);
                 }
             }
-             
-			/* 
-			Configuration config = ConfigurationManager.OpenMappedExeConfiguration (exeMap,level);
-			
-			ConfigurationSectionGroup sectionGroup = config.GetSectionGroup (sectionGroupName);
-			if (sectionGroup != null) {
-				foreach (ConfigurationSection configSection in sectionGroup.Sections) {
-					if (configSection.SectionInformation.Name != groupName)
-						continue;
-
-					ClientSettingsSection clientSection = configSection as ClientSettingsSection;
-					if (clientSection == null)
-						continue;
-
-					foreach (SettingElement element in clientSection.Settings) {
-						LoadPropertyValue(collection, element, allowOverwrite);
-					}
-					// Only the first one seems to be processed by MS
-					break;
-				}
-			}
-			*/
-
 		}
 
 		public override void SetPropertyValues (SettingsContext context, SettingsPropertyValueCollection collection)
@@ -781,7 +757,7 @@ namespace System.Configuration
 			string groupName = context ["GroupName"] as string;
 			groupName = NormalizeInvalidXmlChars (groupName); // we likely saved the element removing the non valid xml chars.
 			
-			//LoadProperties (exeMapCurrent, collection, ConfigurationUserLevel.None, "applicationSettings", false, groupName);
+			LoadProperties (exeMapCurrent, collection, ConfigurationUserLevel.None, "applicationSettings", false, groupName);
 			
 			LoadProperties (exeMapCurrent, collection, ConfigurationUserLevel.None, "applicationSettings", false, groupName);
 			LoadProperties (exeMapCurrent, collection, ConfigurationUserLevel.None, "userSettings", false, groupName);

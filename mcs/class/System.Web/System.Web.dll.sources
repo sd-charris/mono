@@ -60,6 +60,9 @@ System.Web/ModName.cs
 System.Web/SR.cs
 System.Web/WebROCollection.cs
 System.Web/CapabilitiesLoader.cs
+System.Web.Configuration_2.0/MonoSettingsSection.cs
+System.Web.Configuration_2.0/NullableStringValidator.cs
+System.Web.Configuration_2.0/PropertyHelper.cs
 Util/SecureHashCodeProvider.cs
 ../referencesource/System.Web/WorkerRequest.cs
 ../referencesource/System.Web/DataAnnotations/DataAnnotations/LocalizableString.cs

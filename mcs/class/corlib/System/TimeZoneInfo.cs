@@ -1216,13 +1216,15 @@ namespace System
 					return false;
 			}
 
+			var isUtc = false;
 			if (dateTime.Kind != DateTimeKind.Utc) {
 				if (!TryAddTicks (date, -BaseUtcOffset.Ticks, out date, DateTimeKind.Utc))
 					return false;
-			}
+			} else
+				isUtc = true;
 
 			AdjustmentRule current = GetApplicableRule (date);
-			if (current != null) {
+			if (current != null) {				
 				DateTime tStart = TransitionPoint (current.DaylightTransitionStart, date.Year);
 				DateTime tEnd = TransitionPoint (current.DaylightTransitionEnd, date.Year);
 				TryAddTicks (tStart, -BaseUtcOffset.Ticks, out tStart, DateTimeKind.Utc);
@@ -1231,7 +1233,7 @@ namespace System
 					if (forOffset)
 						isDst = true;
 					offset = baseUtcOffset; 
-					if (date >= new DateTime (tStart.Ticks + current.DaylightDelta.Ticks, DateTimeKind.Utc))
+					if (isUtc || date >= new DateTime (tStart.Ticks + current.DaylightDelta.Ticks, DateTimeKind.Utc))
 					{
 						offset += current.DaylightDelta;
 						isDst = true;

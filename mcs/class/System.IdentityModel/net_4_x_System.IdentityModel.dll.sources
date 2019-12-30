@@ -109,6 +109,8 @@ System.IdentityModel.Tokens/SecurityTokenNotYetValidException.cs
 System.IdentityModel.Tokens/SecurityTokenReplayDetectedException.cs
 System.IdentityModel.Tokens/SecurityTokenTypes.cs
 System.IdentityModel.Tokens/SecurityTokenValidationException.cs
+../referencesource/System.IdentityModel/System/IdentityModel/Tokens/SecurityTokenHandlerCollectionManager.cs
+../referencesource/System.IdentityModel/System/IdentityModel/Configuration/ConfigurationStrings.cs
 System.IdentityModel.Tokens/SessionSecurityToken.cs
 System.IdentityModel.Tokens/SessionSecurityTokenCache.cs
 System.IdentityModel.Tokens/SessionSecurityTokenCacheKey.cs

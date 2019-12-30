@@ -29,7 +29,11 @@ namespace System.IdentityModel.Tokens
         {
             if (serviceName == null)
             {
+#if MONO
+                throw new ArgumentNullException("serviceName cannot be null");
+#else
                 throw DiagnosticUtility.ExceptionUtility.ThrowHelperArgumentNull("serviceName");
+#endif
             }
 
             this.serviceName = serviceName;
@@ -87,7 +91,11 @@ namespace System.IdentityModel.Tokens
                 // Empty String is valid (Usage.Default)
                 if (null == usage)
                 {
+#if MONO
+                    throw new ArgumentNullException("usage cannot be null or empty");
+#else
                     throw DiagnosticUtility.ThrowHelperArgumentNullOrEmptyString("usage");
+#endif
                 }
 
                 return this.collections[usage];
@@ -98,7 +106,11 @@ namespace System.IdentityModel.Tokens
                 // Empty String is valid (Usage.Default)
                 if (null == usage)
                 {
+#if MONO
+                    throw new ArgumentNullException("usage cannot be null or empty");
+#else
                     throw DiagnosticUtility.ThrowHelperArgumentNullOrEmptyString("usage");
+#endif
                 }
 
                 this.collections[usage] = value;

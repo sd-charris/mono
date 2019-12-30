@@ -7,7 +7,7 @@ MONO_SECURITY=Mono.Security
 endif
 
 LIBRARY = System.IdentityModel.dll
-LIB_REFS = System System.Xml System.Security $(MONO_SECURITY) System.Runtime.Serialization
+LIB_REFS = System System.Xml System.Core System.Security $(MONO_SECURITY) System.Runtime.Serialization
 KEYFILE = ../ecma.pub
 LIB_MCS_FLAGS = \
 		/d:NET_3_0	\

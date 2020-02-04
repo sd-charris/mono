@@ -14,7 +14,7 @@ using Xunit;
 
 namespace DebuggerTests
 {
-	class Inspector
+	public class Inspector
 	{
 		// InspectorClient client;
 		Dictionary<string, TaskCompletionSource<JObject>> notifications = new Dictionary<string, TaskCompletionSource<JObject>> ();
@@ -89,7 +89,10 @@ namespace DebuggerTests
 		}
 	}
 
-	public class DebuggerTestBase {
+	public class DebuggerTestBase {		
+		protected Dictionary<string, string> dicScriptsIdToUrl;
+		protected Dictionary<string, string> dicFileToUrl;
+		
 		protected Task startTask;
 
 		static string FindTestPath () {
@@ -130,6 +133,51 @@ namespace DebuggerTests
 				}
 			}
 			throw new Exception ("Could not find an installed Chrome to use");
+		}
+
+		public Dictionary<string, string> SubscribeToScripts (Inspector insp) {
+			dicScriptsIdToUrl = new Dictionary<string, string> ();
+			dicFileToUrl = new Dictionary<string, string>();
+			insp.On("Debugger.scriptParsed", async (args, c) => {
+				var script_id = args? ["scriptId"]?.Value<string> ();
+				var url = args["url"]?.Value<string> ();
+				if (script_id.StartsWith("dotnet://"))
+				{
+					var dbgUrl = args["dotNetUrl"]?.Value<string>();
+					var arrStr = dbgUrl.Split("/");
+					dbgUrl = arrStr[0] + "/" + arrStr[1] + "/" + arrStr[2] + "/" + arrStr[arrStr.Length - 1];
+					dicScriptsIdToUrl[script_id] = dbgUrl;
+					dicFileToUrl[dbgUrl] = args["url"]?.Value<string>();
+				}
+				await Task.FromResult (0);
+			});
+			return dicScriptsIdToUrl;
+		}
+
+		public JObject CreateBreakpointCommand (string url, int lineNumber, int columnNumber) {
+			return JObject.FromObject(new {
+				lineNumber = lineNumber,
+				columnNumber = columnNumber,
+				url = dicFileToUrl[url],
+			});
+		}
+
+		public void CheckLocation (string script_loc, int line, int column, Dictionary<string, string> scripts, JToken location) {
+			Assert.Equal (script_loc, scripts[location["scriptId"].Value<string>()]);
+			Assert.Equal (line, location ["lineNumber"].Value<int> ());
+			Assert.Equal (column, location ["columnNumber"].Value<int> ());
+		}
+
+		public void CheckNumber (JToken locals, string name, int value) {
+			foreach (var l in locals) {
+				if (name != l["name"]?.Value<string> ())
+					continue;
+				var val = l["value"];
+				Assert.Equal ("number", val ["type"]?.Value<string> ());
+				Assert.Equal (value, val["value"]?.Value <int> ());
+				return;
+			}
+			Assert.True(false, $"Could not find variable '{name}'");
 		}
 
 		public DebuggerTestBase (string driver = "debugger-driver.html") {

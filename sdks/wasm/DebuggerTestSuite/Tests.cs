@@ -16,34 +16,7 @@ namespace DebuggerTests
 {
 
 	public class SourceList : DebuggerTestBase {
-		Dictionary<string, string> dicScriptsIdToUrl;
-		Dictionary<string, string> dicFileToUrl;
-		Dictionary<string, string> SubscribeToScripts (Inspector insp) {
-			dicScriptsIdToUrl = new Dictionary<string, string> ();
-			dicFileToUrl = new Dictionary<string, string>();
-			insp.On("Debugger.scriptParsed", async (args, c) => {
-				var script_id = args? ["scriptId"]?.Value<string> ();
-				var url = args["url"]?.Value<string> ();
-				if (script_id.StartsWith("dotnet://"))
-				{
-					var dbgUrl = args["dotNetUrl"]?.Value<string>();
-					var arrStr = dbgUrl.Split("/");
-					dbgUrl = arrStr[0] + "/" + arrStr[1] + "/" + arrStr[2] + "/" + arrStr[arrStr.Length - 1];
-					dicScriptsIdToUrl[script_id] = dbgUrl;
-					dicFileToUrl[dbgUrl] = args["url"]?.Value<string>();
-				}
-				await Task.FromResult (0);
-			});
-			return dicScriptsIdToUrl;
-		}
-
-		void CheckLocation (string script_loc, int line, int column, Dictionary<string, string> scripts, JToken location)
-		{
-			Assert.Equal (script_loc, scripts[location["scriptId"].Value<string>()]);
-			Assert.Equal (line, location ["lineNumber"].Value<int> ());
-			Assert.Equal (column, location ["columnNumber"].Value<int> ());
-		}
-
+		
 		[Fact]
 		public async Task CheckThatAllSourcesAreSent () {
 			var insp = new Inspector ();
@@ -67,11 +40,12 @@ namespace DebuggerTests
 
 			await Ready ();
 			await insp.Ready (async (cli, token) => {
-				var bp1_req = JObject.FromObject(new {
-					lineNumber = 5,
-					columnNumber = 2,
-					url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
-				});
+				//var bp1_req = JObject.FromObject(new {
+				//	lineNumber = 5,
+				//	columnNumber = 2,
+				//	url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
+				//});
+				var bp1_req = CreateBreakpointCommand ("dotnet://debugger-test.dll/debugger-test.cs", 5, 2);
 
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 				Assert.True (bp1_res.IsOk);
@@ -88,7 +62,7 @@ namespace DebuggerTests
 		}
 
 		[Fact]
-		public async Task CreateBadBreakpoint () {
+		public async Task CreateBadBreakpoint () {			
 			var insp = new Inspector ();
 
 			//Collect events
@@ -101,7 +75,7 @@ namespace DebuggerTests
 					columnNumber = 2,
 					url = "dotnet://debugger-test.dll/this-file-doesnt-exist.cs",
 				});
-
+				
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 
 				Assert.False (bp1_res.IsOk);
@@ -119,11 +93,12 @@ namespace DebuggerTests
 
 			await Ready ();
 			await insp.Ready (async (cli, token) => {
-				var bp1_req = JObject.FromObject(new {
-					lineNumber = 5,
-					columnNumber = 2,
-					url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
-				});
+				//var bp1_req = JObject.FromObject(new {
+				//	lineNumber = 5,
+				//	columnNumber = 2,
+				//	url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
+				//});
+				var bp1_req = CreateBreakpointCommand ("dotnet://debugger-test.dll/debugger-test.cs", 5, 2);
 
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 				Assert.True (bp1_res.IsOk);
@@ -159,19 +134,7 @@ namespace DebuggerTests
 				CheckLocation ("dotnet://debugger-test.dll/debugger-test.cs", 9, 1, scripts, scope["endLocation"]);
 			});
 		}
-
-		void CheckNumber (JToken locals, string name, int value) {
-			foreach (var l in locals) {
-				if (name != l["name"]?.Value<string> ())
-					continue;
-				var val = l["value"];
-				Assert.Equal ("number", val ["type"]?.Value<string> ());
-				Assert.Equal (value, val["value"]?.Value <int> ());
-				return;
-			}
-			Assert.True(false, $"Could not find variable '{name}'");
-		}
-
+		
 		[Fact]
 		public async Task InspectLocalsAtBreakpointSite () {
 			var insp = new Inspector ();
@@ -180,11 +143,13 @@ namespace DebuggerTests
 
 			await Ready ();
 			await insp.Ready (async (cli, token) => {
-				var bp1_req = JObject.FromObject(new {
-					lineNumber = 5,
-					columnNumber = 2,
-					url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
-				});
+				//var bp1_req = JObject.FromObject(new {
+				//	lineNumber = 5,
+				//	columnNumber = 2,
+				//	url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
+				//});
+				var bp1_req = CreateBreakpointCommand ("dotnet://debugger-test.dll/debugger-test.cs", 5, 2);
+
 				System.Console.WriteLine("InspectLocalsAtBreakpointSite-1");
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 				System.Console.WriteLine("InspectLocalsAtBreakpointSite-2");
@@ -227,17 +192,20 @@ namespace DebuggerTests
 
 		[Fact]
 		public async Task TrivalStepping () {
+			Console.WriteLine("\n\nTrivialStepping START**********\n\n");
+
 			var insp = new Inspector ();
 			//Collect events
 			var scripts = SubscribeToScripts(insp);
 
 			await Ready ();
 			await insp.Ready (async (cli, token) => {
-				var bp1_req = JObject.FromObject(new {
-					lineNumber = 5,
-					columnNumber = 2,
-					url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
-				});
+				//var bp1_req = JObject.FromObject(new {
+				//	lineNumber = 5,
+				//	columnNumber = 2,
+				//	url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
+				//});
+				var bp1_req = CreateBreakpointCommand ("dotnet://debugger-test.dll/debugger-test.cs", 5, 2);
 
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 				Assert.True (bp1_res.IsOk);
@@ -269,6 +237,8 @@ namespace DebuggerTests
 				System.Console.WriteLine("TrivalStepping7");
 				CheckLocation ("dotnet://debugger-test.dll/debugger-test.cs", 6, 2, scripts, top_frame2["location"]); //it moved one line!
 				System.Console.WriteLine("TrivalStepping8");
+
+				Console.WriteLine("\n\nTrivialStepping END**********\n\n");
 			});
 		}
 
@@ -280,11 +250,12 @@ namespace DebuggerTests
 
 			await Ready();
 			await insp.Ready (async (cli, token) => {
-				var bp1_req = JObject.FromObject(new {
-					lineNumber = 4,
-					columnNumber = 2,
-					url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
-				});
+				//var bp1_req = JObject.FromObject(new {
+				//	lineNumber = 4,
+				//	columnNumber = 2,
+				//	url = dicFileToUrl["dotnet://debugger-test.dll/debugger-test.cs"],
+				//});
+				var bp1_req = CreateBreakpointCommand ("dotnet://debugger-test.dll/debugger-test.cs", 4, 2);
 
 				var bp1_res = await cli.SendCommand ("Debugger.setBreakpointByUrl", bp1_req, token);
 				Assert.True (bp1_res.IsOk);
@@ -303,15 +274,17 @@ namespace DebuggerTests
 					objectId = "dotnet:scope:0",
 				});
 
+				int num = 0;
+
 				var frame_props = await cli.SendCommand ("Runtime.getProperties", get_prop_req, token);
 				Assert.True (frame_props.IsOk);
-				var locals = frame_props.Value ["result"];
-				CheckNumber (locals, "a", 10);
-				CheckNumber (locals, "b", 20);
-				CheckNumber (locals, "c", 0);
-				CheckNumber (locals, "d", 0);
+				var locals = frame_props.Value ["result"];				
+				CheckNumber (locals, "a", 10);				
+				CheckNumber (locals, "b", 20);				
+				CheckNumber (locals, "c", 30);				
+				CheckNumber (locals, "d", 0);				
 				CheckNumber (locals, "e", 0);
-
+				
 				//step and get locals
 				var step_res = await cli.SendCommand ("Debugger.stepOver", null, token);
 				Assert.True (step_res.IsOk);
@@ -320,11 +293,11 @@ namespace DebuggerTests
 				Assert.True (frame_props.IsOk);
 
 				locals = frame_props.Value ["result"];
-				CheckNumber (locals, "a", 10);
-				CheckNumber (locals, "b", 20);
-				CheckNumber (locals, "c", 30);
-				CheckNumber (locals, "d", 0);
-				CheckNumber (locals, "e", 0);
+				CheckNumber (locals, "a", 10);				
+				CheckNumber (locals, "b", 20);				
+				CheckNumber (locals, "c", 30);				
+				CheckNumber (locals, "d", 50);				
+				CheckNumber (locals, "e", 0);				
 
 				//step and get locals
 				step_res = await cli.SendCommand ("Debugger.stepOver", null, token);
@@ -338,7 +311,7 @@ namespace DebuggerTests
 				CheckNumber (locals, "b", 20);
 				CheckNumber (locals, "c", 30);
 				CheckNumber (locals, "d", 50);
-				CheckNumber (locals, "e", 0);
+				CheckNumber (locals, "e", 60);
 			});
 		}
 
